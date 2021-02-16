@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:background="@color/primary_grey"
+                android:layout_height="wrap_content"
+                > -->
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    			android:layout_width="fill_parent"
+                android:layout_height="@dimen/standard_view_height" 
+                android:background="@color/primary_grey"
+                >
+
+    <ImageView android:contentDescription="fish_icon" 
+        	   android:layout_width="@dimen/standard_view_height" 
+        	   android:layout_height="match_parent"
+               android:layout_centerVertical="true" 
+               android:layout_alignParentStart="true"
+               android:layout_marginEnd="@dimen/ten"
+               android:id="@+id/imageViewFish"/>
+
+    <TextView android:layout_toEndOf="@+id/imageViewFish" 
+        	  android:layout_marginTop="@dimen/four"
+              android:id="@+id/textCommonName"
+              android:textSize="@dimen/fifteen_sp" 
+              android:textColor="@color/white_back"
+              android:layout_width="wrap_content" 
+              android:layout_height="wrap_content" 
+              android:textStyle="bold"
+              android:singleLine="true" 
+              android:ellipsize="end"/>
+   <TextView android:layout_toEndOf="@+id/imageViewFish" 
+        android:layout_marginTop="@dimen/four"
+              android:id="@+id/textFishFamily" 
+              android:textSize="@dimen/twelve_sp"
+              android:textStyle="italic" 
+              android:textColor="@color/colorAccent"
+              android:layout_width="wrap_content"
+              android:singleLine="true" android:ellipsize="end" 
+              android:layout_below="@id/textCommonName"
+              android:layout_height="wrap_content"/>  
+
+</RelativeLayout>

@@ -1,0 +1,342 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources >
+
+	<string name="map_search_hint">Search place here</string>
+
+	<string name="legend_info">Name</string>
+	<string name="legend_family">Fish family</string>
+	<string name="legend_record">Personal species record</string>
+	<string name="legend_world_record">World species record</string>
+	<string name="legend_summer">Best summer hour</string>
+	<string name="legend_winter">Best winter hour</string>
+	<string name="legend_weight">Average catch weight</string>
+	<string name="legend_depth">Average catch depth</string>
+	<string name="legend_num">Total catches</string>
+
+
+	<string name="app_store_try_later">An app-store error occurred, please try again</string>
+	<string name="app_name" translatable="false">SpearoStats</string>
+	<string name="action_settings">Settings</string>
+	<string name="close">Close</string>
+	<string name="exit">Exit</string>
+	<string name="delete_session_entry_alert">Are you sure you want to delete this session?</string>
+	<string name="username">Username</string>
+	<string name="success_username">Username successfully changed</string>
+	<string name="save_username">Change username</string>
+	<string name="request_hint">Request new fish</string>
+	<string name="request_sent">Your request has been sent. Thank you!</string>
+	<string name="request_length">New fish name must be between 5 and 20 characters long</string>
+
+	<string name="no_catch_data">no catch data</string>
+
+	<string name="no_fish_name_selected">Select the species from the auto-complete</string>
+	<string name="prof_pic_cannot_change">You cannot change your profile pic</string>
+	<string name="select_location">Press and hold to select location</string>
+	<string name="pic_cannot_be_added">No picture was added</string>
+
+
+	<string name="depth">Depth</string>
+	<string name="added">added</string>
+	<string name="fill_all">Please fill all fields</string>
+	<string name="change_profile_pic">click to change</string>
+
+	<string name="weightMetric">Weight Kilos</string>
+	<string name="depthMetric">Depth Meters</string>
+	<string name="weightImperial">Weight Lbs</string>
+	<string name="depthImperial">Depth Feet</string>
+
+	<string name="invalid_length">Invalid username or password length</string>
+	<string name="metric_explained">* Metric = kilograms, meters / Imperial = pounds, feet</string>
+
+	<string name="button_sessions">My diary</string>
+	<string name="button_stats">My stats</string>
+	<string name="button_stats_global">Global stats</string>
+	<string name="button_map">My places</string>
+	<string name="press_for_more">press for more info&#8230;</string>
+
+	<string name="prey">Prey: </string>
+	<string name="search_hint">e.g \'Seriola\'</string>
+
+	<string name="confirm_catches">Please confirm</string>
+
+	<!-- FISH -->
+	<string name="Argyrosomus_regius">Meagre</string>
+	<string name="Argyrops_spinifer">Bream, King Soldier</string>
+	<string name="Balistes_capriscus">Grey triggerfish</string>
+	<string name="Boops_boops">Bogue</string>
+	<string name="Conger_conger">Conger eel</string>
+	<string name="Dermatolepis_dermatolepis">Bass, Leather</string>
+	<string name="Euthynnus_alletteratus">Little Tunny</string>
+	<string name="Lophius_piscatorius">Angler</string>
+
+	<string name="Makaira_indica">Marlin, Black</string>
+	<string name="Makaira_nigricans">Marlin, Blue</string>
+	<string name="Makaira_mazara">Marlin, Blue Indo-Pacific</string>
+	<string name="Kajikia_audax">Marlin, Striped</string>
+	<string name="Kajikia_albida">Marlin, White</string>
+
+	<string name="Paralabrax_clathratus">Bass, Kelp</string>
+	<string name="Seriola_dumerili">Greater Amberjack</string>
+	<string name="Seriola_fasciata">Lesser Amberjack</string>
+	<string name="Sphyraena_afra">African Barracuda</string>
+	<string name="Sphyraena_qenie">Blackfin Barracuda</string>
+	<string name="Sphyraena_barracuda">Great Barracuda</string>
+	<string name="Sphyraena_argentea">Pacific Barracuda</string>
+	<string name="Sphyraena_jello">Pickhandle Barracuda</string>
+	<string name="Sphyraena_putnamae">Sawtooth Barracuda</string>
+	<string name="Sphyraena_viridensis">Yellowmouth Barracuda</string>
+	<string name="Sphyraena_sphyraena">European Barracuda</string>
+	<string name="Stereolepis_gigas">Bass, Giant (Black) Sea</string>
+	<string name="Scorpaena_scrofa">Scorpionfish</string>
+
+	<string name="Scomberomorus_regalis">Mackerel, Cero</string>
+	<string name="Scomberomorus_cavalla">Mackerel, King</string>
+	<string name="Scomberomorus_commerson">Mackerel, Narrowbarred Spanish</string>
+	<string name="Sciaena_umbra">Brown meagre</string>
+
+	<string name="Salema_porgy">Sarpa salpa, cow bream</string>
+	<string name="Spondyliosoma_cantharus">Black seabream</string>
+
+	<string name="Pterois">Lionfish</string>
+	<string name="Uranoscopus_scaber">Stargazer</string>
+	<string name="Seriolella_brama">Blue Warehou</string>
+	<string name="Pomatomus_saltatrix">Bluefish</string>
+	<string name="Paristiopterus_labiosus">Boarfish, Giant</string>
+
+	<string name="Mullus">Red mullet</string>
+	<string name="Mugil_cephalus">grey mullet (all species)</string>
+	<string name="Muraena_helena">Mediterranean moray</string>
+	<string name="Morone_saxatilis">Bass, Striped (Wiper)</string>
+	<string name="Monotaxis_grandoculis">Bream, Humpnose Big-Eye</string>
+
+	<string name="Mycteroperca_bonaci">Grouper, Black</string>
+	<string name="Mycteroperca_xenarcha">Grouper, Broomtail</string>
+	<string name="Mycteroperca_microlepis">Grouper, Gag</string>
+	<string name="Mycteroperca_acutirostris">Grouper, Comb</string>
+	<string name="Mycteroperca_jordani">Grouper, Gulf</string>
+	<string name="Mycteroperca_rosacea">Grouper, Leopard</string>
+	<string name="Mycteroperca_rubra">Grouper, Mottled</string>
+	<string name="Mycteroperca_prionura">Grouper, Sawtail</string>
+	<string name="Mycteroperca_venenosa">Grouper, Yellowfin</string>
+	<string name="Mycteroperca_interstitialis">Υellowmouth grouper</string>
+	<string name="Mycteroperca_phenax">Grouper, Scamp</string>
+
+	<string name="Sarda_sarda">Bonito, Atlantic</string>
+	<string name="Sarda_chiliensis">Bonito, Pacific</string>
+	<string name="Scorpaenichthys_marmoratus">Cabezon</string>
+	<string name="Epinephelus_analogus">Cabrilla, Spotted</string>
+	<string name="Ctenopharyngodon_idella">Carp, Grass</string>
+	<string name="Ictalurus_furcatus">Catfish, Blue</string>
+	<string name="Ictalurus_punctatus">Catfish, Channel</string>
+	<string name="Kyphosus_sectatrix">Chub, Bermuda</string>
+	<string name="Rachycentron_canadum">Cobia</string>
+	<string name="Gadus_morhua">Cod, Atlantic</string>
+	<string name="Gadus_macrocephaleus">Cod, Paciific</string>
+	<string name="Plectropomus_laevis">Coralgrouper, Blacksaddle</string>
+	<string name="Plectropomus_leopardus">Coralgrouper, Leopard</string>
+	<string name="Plectropomus_punctatus">Coralgrouper, Marbled</string>
+	<string name="Plectropomus_pessuliferus">Coralgrouper, Roving</string>
+	<string name="Plectropomus_maculatus">Coralgrouper, Spotted</string>
+	<string name="Cynoscion_stolzmanni">Corvina, Yellowtail</string>
+	<string name="Dentex_dentex">Dentex, Common</string>
+	<string name="Dentex_gibbosus">Dentex, Pink</string>
+	<string name="Coryphaena_hippurus">Dolphinfish, Common / Mahi mahi</string>
+	<string name="Pogonias_cromis">Drum, Black</string>
+	<string name="Lethrinus_olivaceus">Emperor, Long Nose</string>
+	<string name="Lethrinus_erythracanthus">Emperor, Orange Spotted</string>
+	<string name="Lethrinus_nebulosus">Emperor, Spangled</string>
+	<string name="Lethrinus_xanthochilus">Emperor, Yellowlip</string>
+	<string name="Paralichthys_brasiliensis">Flounder, Brazilian</string>
+	<string name="Platichthys_stellatus">Flounder, Starry</string>
+	<string name="Paralichthys_dentatus">Flounder, Summer</string>
+	<string name="Lophius_americanus">Goosefish (Monkfish)</string>
+	<string name="Epinephelus_fuscoguttatus">Grouper, Brown Marbled</string>
+	<string name="Epinephelus_marginatus">Grouper, Dusky</string>
+	<string name="Epinephelus_costae">Grouper, Goldblotch</string>
+	<string name="Epinephelus_malabaricus">Grouper, Malabar</string>
+	<string name="Epinephelus_coioides">Grouper, Orange Spotted</string>
+	<string name="Epinephelus_morio">Grouper, Red</string>
+	<string name="Epinephelus_adsensionis">Grouper, Rock Hind</string>
+	<string name="Epinephelus_posteli">Grouper, Striped-Fin</string>
+	<string name="Epinephelus_nigritus">Grouper, Warsaw</string>
+	<string name="Epinephelus_multinotatus">Grouper, White Blotched</string>
+	<string name="Epinephelus_aeneus">Grouper, White</string>
+	<string name="Hippoglossus_hippoglossus">Halibut, Atlantic</string>
+	<string name="Paralichthys_californicus">Halibut, California</string>
+	<string name="Seriola_rivoliana">Jack, Almaco</string>
+	<string name="Caranx_lugubris">Jack, Black</string>
+	<string name="Caranx_hippos">Jack, Crevalle</string>
+	<string name="Caranx_caninus">Jack, Crevalle, Pacific</string>
+	<string name="Caranx_crysos">Blue runner</string>
+	<string name="Seriola_peruana">Jack, Fortune</string>
+	<string name="Caranx_latus">Jack, Horse-Eye</string>
+	<string name="Caranx_fischeri">Jack, Longfin Crevalle</string>
+	<string name="Caranx_bartholomaei">Jack, Yellow</string>
+	<string name="Lichia_amia">Leerfish</string>
+	<string name="Lichia_stella">Leerfish minor</string>
+	<string name="Hippoglossus_stenolepis">Halibut, Pacific</string>
+
+	<string name="Umbrina_cirrosa">Shi drum</string>
+	<string name="Weever">Weever</string>
+	<string name="Sparisoma_cretense">Parrotfish (all species)</string>
+	<string name="Pollachius_pollachius">Pollack</string>
+	<string name="Pagrus_pagrus">Red porgy, common seabream</string>
+	<string name="Pagrus_auratus">Australasian snapper, silver seabream</string>
+	<string name="Oblada_melanura">Saddled seabream</string>
+	<string name="Dicentrarchus_labrax">Seabass, European</string>
+	<string name="Sparus_aurata">Seabream, Gilthead</string>
+	<string name="Diplodus_puntazzo">Sharpsnout Seabream</string>
+	<string name="Diplodus_sargus">Sargo, white seabream</string>
+	<string name="Diplodus_vulgaris">Two-banded seabream</string>
+	<string name="Lithognathus_mormyrus">Sand steenbras</string>
+	<string name="Zeus_faber">John Dory, Peter\'s Fish</string>
+	<string name="Symphodus_melops">Corkwing wrasse</string>
+	<string name="Phycis_phycis">Forkbeard</string>
+	<string name="Polyprion_americanus">Atlantic wreckfish</string>
+
+	<!-- END FISH-->
+
+	<string name="welcome">Hello spearo</string>
+	<string name="add_catch">Add fish</string>
+	<string name="save_session">Save</string>
+	<string name="catch_time">Time of catch</string>
+	<string name="new_session">Insert new</string>
+	<string name="confirm">Confirm</string>
+	<string name="skip">Skip</string>
+	<string name="cancel">Cancel</string>
+	<string name="save">Save</string>
+	<string name="go_premium">Go premium</string>
+	<string name="fish">fish</string>
+	<string name="fishes">fish</string>
+	<string name="marker_text">the place</string>
+	<string name="fola">Bummer! No fish</string>
+	<string name="confirm_fola">Yes, save</string>
+	<string name="alert_confirm_fola_header">Confirm your bad luck..</string>
+	<string name="session_date">When did you go?</string>
+	<string name="session_location">Where did you go fishing?</string>
+	<string name="map_selection_hint">Press and hold to select</string>
+	<string name="map_only_you">(Visible only by you)</string>
+	<string name="no_fish_selected">Please select at least 1 fish</string>
+
+	<string name="username_hint">desired username</string>
+
+	<string name="error">Something went wrong..</string>
+
+	<string name="delete">delete</string>
+
+	<string name="network_error">Please check your internet connectivity</string>
+
+	<string name="cancel_session_entry">Discard</string>
+	<string name="cancel_session_entry_alert">Cancel and return to main page?</string>
+	<string name="yes">Yes</string>
+	<string name="no">No</string>
+	<string name="on">on</string>
+
+	<string name="premium_info">With just a small fee, you can have access to the global SpearoStats!
+        Apart from having your personal stats available, you can retrieve average statistics among the spearo community.
+        Average depth, average weight, total catches worldwide and the best time window for hunting every species.
+        Subscribe and enjoy our info on %1$d fish species!</string>
+
+	<string name="defaultUsername">Spearo</string>
+
+	<string name="record_entry_attempt_alert"> The weight you are trying to enter is a new record attempt! Good job, but you need to apply for a new record, verify and come back when we have updated our entries with the new record: </string>
+
+	<string name="features_missing">You cannot use all features!</string>
+
+	<string name="jan">Jan</string>
+	<string name="feb">Feb</string>
+	<string name="mar">Mar</string>
+	<string name="apr">Apr</string>
+	<string name="may">May</string>
+	<string name="jun">Jun</string>
+	<string name="jul">Jul</string>
+	<string name="aug">Aug</string>
+	<string name="sep">Sep</string>
+	<string name="oct">Oct</string>
+	<string name="nov">Nov</string>
+	<string name="dec">Dec</string>
+
+	<string name="mon">Mon</string>
+	<string name="tue">Tue</string>
+	<string name="wed">Wed</string>
+	<string name="thu">Thu</string>
+	<string name="fri">Fri</string>
+	<string name="sat">Sat</string>
+	<string name="sun">Sun</string>
+
+	<string name="no_address">No address</string>
+
+	<string name="Metric">Metric (Meters and Kg)</string>
+	<string name="Imperial">Imperial (Feet and Lbs)</string>
+	<string name="no_date">No date set</string>
+
+	<string name="email_us">email us</string>
+
+	<string name="frg_fishing_sessions">This is the place to store your fishing trip sessions! Begin a new session by clicking the round icon at the bottom right of the screen and start entering the required info. Date (required), Place (optional) and finally Fish catches. The place is only visible by you and will be used to draw it on the map for you to navigate to.</string>
+	<string name="frg_personal_stats">Here you can see your personal stats per fish species. Your total catches and average values for depth and weight are calculated. Also the best catch hour for summer or winter is extracted from your saved catches.</string>
+	<string name="frg_global_stats">The global SpearoStats are available here for a small fee. Total catches, average depth and weight per species are unlocked. Best catch hour for summer or winter is calculated among all SpearoStats community data.</string>
+	<string name="frg_my_places">Here you can see the map representation of your fishing trips! Click on any marker and you can see information about your catches, or easily navigate with Google maps to that location again.</string>
+
+	<string name="email_subject">Dear SpearoStats</string>
+	<string name="email_text">Hello SpearoStats, I would like..</string>
+	<string name="email_spearo">spearoStats@gmail.com</string>
+	<string name="email_chooser_title">Choose desired program</string>
+
+
+	<string name="least_concern">is of least survival concern</string>
+	<string name="conservation_dependent">is under conservation program</string>
+	<string name="near_threatened">is near threatened</string>
+	<string name="vulnerable">species is vulnerable for survival</string>
+	<string name="endangered">species is endangered</string>
+	<string name="critically_endangered">species is critically endangered for survival</string>
+
+	<string name="nighly_attempt_alert">Your input time indicates night activity. Although it is allowed in some places, we do not track those catches. Sorry!</string>
+	<string name="catch_hour_not_known">Don\' know catch time</string>
+
+	<string name="session_image">Do you want to add an image for your fishing session?</string>
+
+	<string name="select_wind">Wind information</string>
+
+	<string name="grid_new_moon">New</string>
+	<string name="grid_waxing_crescent">Crescent+</string>
+	<string name="grid_first_quarter">Half+</string>
+	<string name="grid_waxing_gibbous">Gibbous+</string>
+	<string name="grid_full_moon">Full</string>
+	<string name="grid_waning_gibbous">Gibbous-</string>
+	<string name="grid_last_quarter">Half-</string>
+	<string name="grid_waning_crescent">Crescent-</string>
+
+	<string name="new_moon">New moon</string>
+	<string name="waxing_crescent">Waxing crescent</string>
+	<string name="first_quarter">First quarter</string>
+	<string name="waxing_gibbous">Waxing gibbous</string>
+	<string name="full_moon">Full moon</string>
+	<string name="waning_gibbous">Waning gibbous</string>
+	<string name="last_quarter">Last quarter</string>
+	<string name="waning_crescent">Waning crescent</string>
+
+	<string name="wind_direction">Wind direction</string>
+	<string name="wind_volume">speed</string>
+	<string name="not_known">not known</string>
+
+	<string name="no_wind">No wind</string>
+	<string name="wind_north">N</string>
+	<string name="wind_south">S</string>
+	<string name="wind_east">E</string>
+	<string name="wind_west">W</string>
+	<string name="wind_north_east">NE</string>
+	<string name="wind_north_west">NW</string>
+	<string name="wind_south_east">SE</string>
+	<string name="wind_south_west">SW</string>
+
+	<string name="no_wind_full">Air still</string>
+	<string name="wind_north_full">North</string>
+	<string name="wind_south_full">South</string>
+	<string name="wind_east_full">East</string>
+	<string name="wind_west_full">West</string>
+	<string name="wind_north_east_full">Northeast</string>
+	<string name="wind_north_west_full">Northwest</string>
+	<string name="wind_south_east_full">Southeast</string>
+	<string name="wind_south_west_full">Southwest</string>
+
+</resources>

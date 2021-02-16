@@ -1,0 +1,81 @@
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    app:cardCornerRadius="@dimen/eight"
+    android:layout_margin="@dimen/one"
+    >
+
+        <ImageView
+            android:id="@+id/fishingSessionRowIcon"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/one_hundred_fifty"
+            android:scaleType="fitXY"
+            />
+
+     <RelativeLayout
+         android:layout_gravity="bottom"
+         android:background="@color/primary_grey_trans"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
+         android:paddingEnd="@dimen/four"
+         android:paddingBottom="@dimen/four"
+         android:paddingStart="@dimen/four"
+        >
+
+         <View
+             android:id="@+id/topView"
+             android:layout_width="match_parent"
+             android:layout_height="@dimen/one"
+             android:background="@color/colorAccent"
+             android:layout_alignParentTop="true"
+             android:layout_marginBottom="@dimen/four"/>
+         
+         
+    <TextView
+        android:id="@+id/sessionCatchesNumText"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/topView"
+        app:drawableStartCompat="@drawable/fish_22"
+       style="@style/gridTextView"
+         />
+
+             <TextView
+                 android:id="@+id/sessionDateText"
+                 android:layout_below="@+id/topView"
+                 android:layout_alignParentEnd="true"
+                 app:drawableEndCompat="@drawable/calendar_22"
+                style="@style/gridTextView" />
+
+         <com.cj.videoprogressview.LightProgressView
+             android:layout_alignParentBottom="true"
+             android:layout_alignParentStart="true"
+             android:layout_below="@+id/sessionCatchesNumText"
+             android:id="@+id/moon_percentage"
+             android:background="@android:color/transparent"
+             android:layout_width="@dimen/fifteen"
+             android:layout_height="@dimen/fifteen"
+             app:lpv_halo_color="@android:color/transparent"
+             app:lpv_moon_color="@android:color/white"
+             app:lpv_halo_height="0dp"
+             app:lpv_halo_width="0dp"/>
+
+           <!--  <TextView
+                 android:id="@+id/sessionMoonPhaseText"
+                 android:layout_below="@+id/sessionCatchesNumText"
+                 android:layout_toEndOf="@+id/moon_percentage"
+                 android:layout_alignParentBottom="true"
+                 style="@style/gridTextView" />-->
+
+             <TextView
+                 android:id="@+id/sessionWindText"
+                 app:drawableEndCompat="@drawable/wind_22"
+                 android:layout_below="@+id/sessionDateText"
+                 android:layout_alignParentBottom="true"
+                 android:layout_alignParentEnd="true"
+                 style="@style/gridTextView" />
+
+</RelativeLayout>
+</androidx.cardview.widget.CardView>

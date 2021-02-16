@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:id="@+id/bottomButtons"
+              android:orientation="vertical"
+              android:layout_gravity="bottom"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:background="@color/primary_grey"
+        >
+
+    <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="match_parent">
+        <LinearLayout
+                android:id="@+id/btn_fishing_sessions"
+                style="@style/BottomTab">
+            <ImageView
+                    android:src="@drawable/target_50"
+                    style="@style/BottomTabImage"/>
+            <TextView
+                    android:text="@string/button_sessions"
+                    style="@style/BottomTabText"/>
+        </LinearLayout>
+        <LinearLayout
+                android:id="@+id/btn_fishing_stats"
+                style="@style/BottomTab">
+            <ImageView
+                    android:src="@drawable/stats"
+                    style="@style/BottomTabImage"/>
+            <TextView
+                    android:text="@string/button_stats"
+                    style="@style/BottomTabText"/>
+        </LinearLayout>
+        
+        <LinearLayout
+                android:id="@+id/btn_fishing_stats_global"
+                style="@style/BottomTab">
+            <ImageView
+                    android:src="@drawable/globe_50"
+                    style="@style/BottomTabImage"/>
+            <TextView
+                    android:text="@string/button_stats_global"
+                    style="@style/BottomTabText"/>
+        </LinearLayout>
+        
+       <!--  <LinearLayout
+                android:id="@+id/btn_fish"
+                style="@style/BottomTab">
+            <ImageView
+                    android:src="@drawable/blue_fish"
+                    style="@style/BottomTabImage"/>
+            <TextView
+                    android:text="@string/button_fish"
+                    style="@style/BottomTabText"/>
+        </LinearLayout>-->  
+        
+         <LinearLayout
+                android:id="@+id/btn_map"
+                style="@style/BottomTab">
+            <ImageView
+                    android:src="@drawable/map_50"
+                    style="@style/BottomTabImage"/>
+            <TextView
+                    android:text="@string/button_map"
+                    style="@style/BottomTabText"/>
+        </LinearLayout>
+
+       
+    </LinearLayout>
+
+</LinearLayout>

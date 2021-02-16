@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ViewFlipper xmlns:android="http://schemas.android.com/apk/res/android"
+	android:id="@+id/fishing_sessions_flipper"
+	android:orientation="vertical"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	android:clickable="true"
+	android:focusable="true"
+	android:focusableInTouchMode="true"
+	>
+
+	<!-- 0.  Fishing sessions displayed -->
+
+	<include layout="@layout/existing_sessions_gridview_layout"/>
+
+	<!-- 1. New fishing session here  -->
+
+	<include layout="@layout/insert_new_session_layout"/>
+
+	<!-- 2. when no sessions yet  -->
+
+	<include layout="@layout/no_sessions_yet_layout"/>
+
+	<!-- 3. MAP -->
+
+	<LinearLayout
+		android:orientation="vertical"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		>
+
+		<LinearLayout
+			android:padding="@dimen/four"
+			android:orientation="horizontal"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content">
+			<Button
+				style="@style/buttonStyle"
+				android:layout_gravity="top"
+				android:layout_marginEnd="@dimen/four"
+				android:layout_width="@dimen/zero"
+				android:layout_weight="1"
+				android:text="@string/skip"
+				android:id="@+id/button_delete_location"
+				/>
+			<Button
+				style="@style/buttonStyle"
+				android:layout_gravity="top"
+				android:layout_width="@dimen/zero"
+				android:layout_weight="1"
+				android:text="@string/confirm"
+				android:id="@+id/button_confirm_location"
+				/>
+		</LinearLayout>
+
+		<androidx.cardview.widget.CardView
+			android:layout_margin="@dimen/four"
+			android:background="@color/white_back_pressed"
+			android:orientation="horizontal"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content">
+
+			<fragment android:id="@+id/autocomplete_fragment"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:name="com.google.android.libraries.places.widget.AutocompleteSupportFragment"
+				/>
+
+		</androidx.cardview.widget.CardView>
+
+		<include layout="@layout/map_layout"/>
+	</LinearLayout>
+
+</ViewFlipper>

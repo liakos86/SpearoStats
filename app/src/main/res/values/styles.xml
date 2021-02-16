@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <style name="BottomTab">
+        <item name="android:layout_weight">1</item>
+        <item name="android:background">@drawable/bottom_button_background</item>
+        <item name="android:layout_width">@dimen/zero</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:orientation">vertical</item>
+    </style>
+
+    <style name="BottomTabImage">
+        <item name="android:layout_marginTop">6dp</item>
+        <item name="android:layout_height">@dimen/zero</item>
+        <item name="android:layout_weight">0.5</item>
+        <item name="android:layout_width">match_parent</item>
+    </style>
+
+    <style name="BottomTabText">
+        <item name="android:textColor">@color/white_back</item>
+        <item name="android:layout_weight">0.5</item>
+        <item name="android:gravity">center</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:textSize">@dimen/ten_sp</item>
+        <item name="android:layout_height">@dimen/zero</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+    
+    <style name="rowTextView">
+        <item name="android:textColor">@color/primary_grey</item>
+        <item name="android:gravity">start</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:textSize">@dimen/fifteen_sp</item>
+        <item name="android:drawablePadding">@dimen/four</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:ellipsize">end</item>
+        
+    </style>
+
+    <style name="gridTextView">
+        <item name="android:textColor">@color/white_back</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:layout_height">@dimen/fifteen</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:textSize">@dimen/ten_sp</item>
+        <item name="android:drawablePadding">@dimen/two</item>
+        <item name="android:singleLine">true</item>
+    </style>
+
+    <style name="buttonStyle">
+        <item name="android:textAllCaps">false</item>
+        <item name="android:background">@drawable/button_selector</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/white_back</item>
+        <item name="android:textSize">@dimen/fifteen_sp</item>
+        <item name="android:layout_height">@dimen/standard_view_height</item>
+        <item name="android:ellipsize">end</item>
+         <item name="android:singleLine">true</item>
+    </style>
+    
+    <style name="buttonStyleTall">
+        <item name="android:textAllCaps">false</item>
+        <item name="android:background">@drawable/button_selector</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/white_back</item>
+        <item name="android:textSize">@dimen/fifteen_sp</item>
+        <item name="android:layout_height">@dimen/eighty</item>
+        <item name="android:ellipsize">end</item>
+         <item name="android:singleLine">true</item>
+    </style>
+    
+      <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/interval_blue</item>
+        <item name="colorPrimaryDark">@color/interval_blue_pressed</item>
+        <item name="colorAccent">@color/colorAccent</item>
+    </style>
+
+    <style name="AppTheme.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+        <item name="android:background">@android:color/transparent</item>
+        <item name="android:typeface">monospace</item>
+        <item name="android:fontFamily">@font/nexa</item>
+    </style>
+
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+    
+    
+    <style name="CustomProgressBarHorizontal" parent="android:Widget.ProgressBar.Horizontal">
+          <item name="android:progressDrawable">@drawable/custom_progress_bar_horizontal_new</item>
+          <item name="android:minHeight">@dimen/twelve_sp</item>
+          <item name="android:maxHeight">@dimen/twelve_sp</item>
+	</style>
+	
+    <style name="spinnerItemStyle" parent="android:Widget.TextView.SpinnerItem">
+</style>
+
+<style name="spinnerDropDownItemStyle" parent="android:TextAppearance.Widget.TextView.SpinnerItem">
+	</style>
+</resources>

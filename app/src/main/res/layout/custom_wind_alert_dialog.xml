@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:orientation="vertical">
+        
+     <TextView 
+         android:padding="@dimen/twelve"
+         android:text="@string/select_wind"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/sixty_four"
+        android:gravity="center_vertical"
+        android:background="@color/colorAccent"
+        
+        android:textColor="@color/white_back"
+        android:textSize="@dimen/fifteen_sp"
+        android:textStyle="bold"
+        android:singleLine="true"
+        android:ellipsize="end"
+        />
+
+     <LinearLayout
+         android:layout_width="match_parent"
+         android:layout_height="wrap_content">
+
+     <Spinner
+         android:layout_weight="3"
+        android:id="@+id/spinner_wind"
+        android:layout_width="@dimen/zero"
+        android:layout_height="wrap_content"
+        android:drawSelectorOnTop="true" />
+
+          <Spinner
+              android:layout_weight="2"
+              android:id="@+id/spinner_wind_volume"
+              android:layout_width="@dimen/zero"
+              android:layout_height="wrap_content"
+              android:drawSelectorOnTop="true" />
+
+     </LinearLayout>
+   
+</LinearLayout>

@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/parent_layout"
+    android:background="@color/primary_grey"
+    android:padding="@dimen/eight"
+   >
+   
+    <RelativeLayout android:layout_width="match_parent"
+        android:layout_height="@dimen/two_hundred"
+        android:id="@+id/layoutProfilePic">
+    
+        <ProgressBar
+            android:id="@+id/progressBarProfilePic"
+            android:layout_width="wrap_content"
+            android:visibility="gone"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            />
+        
+         <ImageView 
+             android:layout_alignParentTop="true"
+        android:id="@+id/imageViewChangePic"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/two_hundred"
+        android:scaleType="fitXY"
+        android:clickable="true"
+        />
+        
+    <ImageView 
+        android:src="@drawable/pencil"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_margin="@dimen/ten"
+        android:id="@+id/pencil"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        />
+    
+    </RelativeLayout>
+    
+    <LinearLayout android:layout_below="@+id/layoutProfilePic"
+        android:id="@+id/userNameLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/eight"
+       >
+        
+     <EditText
+         android:layout_weight="1"
+          android:gravity="center_vertical"
+          android:padding="@dimen/four"
+        android:id="@+id/editTextUsername"
+        android:background="@drawable/edit_text_back"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/standard_view_height"
+        android:hint="@string/username_hint"
+        android:layout_marginEnd="@dimen/four"
+        android:singleLine="true" />
+      
+     
+     <RelativeLayout 
+    		    android:layout_width="0dp"
+    		    android:layout_weight="1"
+        android:layout_height="@dimen/standard_view_height">
+    		
+    	<ProgressBar
+            android:layout_width="match_parent"
+            android:visibility="gone"
+            android:layout_height="@dimen/standard_view_height"
+            android:id="@+id/settingsProgressBar"
+            />
+    
+    	<Button  
+                style="@style/buttonStyle"
+                android:text="@string/save_username"
+                android:layout_width="match_parent"
+                android:id="@+id/button_save_username"
+                />
+    
+    </RelativeLayout>
+     </LinearLayout>
+     
+     
+     <LinearLayout android:layout_below="@+id/userNameLayout"
+        android:id="@+id/requestFishLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/eight"
+        >
+        
+     <EditText
+         android:layout_weight="1"
+         android:padding="@dimen/four"
+         android:layout_marginEnd="@dimen/four"
+         android:gravity="center_vertical"
+        android:id="@+id/editTextRequestFish"
+        android:background="@drawable/edit_text_back"
+        android:layout_width="0dp"
+        android:singleLine="true"
+        android:layout_height="@dimen/standard_view_height"
+        android:hint="@string/request_hint" />
+      
+      	<Button  style="@style/buttonStyle"
+              android:layout_weight="1"
+                android:layout_width="0dp"
+                android:text="@android:string/ok"
+                android:id="@+id/button_request_fish"
+                />
+     
+     </LinearLayout>
+     
+   
+     
+    <CheckBox
+        android:layout_below="@+id/requestFishLayout"
+        android:id="@+id/checkbox_metric_imperial"
+        android:paddingStart="@dimen/twenty"
+        android:paddingEnd="@dimen/twenty"
+        android:drawablePadding="@dimen/ten"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/eighty"
+        android:background="@drawable/checkbox_selector"
+        android:button="@drawable/checkbox_sound_design"
+        android:gravity="center"
+        android:layout_gravity="center"
+        android:textSize="@dimen/eighteen_sp"
+        android:textColor="@color/white_back"
+        android:layout_marginBottom="@dimen/eight" />
+    
+    <!-- <TextView 
+          android:id="@+id/metricExpl"
+          android:layout_below="@+id/checkbox_metric_imperial"
+          android:textColor="@color/white_back"
+        android:layout_marginTop="@dimen/eight"
+        android:layout_width="match_parent" 
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/twelve_sp" 
+        android:text="@string/metric_explained"/> -->  
+      
+      
+
+      
+    <!--     <Spinner  
+        android:id="@+id/spinnerLanguage"
+        
+        android:layout_below="@+id/checkbox_metric_imperial"  
+        android:layout_width="match_parent"  
+        android:layout_height="wrap_content"  
+        android:layout_marginBottom="@dimen/eight"  
+        android:background="@android:color/transparent"
+        />-->    
+    
+      
+      <TextView android:layout_above="@+id/icons8text"
+              android:layout_centerHorizontal="true"
+              android:textColor="@color/white_back"
+              android:text="@string/email_us"
+              android:drawableTop="@drawable/email_us"
+              android:textSize="@dimen/fifteen_sp"
+              android:id="@+id/text_email_us"
+              android:layout_width="wrap_content"
+              android:clickable="true"
+              android:layout_height="wrap_content"
+              android:layout_marginBottom="@dimen/twelve"/>
+      
+      
+       <TextView android:layout_above="@+id/button_return_to_main"
+              android:layout_centerHorizontal="true"
+              android:textColor="@color/white_back"
+              android:textSize="@dimen/eight_sp"
+              android:id="@+id/icons8text"
+              android:layout_width="wrap_content"
+              android:clickable="true"
+              android:layout_height="wrap_content"
+              android:layout_marginBottom="@dimen/eight"/>
+      
+      
+      
+          <Button  style="@style/buttonStyle"
+              android:layout_alignParentBottom="true"
+                android:layout_width="match_parent"
+                android:text="@android:string/ok"
+                android:id="@+id/button_return_to_main"
+                />
+   
+
+</RelativeLayout>

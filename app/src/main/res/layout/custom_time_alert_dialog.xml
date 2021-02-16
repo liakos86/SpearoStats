@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+    
+     <TextView 
+         android:id="@+id/catchTimeText"
+         android:padding="@dimen/twelve"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/sixty_four"
+        android:gravity="center_vertical"
+        android:background="@color/colorAccent"
+        android:textColor="@color/white_back"
+        android:textSize="@dimen/eighteen_sp"
+        android:textStyle="bold"
+        android:singleLine="true"
+        android:ellipsize="end"
+        />
+    
+  <!-- <TextView android:id="@+id/catchTimeText"
+        android:background="@color/colorAccent"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/standard_view_height"
+        android:textColor="@color/white_back"
+        android:textStyle="bold"
+        android:textSize="@dimen/twenty_sp"
+        />
+ -->      
+   
+    
+    <TimePicker
+        android:id="@+id/catchTimePicker"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:timePickerMode="spinner" />
+
+</LinearLayout>

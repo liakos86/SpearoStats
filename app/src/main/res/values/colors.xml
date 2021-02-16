@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="primary_grey">#333333</color>
+    <color name="secondary_grey">#545454</color>
+    <color name="primary_grey_trans">#E6333333</color>
+    <color name="semitrans_green">#90e6</color>
+    <color name="white_back_pressed">#dbd7d7</color>
+    <color name="white_back">#f6f5f5</color>
+    <color name="interval_red">#c0392b</color>
+    <color name="interval_red_pressed">#e74c3c</color>
+    <color name="interval_red_transparent">#33c0392b</color>
+    <color name="interval_red_transparent_pressed">#CCe74c3c</color>
+    <color name="interval_blue">#2980b9</color>
+    <color name="interval_blue_pressed">#3498db</color>
+
+    <!-- <color name="colorAccent_pressed">#F90354</color>
+      <color name="colorAccent">#FF4081</color>  -->
+
+
+    <color name="colorAccent">#ED97A0</color>
+    <color name="colorAccent_pressed">#FF4081</color>
+
+</resources>

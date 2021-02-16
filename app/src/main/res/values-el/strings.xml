@@ -1,0 +1,268 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+	<string name="map_search_hint">Αναζητήστε το μέρος εδώ</string>
+
+	<string name="legend_info">Όνομα</string>
+	<string name="legend_family">Οικογένεια</string>
+	<string name="legend_record">Προσωπικό ρεκόρ</string>
+	<string name="legend_world_record">Παγκόσμιο ρεκόρ</string>
+	<string name="legend_summer">Καλύτερη καλοκαιρινή ώρα</string>
+	<string name="legend_winter">Καλύτερη χειμερινή ώρα</string>
+	<string name="legend_weight">Μέσο βάρος</string>
+	<string name="legend_depth">Μέσο βάθος</string>
+	<string name="legend_num">Συνολικές συλλήψεις</string>
+
+	<string name="app_store_try_later">Προέκυψε ένα σφάλμα στο app-store, δοκιμάστε ξανά</string>
+	<string name="app_name">SpearoStats</string>
+	<string name="action_settings">Ρυθμίσεις</string>
+	<string name="close">Κλείσιμο</string>
+	<string name="exit">Έξοδος</string>
+	<string name="delete_session_entry_alert">Είστε σίγουροι πως θέλετε να διαγράψετε αυτή την ψαριά σας;</string>
+	<string name="username">Όνομα χρήστη</string>
+	<string name="success_username">Το όνομα χρήστη άλλαξε με επιτυχία</string>
+	<string name="save_username">Αλλαγή ονόματος</string>
+	<string name="request_hint">Ζητήστε ένα ψάρι</string>
+	<string name="request_sent">Το αίτημά σας καταχωρήθηκε. Ευχαριστούμε!</string>
+	<string name="request_length">Το όνομα πρέπει να είναι μεταξύ 5 και 20 χαρακτήρων</string>
+
+	<string name="no_catch_data">χωρίς δεδομένα σύλληψης</string>
+	<string name="invalid_length">Ελέγξτε το μήκος του ονόματος ή του κωδικού</string>
+	<string name="confirm_catches">Επιβεβαιώστε τα παρακάτω</string>
+
+	<string name="select_location">Κρατήστε πατημένο για επιλογή τοποθεσίας</string>
+	<string name="prof_pic_cannot_change">Δεν μπορεί να αλλάξει η φωτογραφία σας</string>
+	<string name="pic_cannot_be_added">Δεν προστέθηκε φωτογραφία</string>
+
+	<string name="weightMetric">Βάρος Κιλά</string>
+	<string name="depthMetric">Βάθος Μέτρα</string>
+	<string name="weightImperial">Βάρος Λίβρες</string>
+	<string name="depthImperial">Βάθος Πόδια</string>
+
+	<string name="change_profile_pic">πατήστε για αλλαγή</string>
+
+	<string name="metric_explained">* Metric = Μέτρηση σε κιλά, μέτρα / Imperial = μέτρηση σε pounds, πόδια</string>
+
+
+	<string name="welcome">Γειά σου ψαρά</string>
+	<string name="no_fish_selected">Επιλέξτε τουλάχιστον 1 ψάρι</string>
+	<string name="no_fish_name_selected">Επιλέξτε ψάρι γράφοντας στο πρώτο πεδίο</string>
+
+	<string name="depth">Βάθος</string>
+	<string name="added">προστέθηκε</string>
+	<string name="fill_all">Συμπληρώστε όλα τα πεδία</string>
+	<string name="button_sessions">Ημερολόγιο</string>
+	<string name="button_stats">Στατιστικά</string>
+	<string name="button_map">Τα μέρη μου</string>
+	<string name="button_stats_global">Συνολικά</string>
+	<string name="press_for_more">πατήστε για λεπτομέρειες&#8230;</string>
+
+	<string name="prey">Θήραμα: </string>
+
+
+	<string name="search_hint">π.χ \'Μαγιάτικο\'</string>
+	<string name="username_hint">επιθυμητό όνομα (έως 16 χαρακτήρες)</string>
+
+	<!-- FISH -->
+	<string name="Argyrosomus_regius">Κρανιός</string>
+
+	<string name="Balistes_capriscus">Βαλιστής, γουρουνόψαρο</string>
+	<string name="Boops_boops">Γόπα</string>
+
+	<string name="Caranx_crysos">Σούρος, τραχούρι (Blue runner)</string>
+	<string name="Coryphaena_hippurus">Κυνηγός / Mahi mahi</string>
+	<string name="Conger_conger">Μουγγρί</string>
+	<string name="Caranx_hippos">Αλογοκοκκάλι</string>
+
+	<string name="Seriola_dumerili">Μαγιάτικο</string>
+	<string name="Seriola_fasciata">Μανάλι</string>
+	<string name="Lophius_piscatorius">Πεσκαντρίτσα</string>
+	<string name="Sphyraena_sphyraena">Λούτσος, Ευρωπαϊκό μπαρακούντα</string>
+	<string name="Sciaena_umbra">Σηκιός, Παντελής</string>
+	<string name="Salema_porgy">Σάλπα, σάρπα</string>
+	<string name="Spondyliosoma_cantharus">Σκαθάρι</string>
+
+	<string name="Mullus">Μπαρμπούνι</string>
+	<string name="Mugil_cephalus">Κέφαλος (όλα τα είδη)</string>
+	<string name="Muraena_helena">Σμέρνα</string>
+	<string name="Morone_saxatilis">Γραμμωτό λαβράκι</string>
+	<string name="Mycteroperca_rubra">Πίγγα</string>
+
+	<string name="Scorpaena_scrofa">Σκορπίνα</string>
+	<string name="Pterois">Λεοντόψαρο</string>
+	<string name="Weever">Δράκαινα</string>
+	<string name="Uranoscopus_scaber">Λύχνος</string>
+	<string name="Pomatomus_saltatrix">Γοφάρι</string>
+	<string name="Sarda_sarda">Παλαμίδα (Λακέρδα)</string>
+	<string name="Gadus_morhua">Βακαλάος/Μπακαλιάρος Ατλαντικού</string>
+	<string name="Gadus_macrocephaleus">Βακαλάος/Μπακαλιάρος Ειρηνικού</string>
+	<string name="Dentex_dentex">Συναγρίδα</string>
+	<string name="Dentex_gibbosus">Τσαουσάς (Κορωνάτο φαγκρί)</string>
+	<string name="Pogonias_cromis">Μαύρο μυλοκόπι</string>
+	<string name="Epinephelus_marginatus">Ροφός</string>
+	<string name="Epinephelus_costae">Στήρα</string>
+	<string name="Epinephelus_aeneus">Σφυρίδα</string>
+	<string name="Lichia_amia">Λίτσα</string>
+	<string name="Lichia_stella">Λιτσομελάνουρο</string>
+	<string name="Euthynnus_alletteratus">Τονάκι, ντάσκα</string>
+	<string name="Umbrina_cirrosa">Μυλοκόπι</string>
+	<string name="Sparisoma_cretense">Σκάρος</string>
+	<string name="Pagrus_pagrus">Φαγκρί</string>
+	<string name="Oblada_melanura">Μελανούρι</string>
+	<string name="Dicentrarchus_labrax">Λαβράκι</string>
+	<string name="Sparus_aurata">Τσιπούρα</string>
+	<string name="Diplodus_puntazzo">Ούγενα</string>
+	<string name="Diplodus_sargus">Σαργός</string>
+	<string name="Diplodus_vulgaris">Κακαρέλος, καμπανάς</string>
+	<string name="Lithognathus_mormyrus">Μουρμούρα</string>
+	<string name="Zeus_faber">Χριστόψαρο</string>
+	<string name="Symphodus_melops">Λαπίνα</string>
+	<string name="Phycis_phycis">Σαλούβαρδος, ποντικόψαρο</string>
+	<string name="Polyprion_americanus">Βλάχος</string>
+
+	<!-- END FISH -->
+
+	<string name="add_catch">Στην ψαροβελόνα</string>
+	<string name="save_session">Σώσε</string>
+	<string name="catch_time">Ώρα σύλληψης</string>
+	<string name="confirm">Επιβεβαίωση</string>
+	<string name="skip">Παράβλεψη</string>
+	<string name="cancel">Ακύρωση</string>
+	<string name="new_session">Νέο ψάρεμα</string>
+	<string name="save">Αποθήκευση</string>
+	<string name="go_premium">Αγορά</string>
+	<string name="fish">ψάρι</string>
+	<string name="fishes">ψάρια</string>
+	<string name="marker_text">Ψάρεψα εδώ</string>
+	<string name="fola">Έφαγα φόλα..</string>
+	<string name="confirm_fola">Σώσε τη φόλα</string>
+	<string name="alert_confirm_fola_header">Επιβεβαίωσε τη γκαντεμιά..</string>
+	<string name="session_date">Πότε πήγατε;</string>
+	<string name="session_location">Πού πήγατε;</string>
+	<string name="map_selection_hint">Κρατήστε πατημένο για επιλογή τόπου</string>
+	<string name="map_only_you">(Ορατό μόνο από εσάς)</string>
+
+	<string name="delete">διαγραφή</string>
+	<string name="error">Κάτι πήγε στραβά..</string>
+
+	<string name="network_error">Παρακαλώ ελέγξτε τη σύνδεσή σας στο internet</string>
+
+	<string name="cancel_session_entry">Ακύρωση</string>
+
+	<string name="cancel_session_entry_alert">Ακύρωση και επιστροφή στην κεντρική σελίδα;</string>
+	<string name="yes">Ναι</string>
+	<string name="no">Όχι</string>
+	<string name="on">στις</string>
+
+	<string name="premium_info">Με ένα μικρό αντίτιμο μπορείτε πλέον να αποκτήσετε πρόσβαση στα συνολικά δεδομένα της κοινότητας του SpearoStats!
+        Εκτός από τα προσωπικά σας δεδομένα, έχετε πρόσβαση σε πληροφορίες όπως: Οι συνολικές συλλήψεις, το μέσο βάρος και βάθος ανά σύλληψη, καθώς και τη βέλτιστη ώρα για το κυνήγι κάθε είδους, σύμφωνα με τα συνολικά δεδομένα της κοινότητας. Εγγραφείτε και αποκτήστε πρόσβαση σε δεδομένα %1$d ειδών!
+         </string>
+
+	<string name="defaultUsername">Spearo</string>
+
+	<string name="record_entry_attempt_alert"> Το βάρος που καταχωρήσατε συνιστά νέο ρεκόρ! Συγχαρητήρια, όμως για να γίνει αποδεκτό πρέπει να καταχωρήσετε επίσημα αυτή την επίδοσή σας και να επιστρέψετε για την καταγραφή μόλις τα δεδομένα ενημερωθούν με το νέο ρεκόρ: </string>
+
+
+	<string name="features_missing">Δεν μπορείτε να κάνετε χρήση όλων των δυνατοτήτων!</string>
+
+	<string name="jan">Ιάν</string>
+	<string name="feb">Φεβ</string>
+	<string name="mar">Μάρ</string>
+	<string name="apr">Απρ</string>
+	<string name="may">Mάι</string>
+	<string name="jun">Ιού</string>
+	<string name="jul">Ιού</string>
+	<string name="aug">Aύγ</string>
+	<string name="sep">Σεπ</string>
+	<string name="oct">Οκτ</string>
+	<string name="nov">Νοέ</string>
+	<string name="dec">Δεκ</string>
+
+	<string name="mon">Δευ</string>
+	<string name="tue">Τρί</string>
+	<string name="wed">Τετ</string>
+	<string name="thu">Πέμ</string>
+	<string name="fri">Παρ</string>
+	<string name="sat">Σάβ</string>
+	<string name="sun">Κυρ</string>
+
+	<string name="icons8">
+        <a href="https://icons8.com/register/?key=Qdg6">Icons powered by Icons8</a>
+    </string>
+
+	<string name="email_us">στείλε μας μήνυμα</string>
+
+	<string name="no_address">Χωρίς διεύθυνση</string>
+
+	<string name="Metric">Metric (Μέτρα/κιλά)</string>
+	<string name="Imperial">Imperial (Πόδια/λίβρες)</string>
+	<string name="no_date">Χωρίς ημερομηνία</string>
+
+	<string name="frg_fishing_sessions">Σε αυτή την οθόνη μπορείτε να αποθηκεύσετε τις ψαρευτικές σας εκδρομές! Ξεκινήστε μια νέα καταχώρηση επιλέγοντας το κυκλικό εικονίδιο κάτω δεξιά. Καταχωρήστε όλες τις πληροφορίες της εκδρομής σας: Ημερομηνία (υποχρεωτικό), τοποθεσία (προαιρετικό) και τέλος τα θηράματά σας. Η τοποθεσία είναι ορατή μόνο από εσάς και χρησιμοποιείται για να σχεδιαστεί στο χάρτη ώστε να ταξιδέψετε ξανά όποτε το επιθυμείτε.</string>
+	<string name="frg_personal_stats">Εδώ βλέπετε τα προσωπικά σας στατιστικά ανά είδος. Οι συνολικές συλλήψεις και το μέσο βάθος και βάρος υπολογίζονται. Τέλος η καλύτερη ώρα σύλληψης, ανά εποχή, βάσει των αποθηκευμένων σας ψαριών είναι διαθέσιμη.</string>
+	<string name="frg_global_stats">Τα συνολικά στατιστικά της κοινότητας SpearoStats είναι διαθέσιμα εδώ με ένα μικρό αντίτιμο. Οι συνολικές συλλήψεις, το μέσο βάθος και βάρος και η καλύτερη ώρα σύλληψης ανά εποχή, υπολογίζονται για το σύνολο όλων των δεδομένων.</string>
+	<string name="frg_my_places">Εδώ βλέπετε όλες τις ψαρευτικές σας εκδρομές ζωγραφισμένες στο χάρτη. Πατώντας στην πινέζα βλέπετε τις λεπτομέρειες τις ψαριάς σας ή μπορείτε να πλοηγηθείτε ξανά μέσω Google maps στο μέρος αυτό.</string>
+
+	<string name="email_subject">Προς SpearoStats - Στατιστικά ψαροντούφεκου</string>
+	<string name="email_text">Καλησπέρα SpearoStats, θα ήθελα..</string>
+	<string name="email_spearo">spearoStats@gmail.com</string>
+	<string name="email_chooser_title">Επίλεξε το πρόγραμμα που επιθυμείς</string>
+
+
+	<string name="least_concern">το είδος δεν απειλείται</string>
+	<string name="conservation_dependent">το είδος βρίσκεται σε πρόγραμμα προστασίας</string>
+	<string name="near_threatened">το είδος είναι σχεδόν απειλούμενο</string>
+	<string name="vulnerable">το είδος είναι υπό αλιευτική πίεση</string>
+	<string name="endangered">το είδος απειλείται σοβαρά</string>
+	<string name="critically_endangered">το είδος βρίσκεται στα όρια εξαφάνισης</string>
+
+	<string name="nighly_attempt_alert">Η ώρα σύλληψης που δηλώσατε υποδηλώνει νυχτερινή δραστηριότητα. Δεν επιτρέπεται τέτοια καταγραφή. Ευχαριστούμε!</string>
+	<string name="catch_hour_not_known">Δε θυμάμαι ώρα</string>
+
+	<string name="session_image">Θέλετε να προσθέσετε μια φωτογραφία για το ψάρεμά σας;</string>
+
+	<string name="select_wind">Άνεμος</string>
+	<string name="wind_direction">Κατεύθυνση ανέμου</string>
+	<string name="wind_volume">ένταση</string>
+	<string name="not_known">άγνωστο</string>
+
+	<string name="no_wind">Άπνοια</string>
+	<string name="wind_north">Β</string>
+	<string name="wind_south">Ν</string>
+	<string name="wind_east">Α</string>
+	<string name="wind_west">Δ</string>
+	<string name="wind_north_east">ΒΑ</string>
+	<string name="wind_north_west">ΒΔ</string>
+	<string name="wind_south_east">ΝΑ</string>
+	<string name="wind_south_west">ΝΔ</string>
+
+	<string name="no_wind_full">Καθόλου αέρας</string>
+	<string name="wind_north_full">Βοριάς</string>
+	<string name="wind_south_full">Νοτιάς</string>
+	<string name="wind_east_full">Ανατολικός</string>
+	<string name="wind_west_full">Δυτικός</string>
+	<string name="wind_north_east_full">Βοριοανατολικός</string>
+	<string name="wind_north_west_full">Βοριοδυτικός</string>
+	<string name="wind_south_east_full">Νοτιοανατολικός</string>
+	<string name="wind_south_west_full">Νοτιοδυτικός</string>
+
+
+	<string name="new_moon">Νέα σελήνη</string>
+	<string name="waxing_crescent">Αύξων Μηνίσκος</string>
+	<string name="first_quarter">Πρώτο τέταρτο</string>
+	<string name="waxing_gibbous">Αύξων Αμφίκυρτος</string>
+	<string name="full_moon">Πανσέληνος</string>
+	<string name="waning_gibbous">Φθίνων Αμφίκυρτος</string>
+	<string name="last_quarter">Τελευταίο τέταρτο</string>
+	<string name="waning_crescent">Φθίνων Μηνίσκος</string>
+
+	<string name="grid_new_moon">Χωρίς</string>
+	<string name="grid_waxing_crescent">Μηνίσκος+</string>
+	<string name="grid_first_quarter">Ημι+</string>
+	<string name="grid_waxing_gibbous">Αμφίκυρτος+</string>
+	<string name="grid_full_moon">Πανσέληνος</string>
+	<string name="grid_waning_gibbous">Αμφίκυρτος-</string>
+	<string name="grid_last_quarter">Ημι-</string>
+	<string name="grid_waning_crescent">Μηνίσκος-</string>
+
+</resources>

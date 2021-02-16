@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout 
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white_back" 
+    xmlns:app1="http://schemas.android.com/apk/res/gr.liakos.spearo"
+    tools:ignore="ResAuto">
+    
+     <ImageView
+          android:layout_centerInParent="true"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:src="@drawable/spearo_black"
+          android:layout_marginBottom="@dimen/fifty"
+                  />
+     
+     <LinearLayout
+			    android:orientation="horizontal"
+        android:id="@+id/transparentLayout2"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/one_hundred"
+        android:layout_alignParentBottom="true"
+        android:background="@android:color/transparent"/>
+			
+		 	 <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab_add_2"
+        app1:fabSize="normal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/fab_margin"
+        android:src="@drawable/plus"
+       android:layout_above="@+id/transparentLayout2"
+       android:layout_alignParentEnd="true"
+       />
+      
+    </RelativeLayout>

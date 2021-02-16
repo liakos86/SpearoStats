@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_height="match_parent"
+    android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical">
+        
+     <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorAccent"
+        android:orientation="vertical"
+        android:padding="@dimen/twelve_sp">
+        
+       
+         <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorAccent"
+        android:layout_marginBottom="@dimen/four">
+        
+         <TextView android:id="@+id/textSessionYear"
+             android:layout_alignParentStart="true"
+             android:layout_width="wrap_content"
+             android:layout_height="wrap_content"
+             android:textColor="@color/white_back"
+             android:textSize="@dimen/twenty_sp"/>
+
+             <com.cj.videoprogressview.LightProgressView
+                 android:layout_alignParentEnd="true"
+                 android:layout_marginLeft="@dimen/two"
+                 android:layout_margin="@dimen/two"
+                 android:id="@+id/moon_percentage_alert"
+                 android:background="@android:color/transparent"
+                 android:layout_width="@dimen/twelve"
+                 android:layout_height="@dimen/twelve"
+                 app:lpv_halo_color="@android:color/transparent"
+                 app:lpv_moon_color="@android:color/white"
+                 app:lpv_halo_height="0dp"
+                 app:lpv_halo_width="0dp"/>
+         
+         <TextView android:id="@+id/textSessionMoon"
+             android:layout_toLeftOf="@+id/moon_percentage_alert"
+             android:layout_width="wrap_content"
+             android:layout_height="wrap_content"
+             android:layout_marginEnd="@dimen/four"
+             android:textColor="@color/white_back"
+             android:layout_marginBottom="@dimen/two"/>
+         
+         <TextView android:id="@+id/textSessionWind"
+             android:layout_alignParentEnd="true"
+             android:drawablePadding="@dimen/two"
+             android:layout_below="@+id/textSessionMoon"
+             android:layout_width="wrap_content"
+             android:layout_height="wrap_content"
+             android:textColor="@color/white_back"
+             android:textSize="@dimen/twelve_sp"
+             android:layout_marginEnd="@dimen/four"/>
+         
+         
+         </RelativeLayout>
+         
+         <TextView android:id="@+id/textSessionDayAndMonth"
+             android:layout_width="wrap_content"
+             android:layout_height="wrap_content"
+             android:textColor="@color/white_back"
+             android:textSize="@dimen/thirty_six_sp"/>
+        
+         </LinearLayout>
+     
+ <ListView android:layout_width="match_parent"  
+     android:layout_height="wrap_content"
+      android:id="@+id/listViewSessionCatchesComp"/>
+
+
+    </LinearLayout>
+   

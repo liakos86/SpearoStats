@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout 
+    xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:tools="http://schemas.android.com/tools"
+	android:layout_width="match_parent"
+        android:layout_height="match_parent" 
+        android:background="@color/white_back"
+        xmlns:app1="http://schemas.android.com/apk/res/gr.liakos.spearo"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	tools:ignore="ResAuto">
+
+	<gr.liakos.spearo.custom.GridRecyclerView
+		android:id="@+id/recyclerView"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		android:scrollbars="vertical"
+		android:layoutAnimation="@anim/grid_layout_animation_from_bottom"
+		app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+
+			
+			<LinearLayout
+			    android:orientation="horizontal"
+        android:id="@+id/transparentLayout"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/one_hundred"
+        android:layout_alignParentBottom="true"
+        android:background="@android:color/transparent"/>
+			
+		 	 <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab_add"
+        app1:fabSize="normal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/fab_margin"
+        android:src="@drawable/plus"
+       android:layout_above="@+id/transparentLayout"
+       android:layout_alignParentEnd="true"
+       />
+		
+</RelativeLayout>

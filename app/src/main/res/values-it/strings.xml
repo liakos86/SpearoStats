@@ -1,0 +1,278 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="map_search_hint">Ricerca</string>
+
+    <string name="action_settings">Impostazioni</string>
+    <string name="close">Chiudi</string>
+    <string name="username">Nome Utente</string>
+
+    <string name="depth">Profondità</string>
+    <string name="added">aggiunto</string>
+
+        <string name="legend_info">Nome del pesce</string>
+        <string name="legend_family">Famiglia del pesce</string>
+        <string name="legend_record">Peso record per questo pesce</string>
+        <string name="legend_world_record">Peso record mondiale per questo pesce</string>
+        <string name="legend_summer">L\'ora con il maggior numero di catture in estate</string>
+        <string name="legend_winter">L\'ora con il maggior numero di catture in inverno</string>
+        <string name="legend_weight">Peso medio per cattura</string>
+        <string name="legend_depth">Profondità media per questo pesce</string>
+        <string name="legend_num">Numeri di catture</string>
+
+
+        <string name="app_store_try_later">Si è verificato un errore nell\'app store, riprova per favore</string>
+
+        <string name="exit">Chiudi</string>
+        <string name="delete_session_entry_alert">Sei certo di voler cancellare questa sessione?</string>
+
+        <string name="success_username">Il nome utente è stato modificato con successo</string>
+        <string name="save_username">Cambia nome utente</string>
+        <string name="request_hint">Richiesta di un nuovo pesce</string>
+        <string name="request_sent">Richiesta inviata, grazie!</string>
+        <string name="request_length">Il nuovo nome del pesce deve avere tra i 5 e 20 caratteri</string>
+
+        <string name="no_catch_data">non ci sono dati di pesca</string>
+
+        <string name="no_fish_name_selected">Selezionare le specie dal auto-complete</string>
+        <string name="prof_pic_cannot_change">Non si può modificare la tua foto profilo</string>
+        <string name="select_location">Tenere premuto per selezionare una località</string>
+        <string name="pic_cannot_be_added">No picture was added</string>
+
+        <string name="fill_all">Compila tutti i campi, per favore</string>
+        <string name="change_profile_pic">Fai click per modificare</string>
+
+        <string name="weightMetric">Peso (kg)</string>
+        <string name="depthMetric">Metri di profondità</string>
+        <string name="weightImperial">Peso (libbre)</string>
+        <string name="depthImperial">Piedi di profondità</string>
+
+        <string name="invalid_length">Nome utente o lunghezza della password non validi</string>
+        <string name="metric_explained">* Metrico = chilogrammi, metri / imperiale britannico = libbre, piedi</string>
+
+        <string name="button_sessions">Il mio diario</string>
+        <string name="button_stats">Le mie statistiche</string>
+        <string name="button_stats_global">Statistiche globali</string>
+        <string name="button_map">I miei luoghi</string>
+
+        <string name="press_for_more">premere per altre informazioni&#8230;</string>
+
+        <string name="prey">Preda:</string>
+        <string name="search_hint">e.g \'Seriola\'</string>
+        <string name="confirm_catches">Si prega di confermare</string>
+
+    <!-- FISH -->
+    <string name="Argyrosomus_regius">Ombrina boccadoro, bocca d\'oro</string>
+
+    <string name="Balistes_capriscus">Pesce balestra, pesce porco</string>
+    <string name="Boops_boops">Boga</string>
+
+    <string name="Caranx_crysos">Carango Mediterraneo, Blue runner</string>
+    <string name="Coryphaena_hippurus">Lampuga, Corifena, Mahi mahi</string>
+    <string name="Conger_conger">Grongo</string>
+    <string name="Caranx_hippos">Carango cavallo</string>
+
+    <string name="Seriola_dumerili">Ricciola</string>
+    <string name="Seriola_fasciata">Ricciola fasciata</string>
+    <string name="Seriola_rivoliana">Ricciola falcata</string>
+
+    <string name="Lophius_piscatorius">Rana pescatrice</string>
+    <string name="Sphyraena_sphyraena">Barracuda europeo, Luccio di mare, Sfirena</string>
+    <string name="Sphyraena_viridensis">Barracuda bocca gialla, Barracuda mediterraneo</string>
+
+    <string name="Sciaena_umbra">Corvina</string>
+    <string name="Salema_porgy">Salpa</string>
+    <string name="Spondyliosoma_cantharus">Tanuta, Cantaro</string>
+
+    <string name="Makaira_nigricans">Marlin blu</string>
+    <string name="Makaira_indica">Marlin, nero</string>
+
+    <string name="Mullus">Mullus, triglia di fango,scoglio</string>
+    <string name="Mugil_cephalus">Cefalo (tutte le specie)</string>
+    <string name="Muraena_helena">Murena mediterranea</string>
+    <string name="Morone_saxatilis">Persico spigola</string>
+    <string name="Mycteroperca_rubra">Cernia rossa, Cirenga</string>
+
+    <string name="Scorpaena_scrofa">Scarpina rossa, Scorfano</string>
+    <string name="Pterois">Pesci scorpione</string>
+    <string name="Weever">Tracina drago</string>
+    <string name="Uranoscopus_scaber">Pesce prete o Lucerna</string>
+    <string name="Pomatomus_saltatrix">Pesce serra</string>
+    <string name="Sarda_sarda">Palamita, Atlantic bonito</string>
+    <string name="Sarda_chiliensis">Bonito</string>
+
+    <string name="Gadus_morhua">Merluzzo comune, bianco</string>
+    <string name="Gadus_macrocephaleus">Merluzzo nordico</string>
+    <string name="Dentex_dentex">Dentice</string>
+    <string name="Dentex_gibbosus">Dentice corazziere</string>
+    <string name="Pogonias_cromis">Scienidi</string>
+    <string name="Epinephelus_marginatus">Cernia bruna</string>
+    <string name="Epinephelus_costae">Cernia dorata/alessandrina</string>
+    <string name="Epinephelus_aeneus">Cernia bianca</string>
+    <string name="Epinephelus_coioides">Cernia arancio-pezzata</string>
+    <string name="Lichia_amia">Leccia, Lecchia</string>
+    <string name="Lichia_stella">Leccia stella</string>
+    <string name="Euthynnus_alletteratus">Tonnetto o Alletterato</string>
+    <string name="Umbrina_cirrosa">Ombrina</string>
+    <string name="Sparisoma_cretense">Scaro, Pesce pappagallo mediterraneo</string>
+    <string name="Pagrus_pagrus">Pagro dentice</string>
+    <string name="Oblada_melanura">Occhiata</string>
+    <string name="Dicentrarchus_labrax">Spigola</string>
+    <string name="Sparus_aurata">Orata</string>
+    <string name="Diplodus_puntazzo">Sarago pizzuto</string>
+    <string name="Diplodus_sargus">Sarago maggiore</string>
+    <string name="Diplodus_vulgaris">Sarago fasciato</string>
+    <string name="Lithognathus_mormyrus">Marmora, mormora</string>
+    <string name="Zeus_faber">Pesce San Pietro</string>
+    <string name="Symphodus_melops">Tordo</string>
+    <string name="Phycis_phycis">Musdea, mostella, Maggiore Forkbeard</string>
+    <string name="Polyprion_americanus">Cernia di fondale, Cernia canina</string>
+
+    <!-- END FISH -->
+
+
+
+    <string name="welcome">Ciao spearo</string>
+        <string name="add_catch">Aggiungi pesce</string>
+        <string name="save_session">Salva</string>
+        <string name="catch_time">Ora della cattura</string>
+        <string name="new_session">Inserisci nuovo</string>
+        <string name="confirm">Conferma</string>
+        <string name="skip">Salta</string>
+        <string name="cancel">Annulla</string>
+        <string name="save">Salva</string>
+        <string name="go_premium">Aggiorna a premium</string>
+        <string name="fish">pesce</string>
+        <string name="fishes">pesci</string>
+        <string name="marker_text">la località</string>
+        <string name="fola">Peccato! Niente pesci!</string>
+        <string name="confirm_fola">Si, salva</string>
+        <string name="alert_confirm_fola_header">Confermi la tua sfortuna..</string>
+        <string name="session_date">Quando sei andato?</string>
+        <string name="session_location">Dove sei andato a pescare?</string>
+        <string name="map_selection_hint">Tenere premuto per selezionare</string>
+        <string name="map_only_you">(Visibile solo da te)</string>
+        <string name="no_fish_selected">Si prega di selezionare almeno un 1 pesce</string>
+
+        <string name="username_hint">nome utente desiderato</string>
+
+        <string name="error">Qualcosa è andato storto..</string>
+
+        <string name="delete">elimina</string>
+
+        <string name="network_error">Si prega di verificare la connessione internet</string>
+
+        <string name="cancel_session_entry">Scarta</string>
+        <string name="cancel_session_entry_alert">Cancella e ritorna alla prima pagina?</string>
+        <string name="yes">Sì</string>
+        <string name="no">No</string>
+        <string name="on">Acceso</string>
+
+        <string name="premium_info">Con un piccolo compenso, puoi avere accesso a SpearoStats globale! Oltre a poter vedere le tue statistiche personali, potrai recuperare le statistiche medie tra la spearo community. Profondità media, peso medio, catture totali in tutto il mondo e l\'ora migliore per cacciare ogni specie. Iscriviti e beneficia di queste informazioni del %1$d pesci</string>
+
+        <string name="defaultUsername">Spearo</string>
+
+        <string name="record_entry_attempt_alert">Il peso che stai cercando di entrare è un nuovo tentativo di record! Ben fatto, ma devi richiedere un nuovo record, verifica e ritorna quando abbiamo aggiornato le nostre voci con il nuovo record:</string>
+
+        <string name="features_missing">Non puoi usare tutte le funzioni!</string>
+
+        <string name="jan">Gen</string>
+        <string name="feb">Feb</string>
+        <string name="mar">Mar</string>
+        <string name="apr">Apr</string>
+        <string name="may">Mag</string>
+        <string name="jun">Giu</string>
+        <string name="jul">Lug</string>
+        <string name="aug">Ag</string>
+        <string name="sep">Set</string>
+        <string name="oct">Ott</string>
+        <string name="nov">Nov</string>
+        <string name="dec">Dic</string>
+
+        <string name="mon">Lun</string>
+        <string name="tue">Mar</string>
+        <string name="wed">Mer</string>
+        <string name="thu">Gio</string>
+        <string name="fri">Ven</string>
+        <string name="sat">Sab</string>
+        <string name="sun">Dom</string>
+
+        <string name="no_address">Nessun indirizzo trovato</string>
+
+
+        <string name="Metric">Unità di misura (Metri e Chilogrammi)</string>
+        <string name="Imperial">Imperiale britannico (Piedi e Libbre)</string>
+        <string name="no_date">Nessuna data fissata</string>
+
+        <string name="email_us">Contattaci</string>
+
+
+        <string name="frg_fishing_sessions">Qui puoi salvare le tue sessioni di pesca! Inizia una nuova sessione facendo clic sull\'icona rotonda in basso a destra, e immetti le informazioni richieste. Data (obbligatorio) , Località (opzionale) e infine, Catture di pesci. La località è visibile solo a te e sarà usata per aiutarti a navigare sulla mappa.</string>
+        <string name="frg_personal_stats">Qui puoi vedere le tue statistiche personali per specie di pesci. Le catture totali e i valori medi di profondità e peso sono stati calcolati. Inoltre, l\'ora migliore per pescare in estate o in inverno è estratta dalle tue catture salvate.</string>
+        <string name="frg_global_stats">Le SpearoStats globali sono disponibili qui con un piccolo compenso. Catture totali, profondità media e peso per specie sono sbloccate. La migliore ora di cattura per l\'estate o l\'inverno è calcolata tra tutti i dati della comunità SpearoStats!</string>
+        <string name="frg_my_places">Qui puoi vedere la rappresentazione cartografica delle tue sessioni di pesca! Fai click su ogni marker per vedere le informazioni sulle tue catture, o navigare di nuovo verso quella località con le mappe di Google.</string>
+
+        <string name="email_subject">Caro SpearoStats</string>
+        <string name="email_text">Ciao SpearoStats, vorrei..</string>
+        <string name="email_spearo">spearoStats@gmail.com</string>
+        <string name="email_chooser_title">Selezionare il programma desiderato</string>
+
+
+        <string name="least_concern">è la minor preoccupazione per la sopravvivenza</string>
+        <string name="conservation_dependent">è nell\'ambito di un programma di conservazione</string>
+        <string name="near_threatened">è quasi minacciato</string>
+        <string name="vulnerable">specie vulnerabile per la sopravvivenza</string>
+        <string name="endangered">specie minacciata</string>
+        <string name="critically_endangered">specie particolarmente minacciata</string>
+
+        <string name="nighly_attempt_alert">Il tuo orario di ingresso indica un’attività notturna. Anche se questo è permesso in qualche regione del mondo, noi non registramo queste catture. Ci dispiace!</string>
+        <string name="catch_hour_not_known">Non so l\'ora della cattura</string>
+
+        <string name="session_image">Vuoi aggiungere un\'immagine per la tua sessione di pesca?</string>
+
+        <string name="select_wind">Informazioni sul vento</string>
+
+
+        <string name="grid_new_moon">Nuova</string>
+        <string name="grid_waxing_crescent">Crescente+</string>
+        <string name="grid_first_quarter">Semi+</string>
+        <string name="grid_waxing_gibbous">Gib.Cresc.+</string>
+        <string name="grid_full_moon">L.Piena</string>
+        <string name="grid_waning_gibbous">Gibbosa-</string>
+        <string name="grid_last_quarter">Semi-</string>
+        <string name="grid_waning_crescent">Crescente-</string>
+
+        <string name="new_moon">Luna nuova</string>
+        <string name="waxing_crescent">Luna crescente</string>
+        <string name="first_quarter">Primo quarto</string>
+        <string name="waxing_gibbous">Gibbosa crescente</string>
+        <string name="full_moon">Luna piena</string>
+        <string name="waning_gibbous">Gibbosa calante</string>
+        <string name="last_quarter">Ultimo quarto</string>
+        <string name="waning_crescent">Luna calante</string>
+
+        <string name="wind_direction">Direzione del vento</string>
+        <string name="wind_volume">velocità</string>
+        <string name="not_known">non lo so</string>
+
+        <string name="no_wind">Senza aria</string>
+        <string name="wind_north">N</string>
+        <string name="wind_south">S</string>
+        <string name="wind_east">E</string>
+        <string name="wind_west">O</string>
+        <string name="wind_north_east">NE</string>
+        <string name="wind_north_west">NO</string>
+        <string name="wind_south_east">SE</string>
+        <string name="wind_south_west">SO</string>
+
+        <string name="no_wind_full">Aria immobile</string>
+        <string name="wind_north_full">Nord</string>
+        <string name="wind_south_full">Sud</string>
+        <string name="wind_east_full">Est</string>
+        <string name="wind_west_full">Ovest</string>
+        <string name="wind_north_east_full">Nordest</string>
+        <string name="wind_north_west_full">Nordovest</string>
+        <string name="wind_south_east_full">Sudest</string>
+        <string name="wind_south_west_full">Sudovest</string>
+
+</resources>
