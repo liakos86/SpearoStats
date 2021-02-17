@@ -14,7 +14,8 @@
 .cxx
 local.properties
 /app/src/main/res/values/secrets.xml
-/app/release
+/app/release/*.apk
+/app/release/*.aab
 
 # Project exclude paths
 /mongo-java-driver-3.4.0-SNAPSHOT/build/
