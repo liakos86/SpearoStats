@@ -63,7 +63,15 @@ import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.facebook.CallbackManager;
+import com.facebook.FacebookCallback;
+import com.facebook.FacebookException;
+import com.facebook.share.Sharer;
+import com.facebook.share.model.ShareLinkContent;
+import com.facebook.share.model.SharePhotoContent;
+import com.facebook.share.widget.ShareDialog;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
@@ -89,6 +97,9 @@ implements LocationListener {
 
     boolean mapPermissionGiven;
 
+	ShareDialog facebookShareDialog;
+	CallbackManager callbackManager;
+
     /**
      * The total size of the pager objects
      */
@@ -112,7 +123,33 @@ implements LocationListener {
         this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 		locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         checkMapPermissions();
-    }
+
+		callbackManager = CallbackManager.Factory.create();
+		facebookShareDialog = new ShareDialog(this);
+
+		facebookShareDialog.registerCallback(callbackManager, new FacebookCallback<Sharer.Result>() {
+			@Override
+			public void onSuccess(Sharer.Result result) {
+				Toast.makeText(getApplicationContext(), "success", Toast.LENGTH_SHORT).show();
+			}
+
+			@Override
+			public void onCancel() {
+				Toast.makeText(getApplicationContext(), "cancel", Toast.LENGTH_SHORT).show();
+			}
+
+			@Override
+			public void onError(FacebookException error) {
+				Toast.makeText(getApplicationContext(), "error", Toast.LENGTH_SHORT).show();
+			} });
+
+	}
+
+	public void tryToShare(SharePhotoContent photoContent){
+		if (ShareDialog.canShow(ShareLinkContent.class)) {
+			facebookShareDialog.show(photoContent);
+		}
+	}
 
 	@RequiresApi(api = Build.VERSION_CODES.M)
 	void checkMapPermissions(){
@@ -460,7 +497,7 @@ implements LocationListener {
 	            Options options = new Options();
 	            options.inScaled = false;
 				Bitmap bitmap = BitmapFactory.decodeStream(inputStream, null, options);
-	            Bitmap scaledBitmap = Bitmap.createScaledBitmap(bitmap, 300, 300, false);
+	            Bitmap scaledBitmap = Bitmap.createScaledBitmap(bitmap, 500, 500, false);
 	            ByteArrayOutputStream baos = new ByteArrayOutputStream();
 	            scaledBitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
 	            data = baos.toByteArray();

@@ -30,6 +30,8 @@ android {
 
 dependencies {
 
+    implementation 'com.facebook.android:facebook-share:5.15.3'
+
     implementation 'com.cj.videoprogressview:progressview:1.0.0'
 
     implementation group: 'com.makeramen', name: 'roundedimageview', version: '2.3.0'

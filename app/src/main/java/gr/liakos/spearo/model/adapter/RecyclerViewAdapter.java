@@ -13,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -23,11 +24,17 @@ import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.cj.videoprogressview.LightProgressView;
+import com.facebook.share.model.ShareHashtag;
+import com.facebook.share.model.SharePhoto;
+import com.facebook.share.model.SharePhotoContent;
+import com.facebook.share.widget.ShareButton;
+
 
 import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 
+import gr.liakos.spearo.ActSpearoStatsMain;
 import gr.liakos.spearo.R;
 import gr.liakos.spearo.SpearoApplication;
 import gr.liakos.spearo.enums.MoonPhase;
@@ -59,11 +66,12 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter {
         public ImageView fishingSessionIcon;
         public TextView sessionCatchesNumText;
         public TextView sessionDateText;
-        //public TextView sessionMoonPhaseText;
         public TextView sessionWindText;
         public LightProgressView moonPercentageView;
+        public Button shareButton;
         public Float moonPercentage = null;
         public MoonPhase moonPhase = null;
+        public Bitmap sessionImage = null;
 
         FishingSession item;
 
@@ -74,10 +82,13 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter {
             v.setOnLongClickListener(this);
             sessionCatchesNumText =  v.findViewById(R.id.sessionCatchesNumText);
             sessionDateText = v.findViewById(R.id.sessionDateText);
-            //sessionMoonPhaseText = v.findViewById(R.id.sessionMoonPhaseText);
             sessionWindText = v.findViewById(R.id.sessionWindText);
             fishingSessionIcon = v.findViewById(R.id.fishingSessionRowIcon);
             moonPercentageView = v.findViewById(R.id.moon_percentage);
+
+            shareButton = v.findViewById(R.id.shareButton);
+
+
         }
 
         public void setData(FishingSession item) {
@@ -92,6 +103,28 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter {
             setWindTextAndImg(item, res);
             setSessionImg(item, res);
             setMoonPhaseTextAndImg(item, res);
+
+            if (sessionImage == null){
+                shareButton.setVisibility(View.GONE);
+            }else {
+                shareButton.setVisibility(View.VISIBLE);
+                shareButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        SharePhoto photo = new SharePhoto.Builder()
+                                .setBitmap(sessionImage)
+                                .build();
+                        SharePhotoContent content = new SharePhotoContent.Builder()
+                                .addPhoto(photo)
+                                .setShareHashtag(new ShareHashtag.Builder().setHashtag("#SpearoStats").build())
+                                .setPageId("104780914788737")
+                                .build();
+                        ((ActSpearoStatsMain) fragment.getActivity()).tryToShare(content);
+
+                    }
+                });
+
+            }
 
         }
 
@@ -144,6 +177,8 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter {
                 byte[] array = Base64.decode(fishingSession.getSessionImage(), Base64.NO_WRAP);
                 Bitmap bmp = BitmapFactory.decodeByteArray(array, 0, array.length, options);
                 fishingSessionIcon.setImageBitmap(bmp);
+
+                sessionImage = bmp;
             }
         }
 
