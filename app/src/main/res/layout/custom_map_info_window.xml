@@ -34,7 +34,6 @@
            android:gravity="center_vertical"
            android:layout_width="match_parent"
            android:id="@+id/info_window_text_date"
-           android:drawableStart="@drawable/calendar_30"
            android:drawablePadding="@dimen/four"
            android:singleLine="true"
            android:ellipsize="end"
@@ -46,7 +45,6 @@
 
         <TextView
             android:layout_weight="1"
-           android:drawableStart="@drawable/catch_fish_30"
             android:gravity="center_vertical"
            android:drawablePadding="@dimen/four"
            android:layout_width="match_parent"
@@ -61,7 +59,6 @@
         <TextView
             android:layout_weight="1"
             android:gravity="center_vertical"
-           android:drawableStart="@drawable/place_marker__30"
            android:drawablePadding="@dimen/four"
            android:layout_width="match_parent"
            android:singleLine="true"

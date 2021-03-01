@@ -22,6 +22,8 @@ public class AsyncLoadProfilePic extends AsyncTask<Void, Void, Void> {
     
     byte[] array;
 
+    String imagePathUri;
+
     public AsyncLoadProfilePic(Application application, ImageView img, ProgressBar prgBar) {
         this.application = application;
         this.img = img;
@@ -37,12 +39,16 @@ public class AsyncLoadProfilePic extends AsyncTask<Void, Void, Void> {
     @Override
     protected Void doInBackground(Void... unused) {
     	SharedPreferences app_preferences = application.getSharedPreferences(Constants.PREFERENCES, Context.MODE_PRIVATE);
-   	  	String stringArray = app_preferences.getString(Constants.PROFILE_PIC, null);
-    	if (stringArray == null){
+
+    	imagePathUri = app_preferences.getString(Constants.PROFILE_PIC_URI, null);
+    	if (imagePathUri != null){
     		return null;
     	}
-   	  	
-    	array = Base64.decode(stringArray, Base64.NO_WRAP);
+
+    	String imgByteArray = app_preferences.getString(Constants.PROFILE_PIC_BYTES, null);
+    	if (imgByteArray != null) {
+            array = Base64.decode(imgByteArray, Base64.NO_WRAP);
+        }
         
         return null;
     }
@@ -52,18 +58,31 @@ public class AsyncLoadProfilePic extends AsyncTask<Void, Void, Void> {
     	if (prgBar != null){
     		prgBar.setVisibility(View.GONE);
     	}
-    	
-    	
-    	if (array == null){
+
+    	//uri from sp
+    	if (imagePathUri != null){
+            Uri imageUri = Uri.parse(imagePathUri);
+            img.setImageURI(imageUri);
+
+            if (img.getDrawable() == null){//image of uri is deleted.
+                Uri defaultImageUri = Uri.parse("android.resource://gr.liakos.spearo/"+R.drawable.spear2_edited); // use this default image uri if user didn't saved any image to sharedprefrence .
+                img.setImageURI(defaultImageUri);
+            }
+
+            return;
+        }
+
+    	//no uri, no byte array
+    	if (array == null ){
     		Uri defaultImageUri = Uri.parse("android.resource://gr.liakos.spearo/"+R.drawable.spear2_edited); // use this default image uri if user didn't saved any image to sharedprefrence .
    		 	img.setImageURI(defaultImageUri);
     		return;
     	}
-    	
+
+    	//byte array set
     	Bitmap bmp = BitmapFactory.decodeByteArray(array, 0, array.length);
     	img.setImageBitmap(Bitmap.createScaledBitmap(bmp, img.getWidth(), img.getHeight(), false));
 
-    	
     }
 }
 

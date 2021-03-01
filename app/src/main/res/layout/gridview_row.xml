@@ -4,8 +4,13 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     app:cardCornerRadius="@dimen/eight"
-    android:layout_margin="@dimen/one"
-    >
+    android:layout_margin="@dimen/one">
+
+    <ProgressBar
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/progress_bar_grid_row"
+        android:visibility="gone"/>
 
         <ImageView
             android:id="@+id/fishingSessionRowIcon"
@@ -16,10 +21,11 @@
 
    <Button
         android:layout_gravity="top"
-        android:layout_height="50dp"
-        android:layout_width="match_parent"
+        android:layout_height="@dimen/thirty_six"
+        android:layout_width="@dimen/thirty_six"
         android:id="@+id/shareButton"
-        android:text="share"
+       android:background="@drawable/fb_button_selector"
+
        />
 
      <RelativeLayout

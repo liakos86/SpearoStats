@@ -189,7 +189,8 @@ public class FrgMyPlaces extends Fragment
 		
 		TextView numTxt = (TextView) markerView.findViewById(R.id.fish_num_txt);
 		numTxt.setText(String.valueOf(fishingSession.getFishCatches().size()));
-		
+		numTxt.setCompoundDrawablesWithIntrinsicBounds(R.drawable.fish_28,0,0,0);
+
 		LatLng point = new LatLng(fishingSession.getLatitude(), fishingSession.getLongitude());
 		Marker addMarker = googleMap.addMarker(new MarkerOptions()
 		.position(point)

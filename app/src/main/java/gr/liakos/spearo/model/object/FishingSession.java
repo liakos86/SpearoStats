@@ -30,6 +30,8 @@ public class FishingSession implements Comparable<FishingSession>{
 	boolean uploadedToMongo;
 	
 	String sessionImage;
+
+	String sessionImageUriPath;
 	
 	//MoonPhase sessionMoon;
 	
@@ -103,14 +105,14 @@ public class FishingSession implements Comparable<FishingSession>{
 	public void setSessionImage(String sessionImage) {
 		this.sessionImage = sessionImage;
 	}
-	
-//	public MoonPhase getSessionMoon() {
-//		return sessionMoon;
-//	}
 
-	//public void setSessionMoon(MoonPhase sessionMoon) {
-//		this.sessionMoon = sessionMoon;
-//	}
+	public String getSessionImageUriPath() {
+		return sessionImageUriPath;
+	}
+
+	public void setSessionImageUriPath(String sessionImageUriPath) {
+		this.sessionImageUriPath = sessionImageUriPath;
+	}
 
 	public Wind getSessionWind() {
 		return sessionWind;
@@ -172,7 +174,7 @@ public class FishingSession implements Comparable<FishingSession>{
             toRet.put(ContentDescriptor.FishingSession.Cols.FISHINGSESSIONLON, item.longitude);
             toRet.put(ContentDescriptor.FishingSession.Cols.UPLOADED, item.uploadedToMongo);
             toRet.put(ContentDescriptor.FishingSession.Cols.SESSION_IMAGE, item.sessionImage);
-            //toRet.put(ContentDescriptor.FishingSession.Cols.SESSION_MOON, item.sessionMoon.getPosition());
+            toRet.put(ContentDescriptor.FishingSession.Cols.SESSION_IMAGE_URI_PATH, item.sessionImageUriPath);
             toRet.put(ContentDescriptor.FishingSession.Cols.SESSION_WIND, item.sessionWind.getPosition());
 			toRet.put(ContentDescriptor.FishingSession.Cols.SESSION_WIND_VOLUME, item.sessionWindVolume.getPosition());
             
@@ -194,8 +196,7 @@ public class FishingSession implements Comparable<FishingSession>{
             FishingSession fishingSession = new FishingSession(fishingSessionId, fishingDate, latitude, longitude, uploaded);
             String sessionImg = cursor.getString(cursor.getColumnIndex(ContentDescriptor.FishingSession.Cols.SESSION_IMAGE));
             fishingSession.setSessionImage(sessionImg);
-//            MoonPhase phase = MoonPhase.ofPosition(cursor.getInt(cursor.getColumnIndex(ContentDescriptor.FishingSession.Cols.SESSION_MOON)));
-//            fishingSession.setSessionMoon(phase);
+            fishingSession.setSessionImageUriPath(cursor.getString(cursor.getColumnIndex(ContentDescriptor.FishingSession.Cols.SESSION_IMAGE_URI_PATH)));
             Wind wind = Wind.ofPosition(cursor.getInt(cursor.getColumnIndex(ContentDescriptor.FishingSession.Cols.SESSION_WIND)));
             fishingSession.setSessionWind(wind);
 			WindVolume windVolume = WindVolume.ofPosition(cursor.getInt(cursor.getColumnIndex(ContentDescriptor.FishingSession.Cols.SESSION_WIND_VOLUME)));

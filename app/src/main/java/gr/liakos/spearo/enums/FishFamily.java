@@ -70,7 +70,11 @@ public enum FishFamily {
 	
 	Labridae(33, "labridae"),
 	
-	Phycidae(34, "phycidae");
+	Phycidae(34, "phycidae"),
+
+	Lutjanidae(35, "lutjanidae"),
+
+	Octopodidae(36, "octopodidae");
 	
 	int position;
 	

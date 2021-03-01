@@ -29,7 +29,9 @@ public interface Constants {
 
 	String IMPERIAL = "Imperial";
 
-	String PROFILE_PIC = "profile_pic";
+	String PROFILE_PIC_BYTES = "profile_pic"; // DO NOT RENAME SHARED PREFS
+
+	String PROFILE_PIC_URI = "profile_pic_path"; // DO NOT RENAME SHARED PREFS
 
 	int PERMISSION_STORAGE = 2;
 
@@ -64,4 +66,12 @@ public interface Constants {
 	String BFT = "bft";
 
 	String SLASH = "/";
+
+    String SINGLE_QUOTE = "'";
+
+    String SHOWCASE_ACT_MAIN = "SHOWCASE_ID";
+
+	String SHOWCASE_FRG_SESSIONS = "SHOWCASE_FRG_SESSIONS";
+
+    String SHOWCASE_FB = "SHOWCASE_FB";
 }

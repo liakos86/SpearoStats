@@ -25,7 +25,6 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-//import android.support.design.widget.Snackbar;
 import androidx.core.content.ContextCompat;
 import android.text.method.LinkMovementMethod;
 import android.util.Base64;
@@ -116,7 +115,6 @@ extends Activity implements AsyncSaveUserListener {
 
 	void uploadRequest(String fishName) {
 		new AsyncSaveFishRequestMongo((SpearoApplication) getApplication(), fishName).execute();
-		
 	}
 
 	void setupIcons8Link() {
@@ -267,7 +265,8 @@ extends Activity implements AsyncSaveUserListener {
 	private void openImageIntent() {
 		Intent intent = new Intent();
 		intent.setType("image/*");
-		intent.setAction(Intent.ACTION_GET_CONTENT);
+		intent.addCategory(Intent.CATEGORY_OPENABLE);
+		intent.setAction(Intent.ACTION_OPEN_DOCUMENT);
 		startActivityForResult(Intent.createChooser(intent, "Select Picture"), Constants.PICK_IMAGE);
 		
 	}
@@ -313,6 +312,12 @@ extends Activity implements AsyncSaveUserListener {
 					new SpearoUtils(this).snack(findViewById(R.id.parent_layout), "Wrong path or content type");
 					return;
 				}
+
+				final int takeFlags = data.getFlags()
+						& (Intent.FLAG_GRANT_READ_URI_PERMISSION
+						| Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+
+				getContentResolver().takePersistableUriPermission(selectedImage, takeFlags);
 	            
 	            setProfilePicSource(selectedImage);
 	            ImageView changeProfilePicImg = (ImageView) findViewById(R.id.imageViewChangePic);
@@ -362,7 +367,9 @@ extends Activity implements AsyncSaveUserListener {
 		int width;
 		
 		int height;
-		
+
+		String uriPath;
+
 		public AsyncStoreProfilePic(Uri uri, int width, int height) {
 			this.uri = uri;
 			this.width = width;
@@ -371,25 +378,40 @@ extends Activity implements AsyncSaveUserListener {
 		
 		@Override
 		protected byte[] doInBackground(Void... arg0) {
-			return	storeImageByteArray();
+			byte[] imgByteArray = null;
+
+			try {
+				uriPath = String.valueOf(uri);// RealPathUtil.getRealPath(getApplicationContext(), uri);
+			}catch (Exception e){
+				uriPath = null;
+				imgByteArray = storeImageByteArray();
+			}
+
+			return	imgByteArray;
 		}
 		
 		@Override
 		protected void onPostExecute(byte[] result) {
-			if (result == null){
+			if (result == null && uriPath == null){
 				return;
 			}
 			
 			SharedPreferences app_preferences = getSharedPreferences(Constants.PREFERENCES, Context.MODE_PRIVATE);
 	   	  	Editor editor = app_preferences.edit();
-	        String saveThis = Base64.encodeToString(result, Base64.NO_WRAP);
-	   	  	editor.putString(Constants.PROFILE_PIC, saveThis);
-	        editor.commit();
-			
+
+	   	  	if (uriPath != null) {
+				editor.putString(Constants.PROFILE_PIC_URI, uriPath);
+				editor.putString(Constants.PROFILE_PIC_BYTES, null);
+			}else{
+				String saveThis = Base64.encodeToString(result, Base64.NO_WRAP);
+				editor.putString(Constants.PROFILE_PIC_BYTES, saveThis);
+				editor.putString(Constants.PROFILE_PIC_URI, null);
+			}
+
+	        editor.apply();
 		}
 
 		private byte[] storeImageByteArray() {
-	   	  	
 	        byte[] data = null;
 	        try {
 	            ContentResolver cr = getBaseContext().getContentResolver();
@@ -397,7 +419,7 @@ extends Activity implements AsyncSaveUserListener {
 	            Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
 	            Bitmap scaledBitmap = Bitmap.createScaledBitmap(bitmap, width, height, false);
 	            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-	            scaledBitmap.compress(Bitmap.CompressFormat.JPEG, 50, baos);
+	            scaledBitmap.compress(Bitmap.CompressFormat.JPEG, 70, baos);
 	            data = baos.toByteArray();
 	            return data;
 	        } catch (FileNotFoundException e) {

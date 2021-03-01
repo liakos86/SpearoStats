@@ -26,7 +26,7 @@ import android.net.Uri;
 public class Database extends SQLiteOpenHelper {
 
     private static final String DATABASE_NAME = "spearo_stats.db";
-    private static final int DATABASE_VERSION =  3;
+    private static final int DATABASE_VERSION =  4;
     // this is also considered as invalid id by the server
     public static final Integer INVALID_ID = -1;
     private Context mContext;
@@ -61,6 +61,26 @@ public class Database extends SQLiteOpenHelper {
 
         if (newVersion == 3 && oldVersion == 2){
             db.execSQL("ALTER TABLE " + gr.liakos.spearo.model.ContentDescriptor.FishingSession.TABLE_NAME + " ADD COLUMN " + ContentDescriptor.FishingSession.Cols.SESSION_WIND_VOLUME + " INTEGER DEFAULT 0;");
+        }
+
+        if (newVersion == 4 &&  oldVersion == 1 ){
+            db.execSQL("ALTER TABLE " + gr.liakos.spearo.model.ContentDescriptor.FishingSession.TABLE_NAME + " ADD COLUMN " + gr.liakos.spearo.model.ContentDescriptor.FishingSession.Cols.SESSION_IMAGE + " TEXT;");
+            db.execSQL("ALTER TABLE " + gr.liakos.spearo.model.ContentDescriptor.FishingSession.TABLE_NAME + " ADD COLUMN " + gr.liakos.spearo.model.ContentDescriptor.FishingSession.Cols.SESSION_MOON + " INTEGER DEFAULT 0;");
+            db.execSQL("ALTER TABLE " + gr.liakos.spearo.model.ContentDescriptor.FishingSession.TABLE_NAME + " ADD COLUMN " + gr.liakos.spearo.model.ContentDescriptor.FishingSession.Cols.SESSION_WIND + " INTEGER DEFAULT 0;");
+            db.execSQL("ALTER TABLE " + gr.liakos.spearo.model.ContentDescriptor.FishingSession.TABLE_NAME + " ADD COLUMN " + ContentDescriptor.FishingSession.Cols.SESSION_WIND_VOLUME + " INTEGER DEFAULT 0;");
+            db.execSQL("ALTER TABLE " + gr.liakos.spearo.model.ContentDescriptor.FishingSession.TABLE_NAME + " ADD COLUMN " + ContentDescriptor.FishingSession.Cols.SESSION_IMAGE_URI_PATH + " TEXT;");
+            db.execSQL(ContentDescriptor.Fish.insertAdditionalSpecies0());
+        }
+
+        if (newVersion == 4 &&  oldVersion == 2 ){
+            db.execSQL("ALTER TABLE " + gr.liakos.spearo.model.ContentDescriptor.FishingSession.TABLE_NAME + " ADD COLUMN " + ContentDescriptor.FishingSession.Cols.SESSION_WIND_VOLUME + " INTEGER DEFAULT 0;");
+            db.execSQL("ALTER TABLE " + gr.liakos.spearo.model.ContentDescriptor.FishingSession.TABLE_NAME + " ADD COLUMN " + ContentDescriptor.FishingSession.Cols.SESSION_IMAGE_URI_PATH + " TEXT;");
+            db.execSQL(ContentDescriptor.Fish.insertAdditionalSpecies0());
+        }
+
+        if (newVersion == 4 &&  oldVersion == 3 ){
+            db.execSQL("ALTER TABLE " + gr.liakos.spearo.model.ContentDescriptor.FishingSession.TABLE_NAME + " ADD COLUMN " + ContentDescriptor.FishingSession.Cols.SESSION_IMAGE_URI_PATH + " TEXT;");
+            db.execSQL(ContentDescriptor.Fish.insertAdditionalSpecies0());
         }
 
 	}
@@ -117,9 +137,9 @@ public class Database extends SQLiteOpenHelper {
         int sLonPosition = 3;
         int sUploadedPosition = 4;
         int sSessionImgPosition = 5;
-        //int sSessionMoonPosition = 6;
         int sSessionWindPosition = 6;
         int sSessionWindVolumePosition = 7;
+        int sSessionImgUriPosition = 8;
 
         Cursor c = mContext.getContentResolver().query(ContentDescriptor.FishingSession.CONTENT_URI, FROM, null,
                 null, null);
@@ -131,9 +151,9 @@ public class Database extends SQLiteOpenHelper {
                         c.getLong(sDatePosition), c.getDouble(sLatPosition), c.getDouble(sLonPosition), c.getInt(sUploadedPosition) == 1);
                 
                 fishingSession.setSessionImage(c.getString(sSessionImgPosition));
-                //fishingSession.setSessionMoon(MoonPhase.ofPosition(c.getInt(sSessionMoonPosition)));
                 fishingSession.setSessionWind(Wind.ofPosition(c.getInt(sSessionWindPosition)));
                 fishingSession.setSessionWindVolume(WindVolume.ofPosition(c.getInt(sSessionWindVolumePosition)));
+                fishingSession.setSessionImageUriPath(c.getString(sSessionImgUriPosition));
                 
                 fishingSession.getFishCatches().addAll(fetchCatchesForSession(fishingSession.getFishingSessionId()));
                 fishingSessions.add(fishingSession);

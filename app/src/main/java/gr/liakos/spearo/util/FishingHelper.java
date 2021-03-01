@@ -53,7 +53,7 @@ public class FishingHelper {
 	public static List<FishAverageStatistic> getAverageStatsFrom(Context ctx, List<FishStatistic> stats, StatMode mode){
 		List<FishAverageStatistic> averageStats = new ArrayList<FishAverageStatistic>();
 		for (FishStatistic stat : stats){
-			Fish fish = Fish.getFromId(ctx,  stat.getFishId());
+			Fish fish = Fish.getFromId(ctx,  stat.getFishId());//TODO null pointer if fish in mongo but not here
 			if (fish == null){//fish in mongo but not in db
 				continue;
 			}

@@ -191,7 +191,8 @@ public class SpearoUtils {
 	
 	public static boolean customProfPicIsSet(Application app){
 		SharedPreferences app_preferences = app.getSharedPreferences(Constants.PREFERENCES, Context.MODE_PRIVATE);
-		return app_preferences.getString(Constants.PROFILE_PIC, null) != null;
+		return app_preferences.getString(Constants.PROFILE_PIC_BYTES, null) != null ||
+				app_preferences.getString(Constants.PROFILE_PIC_URI, null) != null;
 	}
 	
 	static Resources getGreekResources(Context mContext) {

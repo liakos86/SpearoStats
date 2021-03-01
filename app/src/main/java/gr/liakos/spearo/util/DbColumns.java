@@ -57,9 +57,9 @@ public class DbColumns {
 	                ContentDescriptor.FishingSession.Cols.FISHINGSESSIONLON,
 	                ContentDescriptor.FishingSession.Cols.UPLOADED,
 	                ContentDescriptor.FishingSession.Cols.SESSION_IMAGE,
-	               // ContentDescriptor.FishingSession.Cols.SESSION_MOON,
 	                ContentDescriptor.FishingSession.Cols.SESSION_WIND,
-				 	ContentDescriptor.FishingSession.Cols.SESSION_WIND_VOLUME
+				 	ContentDescriptor.FishingSession.Cols.SESSION_WIND_VOLUME,
+				 	ContentDescriptor.FishingSession.Cols.SESSION_IMAGE_URI_PATH
 	                };
 	 
 		 return FROM;

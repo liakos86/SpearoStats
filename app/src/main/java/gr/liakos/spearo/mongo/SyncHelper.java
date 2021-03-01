@@ -1,5 +1,7 @@
 package gr.liakos.spearo.mongo;
 
+import android.os.Build;
+
 import gr.liakos.spearo.R;
 import gr.liakos.spearo.SpearoApplication;
 import gr.liakos.spearo.model.bean.FishStatistic;
@@ -81,6 +83,12 @@ public class SyncHelper {
     }
 
 	public void uploadAtlasStats(Map<Fish, FishStatistic> toBeUploaded){
+
+    	if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.M){
+			return;
+		}
+
+
          MongoCollection<Document> species = getMongoCollection(MongoConstants.COLLECTION_FISH);
 
          for (Map.Entry<Fish, FishStatistic> mapEntry : toBeUploaded.entrySet()){

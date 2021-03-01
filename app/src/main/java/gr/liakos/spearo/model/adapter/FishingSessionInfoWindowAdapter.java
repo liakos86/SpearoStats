@@ -1,32 +1,34 @@
 package gr.liakos.spearo.model.adapter;
 
+import android.app.Activity;
+import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.Drawable;
+import android.net.Uri;
+import android.util.Base64;
+import android.view.View;
+import android.widget.ImageView;
+import android.widget.TextView;
+
+import androidx.core.content.res.ResourcesCompat;
+
+import com.google.android.gms.maps.GoogleMap.InfoWindowAdapter;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
+import com.makeramen.roundedimageview.RoundedImageView;
+
+import java.util.Calendar;
+import java.util.List;
+import java.util.Map;
+
 import gr.liakos.spearo.R;
-//import gr.liakos.spearo.custom.CircularImageView;
 import gr.liakos.spearo.model.object.FishCatch;
 import gr.liakos.spearo.model.object.FishingSession;
 import gr.liakos.spearo.util.Constants;
 import gr.liakos.spearo.util.DateUtils;
 import gr.liakos.spearo.util.LocationUtils;
 import gr.liakos.spearo.util.SpearoUtils;
-
-import java.util.Calendar;
-import java.util.List;
-import java.util.Map;
-
-import android.app.Activity;
-import android.content.res.Resources;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.BitmapFactory.Options;
-import androidx.core.content.res.ResourcesCompat;
-import android.util.Base64;
-import android.view.View;
-import android.widget.TextView;
-
-import com.google.android.gms.maps.GoogleMap.InfoWindowAdapter;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.Marker;
-import com.makeramen.roundedimageview.RoundedImageView;
 
 public class FishingSessionInfoWindowAdapter 
 implements InfoWindowAdapter{
@@ -63,8 +65,7 @@ implements InfoWindowAdapter{
 		}
 		List<FishCatch> fishCatches = currentSession.getFishCatches();
 
-		//CircularImageView img = (CircularImageView) view.findViewById(R.id.info_window_fish);
-		// img = (ImageView) view.findViewById(R.id.info_window_icon);
+
 		RoundedImageView img = (RoundedImageView) view.findViewById(R.id.info_window_icon);
 		TextView sessionInfoTextViewDate = (TextView) view.findViewById(R.id.info_window_text_date);
 		TextView sessionInfoTextViewFish = (TextView) view.findViewById(R.id.info_window_text_fish);
@@ -79,33 +80,70 @@ implements InfoWindowAdapter{
 		String newDateString = String.valueOf(cal.get(Calendar.YEAR));
 		newDateString += Constants.COMMA_SEP + DateUtils.getDayAndMonth(cal, activity.getApplicationContext());
 		sessionInfoTextViewDate.setText(newDateString);
+		sessionInfoTextViewDate.setCompoundDrawablesWithIntrinsicBounds(R.drawable.calendar_30,0,0,0);
 
 		if (currentSession.getLatitude() !=null && currentSession.getLongitude() != null){
 			sessionInfoTextViewLocation.setVisibility(View.VISIBLE);
 			LatLng loc = new LatLng(currentSession.getLatitude(), currentSession.getLongitude());
 			String addressFromLocation = new LocationUtils().getAddressFromLocation(loc, activity.getApplicationContext()).getAddress();
 			sessionInfoTextViewLocation.setText(addressFromLocation);
+			sessionInfoTextViewLocation.setCompoundDrawablesWithIntrinsicBounds(R.drawable.place_marker__30,0,0,0);
 		}else{
 			sessionInfoTextViewLocation.setVisibility(View.GONE);
 		}
 		sessionInfoTextViewFish.setText(fishString);
+		sessionInfoTextViewFish.setCompoundDrawablesWithIntrinsicBounds(R.drawable.catch_fish_30,0,0,0);
 
-		SpearoUtils spearoUtils = new SpearoUtils(activity);
-		if (currentSession.getSessionImage() != null){
-			Options options = new Options();
-            options.inScaled = false;
-			byte[] array = Base64.decode(currentSession.getSessionImage(), Base64.NO_WRAP);
-        	Bitmap bmp = BitmapFactory.decodeByteArray(array, 0, array.length, options);
-			img.setImageBitmap(bmp);
-		}else{
-			if (fishCatches.isEmpty()){
-				img.setImageDrawable(ResourcesCompat.getDrawable(resources, R.drawable.jelly_grid, null));
-			}else{
-				img.setImageDrawable(spearoUtils.getGridDrawableFromFish( fishCatches.get(0).getFish()));
-			}
-		}
+		setSessionImg(currentSession, resources, img);
 		
 		marker.setInfoWindowAnchor(0.5f, 1f);
+	}
+
+	/**
+	 * If there is no image set, set icon to the first fish.
+	 * If there is a bytearray or uri path for image try to set it.
+	 * If user has deleted the image, catch the exception and set the first fish icon.
+	 *
+	 * @param fishingSession
+	 * @param res
+	 */
+	void setSessionImg(FishingSession fishingSession, Resources res, ImageView fishingSessionIcon) {
+		if (fishingSession.getSessionImage() == null && fishingSession.getSessionImageUriPath()==null){
+			setFirstFishIcon(fishingSession, res, fishingSessionIcon);
+		}else{
+			String uriPath = fishingSession.getSessionImageUriPath();
+
+			if (uriPath != null){
+				try {
+					Uri sessionUri = Uri.parse(uriPath);
+					fishingSessionIcon.setImageURI(sessionUri);
+					if(fishingSessionIcon.getDrawable() == null){//the image referenced by the uri is deleted
+						setFirstFishIcon(fishingSession, res, fishingSessionIcon);
+					}
+
+				}catch(Exception e){
+					setFirstFishIcon(fishingSession, res, fishingSessionIcon);
+				}
+
+				return;
+			}
+
+			BitmapFactory.Options options = new BitmapFactory.Options();
+			options.inScaled = false;
+			byte[] array = Base64.decode(fishingSession.getSessionImage(), Base64.NO_WRAP);
+			Bitmap bmp = BitmapFactory.decodeByteArray(array, 0, array.length, options);
+			fishingSessionIcon.setImageBitmap(bmp);
+		}
+	}
+
+	private void setFirstFishIcon(FishingSession fishingSession, Resources res, ImageView fishingSessionIcon) {
+		Drawable drawableFromFish = null;
+		if (fishingSession.getFishCatches().isEmpty()){
+			drawableFromFish = ResourcesCompat.getDrawable(res, R.drawable.jelly_grid, null);
+		}else{
+			drawableFromFish = new SpearoUtils(activity).getGridDrawableFromFish(fishingSession.getFishCatches().get(0).getFish());
+		}
+		fishingSessionIcon.setImageDrawable(drawableFromFish);
 	}
 
 }

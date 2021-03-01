@@ -1,6 +1,7 @@
 package gr.liakos.spearo.model.adapter;
 
 import android.app.AlertDialog;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.res.Resources;
@@ -8,6 +9,8 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
+import android.os.Build;
 import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,7 +19,9 @@ import android.view.Window;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.core.content.res.ResourcesCompat;
@@ -25,14 +30,15 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.cj.videoprogressview.LightProgressView;
 import com.facebook.share.model.ShareHashtag;
+import com.facebook.share.model.ShareLinkContent;
 import com.facebook.share.model.SharePhoto;
 import com.facebook.share.model.SharePhotoContent;
-import com.facebook.share.widget.ShareButton;
 
-
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.Calendar;
 import java.util.List;
-import java.util.Locale;
 
 import gr.liakos.spearo.ActSpearoStatsMain;
 import gr.liakos.spearo.R;
@@ -47,6 +53,7 @@ import gr.liakos.spearo.util.Constants;
 import gr.liakos.spearo.util.DateUtils;
 import gr.liakos.spearo.util.MoonPhaseUtil;
 import gr.liakos.spearo.util.SpearoUtils;
+import uk.co.deanwild.materialshowcaseview.MaterialShowcaseView;
 
 
 public class RecyclerViewAdapter extends RecyclerView.Adapter {
@@ -72,6 +79,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter {
         public Float moonPercentage = null;
         public MoonPhase moonPhase = null;
         public Bitmap sessionImage = null;
+        public Uri sessionUri = null;
 
         FishingSession item;
 
@@ -85,13 +93,13 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter {
             sessionWindText = v.findViewById(R.id.sessionWindText);
             fishingSessionIcon = v.findViewById(R.id.fishingSessionRowIcon);
             moonPercentageView = v.findViewById(R.id.moon_percentage);
-
             shareButton = v.findViewById(R.id.shareButton);
-
-
         }
 
         public void setData(FishingSession item) {
+            sessionImage = null;
+            sessionUri = null;
+
             this.item = item;
 
             sessionCatchesNumText.setText(String.valueOf(item.getFishCatches().size()));
@@ -104,32 +112,73 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter {
             setSessionImg(item, res);
             setMoonPhaseTextAndImg(item, res);
 
-            if (sessionImage == null){
+            if (sessionImage == null && sessionUri == null){
                 shareButton.setVisibility(View.GONE);
+                shareButton.setOnClickListener(null);
             }else {
                 shareButton.setVisibility(View.VISIBLE);
                 shareButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        SharePhoto photo = new SharePhoto.Builder()
-                                .setBitmap(sessionImage)
-                                .build();
-                        SharePhotoContent content = new SharePhotoContent.Builder()
-                                .addPhoto(photo)
-                                .setShareHashtag(new ShareHashtag.Builder().setHashtag("#SpearoStats").build())
-                                .setPageId("104780914788737")
-                                .build();
-                        ((ActSpearoStatsMain) fragment.getActivity()).tryToShare(content);
-
+                        setShareListener();
                     }
                 });
 
             }
 
+            showFbShowcase();
+
+        }
+
+        private void showFbShowcase() {
+
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
+                return;
+            }
+
+            new MaterialShowcaseView.Builder(fragment.getActivity())
+                    .setTarget(shareButton)
+                    .setDismissText(android.R.string.ok)
+                    .setContentText(fragment.getResources().getString(R.string.showcase_fb))
+                    .setDelay(100)
+                    .singleUse(Constants.SHOWCASE_FB)
+                    .show();
+
+        }
+
+        private void setShareListener() {
+            Bitmap bitmap =  null;
+             if (sessionUri != null){
+
+                try {
+                    ContentResolver cr = fragment.getActivity().getBaseContext().getContentResolver();
+                    InputStream inputStream = cr.openInputStream(sessionUri);
+                    BitmapFactory.Options options = new BitmapFactory.Options();
+                    options.inScaled = false;
+                    bitmap = BitmapFactory.decodeStream(inputStream, null, options);
+                } catch (Exception e) {
+                    bitmap = null;
+                }
+            }else{
+                bitmap = sessionImage;
+            }
+
+            SharePhoto photo = new SharePhoto.Builder()
+                    .setBitmap(bitmap)
+                    .build();
+
+            SharePhotoContent content = new SharePhotoContent.Builder()
+                    .addPhoto(photo)
+                    .setShareHashtag(new ShareHashtag.Builder().setHashtag("#SpearoStats").build())
+                    .setPageId("104780914788737")
+                    .build();
+
+            ((ActSpearoStatsMain) fragment.getActivity()).tryToShare(content);
         }
 
         void setWindTextAndImg(FishingSession fishingSession,
                                Resources res) {
+
             Wind sessionWind = fishingSession.getSessionWind();
             WindVolume sessionWindVolume = fishingSession.getSessionWindVolume();
             boolean noWind = Wind.NOT_KNOWN.equals(sessionWind);
@@ -157,31 +206,57 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter {
                 moonPercentage = moonPercentage < 0 ? -moonPercentage : moonPercentage;
                 moonPercentageView.setProgress(moonPercentage);
                 moonPhase = MoonPhase.ofPosition(util.getPhaseIndex());
-                //String moonText = String.format(Locale.getDefault(), "%.1f", percentage) + "%";
-                //sessionMoonPhaseText.setText(moonText);
-
         }
 
+        /**
+         * If there is no image set, set icon to the first fish.
+         * If there is a bytearray or uri path for image try to set it.
+         * If user has deleted the image, catch the exception and set the first fish icon.
+         *
+         * @param fishingSession
+         * @param res
+         */
         void setSessionImg(FishingSession fishingSession, Resources res) {
-            if (fishingSession.getSessionImage() == null){
-                Drawable drawableFromFish = null;
-                if (fishingSession.getFishCatches().isEmpty()){
-                    drawableFromFish = ResourcesCompat.getDrawable(res, R.drawable.jelly_grid, null);
-                }else{
-                    drawableFromFish = new SpearoUtils(mContext).getGridDrawableFromFish(fishingSession.getFishCatches().get(0).getFish());
-                }
-                fishingSessionIcon.setImageDrawable(drawableFromFish);
+            if (fishingSession.getSessionImage() == null && fishingSession.getSessionImageUriPath()==null){
+                setFirstFishIcon(fishingSession, res);
             }else{
+                String uriPath = fishingSession.getSessionImageUriPath();
+
+                if (uriPath != null){
+                    try {
+                        sessionUri = Uri.parse(uriPath);
+                        fishingSessionIcon.setImageURI(sessionUri);
+                        if(fishingSessionIcon.getDrawable() == null){//the image referenced by the uri is deleted
+                            sessionUri = null;
+                            setFirstFishIcon(fishingSession, res);
+                        }
+
+                    }catch(Exception e){
+                        sessionUri = null;
+                        setFirstFishIcon(fishingSession, res);
+                    }
+
+                    return;
+                }
+
                 BitmapFactory.Options options = new BitmapFactory.Options();
                 options.inScaled = false;
                 byte[] array = Base64.decode(fishingSession.getSessionImage(), Base64.NO_WRAP);
                 Bitmap bmp = BitmapFactory.decodeByteArray(array, 0, array.length, options);
                 fishingSessionIcon.setImageBitmap(bmp);
-
                 sessionImage = bmp;
             }
         }
 
+        private void setFirstFishIcon(FishingSession fishingSession, Resources res) {
+            Drawable drawableFromFish = null;
+            if (fishingSession.getFishCatches().isEmpty()){
+                drawableFromFish = ResourcesCompat.getDrawable(res, R.drawable.jelly_grid, null);
+            }else{
+                drawableFromFish = new SpearoUtils(mContext).getGridDrawableFromFish(fishingSession.getFishCatches().get(0).getFish());
+            }
+            fishingSessionIcon.setImageDrawable(drawableFromFish);
+        }
 
         @Override
         public void onClick(View view) {

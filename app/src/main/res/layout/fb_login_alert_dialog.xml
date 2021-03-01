@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:orientation="vertical">
+
+    <LinearLayout
+        android:id="@+id/header_fb"
+        android:layout_alignParentTop="true"
+        android:background="@color/white_back"
+        android:padding="@dimen/four"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:src="@drawable/fb_share_pressed"
+            android:layout_width="@dimen/standard_view_height"
+            android:layout_height="@dimen/standard_view_height"
+            android:layout_marginEnd="@dimen/four"/>
+        
+     <TextView
+         android:layout_gravity="center_vertical"
+         android:text="Facebook"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:textColor="@color/com_facebook_blue"
+        android:textSize="@dimen/eighteen_sp"
+        android:textStyle="bold"
+        android:singleLine="true"
+        android:ellipsize="end"
+        />
+
+
+    </LinearLayout>
+
+    <RelativeLayout
+        android:layout_below="@+id/header_fb"
+        android:padding="@dimen/ten"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/one_hundred">
+
+
+    <TextView
+        android:textStyle="bold"
+        android:layout_centerInParent="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/fb_login_success"/>
+    </RelativeLayout>
+   
+</RelativeLayout>

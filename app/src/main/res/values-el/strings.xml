@@ -58,6 +58,7 @@
 	<string name="press_for_more">πατήστε για λεπτομέρειες&#8230;</string>
 
 	<string name="prey">Θήραμα: </string>
+	<string name="click_to_add">Πατήστε για προσθήκη</string>
 
 
 	<string name="search_hint">π.χ \'Μαγιάτικο\'</string>
@@ -119,6 +120,8 @@
 	<string name="Symphodus_melops">Λαπίνα</string>
 	<string name="Phycis_phycis">Σαλούβαρδος, ποντικόψαρο</string>
 	<string name="Polyprion_americanus">Βλάχος</string>
+
+	<string name="Octopus_vulgaris">Χταπόδι, κοινό</string>
 
 	<!-- END FISH -->
 
@@ -198,6 +201,18 @@
 	<string name="Imperial">Imperial (Πόδια/λίβρες)</string>
 	<string name="no_date">Χωρίς ημερομηνία</string>
 
+	<string name="showcase_sessions">Σε αυτή την οθόνη μπορείτε να αποθηκεύσετε τις ψαρευτικές σας εκδρομές!</string>
+	<string name="showcase_stats">Εδώ βλέπετε τα προσωπικά σας στατιστικά ανά είδος!</string>
+	<string name="showcase_global">Τα συνολικά στατιστικά της κοινότητας SpearoStats είναι διαθέσιμα εδώ με ένα μικρό αντίτιμο!</string>
+	<string name="showcase_map">Εδώ βλέπετε όλες τις ψαρευτικές σας εκδρομές ζωγραφισμένες στο χάρτη!</string>
+
+	<string name="showcase_auto_comp">1. Γράψτε το είδος του ψαριού που πιάσατε εδώ</string>
+	<string name="showcase_depth">2. Εισάγετε το βάθος της σύλληψης εδώ</string>
+	<string name="showcase_weight">3. Εισάγετε το βάρος του ψαριού εδώ</string>
+	<string name="showcase_catch_time">4. Αν θυμάστε την ώρα σύλληψης την εισάγετε εδώ</string>
+	<string name="showcase_add_catch">5. Πατήστε εδώ για αποθήκευση του ψαριού</string>
+	<string name="showcase_checkout">6. Τέλος πατήστε εδώ για την τελική αποθήκευση της ψαριάς σας</string>
+
 	<string name="frg_fishing_sessions">Σε αυτή την οθόνη μπορείτε να αποθηκεύσετε τις ψαρευτικές σας εκδρομές! Ξεκινήστε μια νέα καταχώρηση επιλέγοντας το κυκλικό εικονίδιο κάτω δεξιά. Καταχωρήστε όλες τις πληροφορίες της εκδρομής σας: Ημερομηνία (υποχρεωτικό), τοποθεσία (προαιρετικό) και τέλος τα θηράματά σας. Η τοποθεσία είναι ορατή μόνο από εσάς και χρησιμοποιείται για να σχεδιαστεί στο χάρτη ώστε να ταξιδέψετε ξανά όποτε το επιθυμείτε.</string>
 	<string name="frg_personal_stats">Εδώ βλέπετε τα προσωπικά σας στατιστικά ανά είδος. Οι συνολικές συλλήψεις και το μέσο βάθος και βάρος υπολογίζονται. Τέλος η καλύτερη ώρα σύλληψης, ανά εποχή, βάσει των αποθηκευμένων σας ψαριών είναι διαθέσιμη.</string>
 	<string name="frg_global_stats">Τα συνολικά στατιστικά της κοινότητας SpearoStats είναι διαθέσιμα εδώ με ένα μικρό αντίτιμο. Οι συνολικές συλλήψεις, το μέσο βάθος και βάρος και η καλύτερη ώρα σύλληψης ανά εποχή, υπολογίζονται για το σύνολο όλων των δεδομένων.</string>
@@ -264,5 +279,10 @@
 	<string name="grid_waning_gibbous">Αμφίκυρτος-</string>
 	<string name="grid_last_quarter">Ημι-</string>
 	<string name="grid_waning_crescent">Μηνίσκος-</string>
+
+	<string name="post_cancelled">Το post σας ακυρώθηκε</string>
+	<string name="post_success">Το post έγινε με επιτυχία!</string>
+	<string name="post_in_progress">Το post σας ετοιμάζεται…</string>
+	<string name="showcase_fb">Πατήστε για να μοιραστείτε την ψαριά σας στο Facebook!</string>
 
 </resources>

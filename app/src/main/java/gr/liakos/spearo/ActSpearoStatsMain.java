@@ -1,25 +1,5 @@
 package gr.liakos.spearo;
 
-import gr.liakos.spearo.application.BaseFrgActivityWithBottomButtons;
-import gr.liakos.spearo.application.NonSwipeableViewPager;
-import gr.liakos.spearo.async.AsyncLoadProfilePic;
-import gr.liakos.spearo.billing.BillingHelper;
-import gr.liakos.spearo.def.AsyncListener;
-import gr.liakos.spearo.fragment.FrgFishingSessions;
-import gr.liakos.spearo.fragment.FrgFishingStats;
-import gr.liakos.spearo.fragment.FrgFishingStatsGlobal;
-import gr.liakos.spearo.fragment.FrgMyPlaces;
-import gr.liakos.spearo.model.adapter.MyPagerAdapter;
-import gr.liakos.spearo.model.object.User;
-import gr.liakos.spearo.util.Constants;
-import gr.liakos.spearo.util.SpearoUtils;
-
-import java.io.ByteArrayOutputStream;
-import java.io.FileNotFoundException;
-import java.io.InputStream;
-import java.io.PrintWriter;
-import java.util.Map;
-
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -38,23 +18,6 @@ import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-//import android.support.design.widget.AppBarLayout;
-//import android.support.design.widget.CollapsingToolbarLayout;
-//import android.support.design.widget.FloatingActionButton;
-//import android.support.design.widget.Snackbar;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.RequiresApi;
-import androidx.appcompat.widget.Toolbar;
-//import androidx.core.app.Fragment;
-//import androidx.core.app.FragmentManager;
-import androidx.core.content.ContextCompat;
-import androidx.core.widget.NestedScrollView;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-
-
-//import android.support.v7.widget.Toolbar;
 import android.util.Base64;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -63,13 +26,23 @@ import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.ContextCompat;
+import androidx.core.widget.NestedScrollView;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+
+import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
+import com.facebook.login.LoginManager;
+import com.facebook.login.LoginResult;
+import com.facebook.share.ShareApi;
 import com.facebook.share.Sharer;
-import com.facebook.share.model.ShareLinkContent;
 import com.facebook.share.model.SharePhotoContent;
 import com.facebook.share.widget.ShareDialog;
 import com.google.android.gms.maps.model.LatLng;
@@ -77,6 +50,29 @@ import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
+
+import java.io.ByteArrayOutputStream;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
+import java.io.PrintWriter;
+import java.util.Arrays;
+import java.util.Map;
+
+import gr.liakos.spearo.application.BaseFrgActivityWithBottomButtons;
+import gr.liakos.spearo.application.NonSwipeableViewPager;
+import gr.liakos.spearo.async.AsyncLoadProfilePic;
+import gr.liakos.spearo.billing.BillingHelper;
+import gr.liakos.spearo.def.AsyncListener;
+import gr.liakos.spearo.fragment.FrgFishingSessions;
+import gr.liakos.spearo.fragment.FrgFishingStats;
+import gr.liakos.spearo.fragment.FrgFishingStatsGlobal;
+import gr.liakos.spearo.fragment.FrgMyPlaces;
+import gr.liakos.spearo.model.adapter.MyPagerAdapter;
+import gr.liakos.spearo.model.object.User;
+import gr.liakos.spearo.util.Constants;
+import gr.liakos.spearo.util.SpearoUtils;
+import uk.co.deanwild.materialshowcaseview.MaterialShowcaseSequence;
+import uk.co.deanwild.materialshowcaseview.ShowcaseConfig;
 
 public class ActSpearoStatsMain 
 extends BaseFrgActivityWithBottomButtons
@@ -99,6 +95,8 @@ implements LocationListener {
 
 	ShareDialog facebookShareDialog;
 	CallbackManager callbackManager;
+	FacebookCallback fbCallBack;
+	AlertDialog fbAlertDialog;
 
     /**
      * The total size of the pager objects
@@ -107,7 +105,6 @@ implements LocationListener {
 	private BillingHelper billingHelper;
 
 
-	@SuppressLint("NewApi")
 	@Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -121,35 +118,135 @@ implements LocationListener {
         setupAppBarScrolling();
         fixAppBarTextViews();
         this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+
+		startShowcaseView();
+
 		locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-        checkMapPermissions();
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+			checkMapPermissions();
+		}
 
 		callbackManager = CallbackManager.Factory.create();
 		facebookShareDialog = new ShareDialog(this);
-
-		facebookShareDialog.registerCallback(callbackManager, new FacebookCallback<Sharer.Result>() {
+		fbCallBack = new FacebookCallback<Sharer.Result>() {
 			@Override
 			public void onSuccess(Sharer.Result result) {
-				Toast.makeText(getApplicationContext(), "success", Toast.LENGTH_SHORT).show();
+				hideAlertFbShare();
+				new SpearoUtils(getApplicationContext()).snack(findViewById(R.id.fab_add), getResources().getString(R.string.post_success));
 			}
 
 			@Override
 			public void onCancel() {
-				Toast.makeText(getApplicationContext(), "cancel", Toast.LENGTH_SHORT).show();
+				hideAlertFbShare();
+				new SpearoUtils(getApplicationContext()).snack(findViewById(R.id.fab_add), getResources().getString(R.string.post_cancelled));
 			}
 
 			@Override
 			public void onError(FacebookException error) {
-				Toast.makeText(getApplicationContext(), "error", Toast.LENGTH_SHORT).show();
-			} });
+				hideAlertFbShare();
+				new SpearoUtils(getApplicationContext()).snack(findViewById(R.id.fab_add), getResources().getString(R.string.post_cancelled));
+				} };
 
+		facebookShareDialog.registerCallback(callbackManager, fbCallBack);
+
+	}
+
+	private void startShowcaseView() {
+		LinearLayout frgSessions = findViewById(R.id.btn_fishing_sessions);
+		LinearLayout frgStats = findViewById(R.id.btn_fishing_stats);
+		LinearLayout frgGlobal = findViewById(R.id.btn_fishing_stats_global);
+		LinearLayout frgMap = findViewById(R.id.btn_map);
+		
+		ShowcaseConfig config = new ShowcaseConfig();
+		config.setDelay(200); // half second between each showcase view
+
+		MaterialShowcaseSequence sequence = new MaterialShowcaseSequence(this, Constants.SHOWCASE_ACT_MAIN);
+		sequence.setConfig(config);
+
+		String gotIt = getResources().getString(android.R.string.ok);
+		
+		sequence.addSequenceItem(frgSessions,
+				getResources().getString(R.string.showcase_sessions), gotIt);
+		sequence.addSequenceItem(frgStats,
+				getResources().getString(R.string.showcase_stats), gotIt);
+		sequence.addSequenceItem(frgGlobal,
+				getResources().getString(R.string.showcase_global), gotIt);
+		sequence.addSequenceItem(frgMap,
+				getResources().getString(R.string.showcase_map), gotIt);
+
+		sequence.start();
 	}
 
 	public void tryToShare(SharePhotoContent photoContent){
-		if (ShareDialog.canShow(ShareLinkContent.class)) {
+		alertFbShare();
+
+		if (ShareDialog.canShow(SharePhotoContent.class)) {
 			facebookShareDialog.show(photoContent);
+		}else{
+
+			LoginManager loginManager = LoginManager.getInstance();
+
+			loginManager.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
+				@Override
+				public void onSuccess(LoginResult loginResult) {
+					hideAlertFbShare();
+					alertFbLoginShare();
+				}
+
+				@Override
+				public void onCancel() {
+					hideAlertFbShare();
+					new SpearoUtils(getApplicationContext()).snack(findViewById(R.id.fab_add), getResources().getString(R.string.post_cancelled));
+				}
+
+				@Override
+				public void onError(FacebookException error) {
+					hideAlertFbShare();
+					new SpearoUtils(getApplicationContext()).snack(findViewById(R.id.fab_add), getResources().getString(R.string.post_cancelled));
+				}
+			});
+
+
+			AccessToken token = AccessToken.getCurrentAccessToken();
+			if (token != null && !token.isExpired()){
+				ShareApi.share(photoContent, fbCallBack);
+			}else {
+				loginManager.logOut();
+				loginManager.logInWithReadPermissions(this, Arrays.asList("public_profile"));
+			}
+
 		}
 	}
+
+	void hideAlertFbShare(){
+		fbAlertDialog.cancel();
+	}
+
+	void alertFbShare(){
+		AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
+		View dialogView = getLayoutInflater().inflate(R.layout.fb_share_alert_dialog, null);
+		dialogBuilder.setView(dialogView);
+		dialogBuilder.setMessage(getResources().getString(R.string.post_in_progress));
+
+		fbAlertDialog = dialogBuilder.create();
+		fbAlertDialog.show();
+	}
+
+	void alertFbLoginShare(){
+		AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
+		View dialogView = getLayoutInflater().inflate(R.layout.fb_login_alert_dialog, null);
+		dialogBuilder.setView(dialogView);
+		dialogBuilder.setPositiveButton(getResources().getString(android.R.string.ok), new DialogInterface.OnClickListener() {
+			public void onClick(DialogInterface dialog, int id) {
+				dialog.cancel();
+			}
+		});
+
+		AlertDialog fbLoginAlertDialog = dialogBuilder.create();
+		fbLoginAlertDialog.show();
+	}
+
+
 
 	@RequiresApi(api = Build.VERSION_CODES.M)
 	void checkMapPermissions(){
@@ -161,7 +258,6 @@ implements LocationListener {
 						PackageManager.PERMISSION_GRANTED)){
 			mapPermissionGiven = true;
 			locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 400, 1000, this);
-			//You can also use LocationManager.GPS_PROVIDER and LocationManager.PASSIVE_PROVIDER
 		}else{
 			requestPermissions(new String[] { Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION },
 					Constants.PERMISSIONS_MAP_CODE);
@@ -201,13 +297,13 @@ implements LocationListener {
 	}
 
 	void setupFabSettings() {
-		   FloatingActionButton fabSettings = (FloatingActionButton) findViewById(R.id.fab_settings);
-		        fabSettings.setOnClickListener(new View.OnClickListener() {
-		            @Override
-		            public void onClick(View view) {
-		            	startSettings();
-		            }
-		        });
+	   FloatingActionButton fabSettings = (FloatingActionButton) findViewById(R.id.fab_settings);
+			fabSettings.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View view) {
+					startSettings();
+				}
+			});
 	}
 
 	void setProfilePicSource() {
@@ -374,13 +470,11 @@ implements LocationListener {
         }
     }
 
-
     public void interceptEvents(boolean doIntercept){
     	NestedScrollView nsv = findViewById(R.id.nestedScrollView);
     	nsv.requestDisallowInterceptTouchEvent(doIntercept);
     }
 
-	
     public void fixCatchesNum(int total){
     	TextView textCatchesNum = (TextView) findViewById(R.id.textCatchesNum);
     	textCatchesNum.setText(String.valueOf(total));
@@ -393,13 +487,13 @@ implements LocationListener {
 		ctl.setTitle(username);
 	}
     
-    
     /**
 	 * The response from app-store is not handled, so we do it manually.
 	 */
 	 @Override
 	 protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		 super.onActivityResult(requestCode, resultCode, data);
+		 callbackManager.onActivityResult(requestCode, resultCode, data);
 //	     if (!mHelper.handleActivityResult(requestCode, resultCode, data)) {
 //	         super.onActivityResult(requestCode, resultCode, data);
 //	     }
@@ -415,6 +509,12 @@ implements LocationListener {
 					//new SpearoUtils(this).snack(findViewById(R.id.parent_layout), "Wrong path or content type");
 					return;
 				}
+
+			 final int takeFlags = data.getFlags()
+					 & (Intent.FLAG_GRANT_READ_URI_PERMISSION
+					 | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+
+			 getContentResolver().takePersistableUriPermission(selectedImage, takeFlags);
 	            
 				sendBytes(selectedImage);
 	        }
@@ -459,12 +559,11 @@ implements LocationListener {
 	public void openImageIntent() {
 		Intent intent = new Intent();
 		intent.setType("image/*");
-		intent.setAction(Intent.ACTION_GET_CONTENT);
+		intent.addCategory(Intent.CATEGORY_OPENABLE);
+		intent.setAction(Intent.ACTION_OPEN_DOCUMENT);
 		startActivityForResult(Intent.createChooser(intent, "Select Picture"), Constants.PICK_IMAGE);
-		
 	}
-	
-	
+
 	@SuppressLint("NewApi")
 	public void selectImage() {
 		if (ContextCompat.checkSelfPermission(
@@ -477,38 +576,42 @@ implements LocationListener {
         }
 	}
 	
-	
-		void sendBytes(Uri uri){
-			FrgFishingSessions frgSessions = (FrgFishingSessions) getActiveFragment(getSupportFragmentManager(), 0);
-			String saveThis = null;
-			if (uri != null){
+	void sendBytes(Uri uri){
+		FrgFishingSessions frgSessions = (FrgFishingSessions) getActiveFragment(getSupportFragmentManager(), 0);
+
+		if (uri != null){
+			try {
+				//String uriPath = RealPathUtil.getRealPath(getApplicationContext(), uri);
+				frgSessions.setSessionUriAndSave(String.valueOf(uri));
+			}catch(Exception e){
+				String saveThis = null;
 				byte[] result = storeImageByteArray(uri);
 				saveThis = Base64.encodeToString(result, Base64.NO_WRAP);
+				frgSessions.setSessionBytesAndSave(saveThis);
 			}
-			frgSessions.setSessionBytesAndSave(saveThis);
 		}
 
-		private byte[] storeImageByteArray(Uri uri) {
-	   	  	
-	        byte[] data = null;
-	        try {
-	            ContentResolver cr = getBaseContext().getContentResolver();
-	            InputStream inputStream = cr.openInputStream(uri);
-	            Options options = new Options();
-	            options.inScaled = false;
-				Bitmap bitmap = BitmapFactory.decodeStream(inputStream, null, options);
-	            Bitmap scaledBitmap = Bitmap.createScaledBitmap(bitmap, 500, 500, false);
-	            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-	            scaledBitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
-	            data = baos.toByteArray();
-	            scaledBitmap.recycle();
-	            return data;
-	        } catch (FileNotFoundException e) {
-	            return null;
-	        }
+	}
+
+	private byte[] storeImageByteArray(Uri uri) {
+
+		byte[] data = null;
+		try {
+			ContentResolver cr = getBaseContext().getContentResolver();
+			InputStream inputStream = cr.openInputStream(uri);
+			Options options = new Options();
+			options.inScaled = false;
+			Bitmap bitmap = BitmapFactory.decodeStream(inputStream, null, options);
+			Bitmap scaledBitmap = Bitmap.createScaledBitmap(bitmap, 500, 500, false);
+			ByteArrayOutputStream baos = new ByteArrayOutputStream();
+			scaledBitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+			data = baos.toByteArray();
+			scaledBitmap.recycle();
+			return data;
+		} catch (FileNotFoundException e) {
+			return null;
 		}
-		
-	
+	}
 
 	/**
      * Retrive google licence key from Google Play Console:
@@ -523,14 +626,9 @@ implements LocationListener {
 		billingHelper = new BillingHelper(this);
 	}
 
-
 	public void purchase(View view) {
 		billingHelper.purchase();
 	}
-
-	//public void consume(View view){
-	//	billingHelper.consume(view);
-	//}
 
 	@Override
 	protected void onDestroy() {
@@ -566,16 +664,8 @@ implements LocationListener {
 		return currentLatLng;
 	}
 
-	public void setCurrentLatLng(LatLng currentLatLng) {
-		this.currentLatLng = currentLatLng;
-	}
-
 	public boolean isMapPermissionGiven() {
 		return mapPermissionGiven;
-	}
-
-	public void setMapPermissionGiven(boolean mapPermissionGiven) {
-		this.mapPermissionGiven = mapPermissionGiven;
 	}
 
 }

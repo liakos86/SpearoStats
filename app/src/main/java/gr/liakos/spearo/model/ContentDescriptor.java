@@ -141,6 +141,7 @@ public class ContentDescriptor {
             public static final String FISHINGSESSIONLON = "longitude";
             public static final String UPLOADED = "uploaded";
 			public static final String SESSION_IMAGE = "sessionImage";
+            public static final String SESSION_IMAGE_URI_PATH = "sessionImageUriPath";
 			public static final String SESSION_MOON = "sessionMoon";
 			public static final String SESSION_WIND = "sessionWind";
             public static final String SESSION_WIND_VOLUME = "sessionWindVolume";
@@ -162,6 +163,7 @@ public class ContentDescriptor {
                     + String.format(sFrmDouble, Cols.FISHINGSESSIONLON) + " , "
                     + String.format(sFrmIntDefault0, Cols.UPLOADED) + " , "
                     + String.format(sFrmText, Cols.SESSION_IMAGE) + " , "
+                    + String.format(sFrmText, Cols.SESSION_IMAGE_URI_PATH) + " , "
                     + String.format(sFrmIntDefault0, Cols.SESSION_MOON) + " , "
                     + String.format(sFrmIntDefault0, Cols.SESSION_WIND) + " , "
                     + String.format(sFrmIntDefault0, Cols.SESSION_WIND_VOLUME) + " , "
@@ -194,9 +196,9 @@ public class ContentDescriptor {
             public static final String LATINNAME = "latinname";
             public static final String RECORDWEIGHT = "record";
             public static final String FISHFAMILY = "fishFamily";
-			public static final String MAXALLOWEDCATCHWEIGHT = "maxAllowedCatchWeight";
-			public static final String CONCERN = "concern";
-            
+            public static final String MAXALLOWEDCATCHWEIGHT = "maxAllowedCatchWeight";
+            public static final String CONCERN = "concern";
+
         }
 
         protected static UriMatcher addToUriMatcher(String authority, UriMatcher matcher) {
@@ -215,165 +217,224 @@ public class ContentDescriptor {
                     + String.format(sFrmIntDefault0, Cols.FISHFAMILY) + " , "
                     + String.format(sFrmIntDefault0, Cols.CONCERN) + " , "
                     + String.format(sFrmDouble, Cols.MAXALLOWEDCATCHWEIGHT) + " , "
-                    
+
                     + String.format(sFrmPrimaryKey, Cols.FISHID) + ")";
         }
-        
-        
+
+
         public static String insertSpecies() {
-			String insert = "INSERT OR IGNORE INTO " + Fish.TABLE_NAME 
-					+ "( "+ ContentDescriptor.Fish.Cols.FISHID + Constants.COMMA_SEP + ContentDescriptor.Fish.Cols.LATINNAME + Constants.COMMA_SEP + ContentDescriptor.Fish.Cols.RECORDWEIGHT + Constants.COMMA_SEP + ContentDescriptor.Fish.Cols.FISHFAMILY + Constants.COMMA_SEP + ContentDescriptor.Fish.Cols.MAXALLOWEDCATCHWEIGHT + Constants.COMMA_SEP + ContentDescriptor.Fish.Cols.CONCERN +") values "
-					+ "(1, 'Seriola dumerili', 75.4, 2, 0, 1)," 
-					+ "(2, 'Seriola fasciata', 10, 2, 0, 1),"
-					+ "(3, 'Lophius piscatorius', 38.3, 3, 0, 1),"
-					+ "(4, 'Sphyraena afra', 25.0, 5, 0, 1),"
-					+ "(5, 'Sphyraena qenie', 16.4, 5, 0, 1),"
-					+ "(6, 'Sphyraena barracuda', 29.4, 5, 0, 1),"
-					+ "(7, 'Sphyraena argentea', 5.2, 5, 0, 1),"
-					+ "(8, 'Sphyraena jello', 18.5, 5, 0, 1),"
-					+ "(9, 'Sphyraena putnamae', 10.5, 5, 0, 1),"
-					+ "(10,'Sphyraena viridensis', 11.6, 5, 0, 1),"
-					+ "(11,'Sphyraena sphyraena', 3.6, 5, 0, 1),"
-					+"(12,'Stereolepis gigas', 247.2, 8, 0, 6),"
-					+"(13,'Paralabrax clathratus', 5.6, 1, 0, 1),"
-					+"(14,'Dermatolepis dermatolepis', 10.6, 1, 0, 1),"
-					+"(15,'Mullus', -1, 23, 2.0, 1),"
-					+"(16, 'Morone saxatilis', 5.6, 10, 0, 1),"
-					+"(17, 'Seriolella brama', 6.7, 11, 0, 1),"
-					+"(18, 'Pomatomus saltatrix', 11.6, 6, 0, 4),"
-					+"(19, 'Paristiopterus labiosus', 5.4, 12, 0, 1),"
-					+"(20, 'Sarda sarda', 10.1, 13, 0, 1),"
-					+"(21, 'Sarda chiliensis', 8.2, 13, 0, 1),"
-					+"(22, 'Scorpaena scrofa', 3.6, 24, 5.0, 1),"
-					+"(23, 'Monotaxis grandoculis', 6.7, 14, 0, 1),"
-					+"(24, 'Argyrops spinifer', 4.7, 4, 0, 1),"
-					+"(25, 'Balistes capriscus', -1, 25, 10.0, 1),"
-					+"(26, 'Pterois', -1, 24, 1.5, 1),"
-					+"(27, 'Weever', -1, 26, 3.0, 1),"
-					+"(28, 'Scorpaenichthys marmoratus', 11.3, 15, 0, 1),"
-					+"(29, 'Epinephelus analogus', 23.6, 1, 0, 1),"
-					+"(30, 'Mugil cephalus', -1, 27, 10.0, 1),"
-					+"(31, 'Muraena helena', -1, 28, 6.0, 1),"
-					+"(32, 'Uranoscopus scaber', -1, 29, 4.0, 1),"
-					+"(33, 'Lichia stella', -1, 2, 3, 1),"
-					+"(34, 'Kyphosus sectatrix', 9.9, 16, 0, 1),"
-					+"(35, 'Rachycentron canadum', 66.2, 17, 0, 1),"
-					+"(36, 'Gadus morhua', 9.8, 18, 0, 4),"
-					+"(37, 'Gadus macrocephaleus', 11.5, 18, 0, 1),"
-					+"(38, 'Conger conger', 4.9, 19, 0, 1),"
-					+"(39, 'Plectropomus laevis', 24.9, 1, 0, 1),"
-					+"(40, 'Plectropomus leopardus', 7.2, 1, 0, 1),"
-					+"(41, 'Plectropomus punctatus', 17.3, 1, 0, 1),"
-					+"(42, 'Plectropomus pessuliferus', 13.1, 1, 0, 1),"
-					+"(43, 'Plectropomus maculatus', 11.8, 1, 0, 1),"
-					+"(44, 'Cynoscion stolzmanni', 10.5, 20, 0, 1),"
-					+"(45, 'Dentex dentex', 12.7, 4, 0, 4),"
-					+"(46, 'Dentex gibbosus', 9.9, 4, 0, 1),"
-					+"(47, 'Coryphaena hippurus', 31.8, 7, 0, 1),"
-					+"(48, 'Pogonias cromis', 45.9, 20, 0, 1),"
-					+"(49, 'Boops boops', -1, 4, 2.0, 1),"
-					+"(50, 'Sciaena umbra', -1, 20, 5.0, 1),"
-					+"(51, 'Lethrinus olivaceus', 9.2, 14, 0, 1),"
-					+"(52, 'Lethrinus erythracanthus', 8.7, 14, 0, 1),"
-					+"(53, 'Lethrinus nebulosus', 5.8, 14, 0, 1),"
-					+"(54, 'Lethrinus xanthochilus', 4.6, 14, 0, 1),"
-					+"(55, 'Paralichthys brasiliensis', 10.1, 21, 0, 1),"
-					+"(56, 'Platichthys stellatus', 6.0, 22, 0, 1),"
-					+"(57, 'Paralichthys dentatus', 6.9, 21, 0, 1),"
-					+"(58, 'Umbrina cirrosa', -1, 20, 12.0 , 4),"
-					+"(59, 'Sparisoma cretense', -1, 31, 4.0, 1),"
-					
-					+"(60, 'Lophius americanus', 11.1, 3, 0, 1),"
-					+"(61, 'Mycteroperca bonaci', 44.2, 1, 0, 1),"
-					+"(62, 'Mycteroperca xenarcha', 55.8, 1, 0, 1),"
-					+"(63, 'Epinephelus fuscoguttatus', 11.6, 1, 0, 4),"
-					+"(64, 'Mycteroperca acutirostris', 10.2, 1, 0, 1),"
-					+"(65, 'Epinephelus marginatus', 35.1, 1, 0, 4),"
-					+"(66, 'Mycteroperca microlepis', 29.2, 1, 0, 4),"
-					+"(67, 'Epinephelus costae', 7.8, 1, 0, 1),"
-					+"(68, 'Mycteroperca jordani', 95.7, 1, 0, 5),"
-					+"(69, 'Mycteroperca rosacea', 13.7, 1, 0, 1),"
-					+"(70, 'Epinephelus malabaricus', 46.5, 1, 0, 1),"
-					+"(71, 'Mycteroperca rubra', 7.0, 1, 0, 1),"
-					+"(72, 'Epinephelus coioides', 19.8, 1, 0, 1),"
-					+"(73, 'Epinephelus morio', 8.7, 1, 0, 4),"
-					+"(74, 'Epinephelus adsensionis', 4.6, 1, 0, 1),"
-					+"(75, 'Mycteroperca prionura', 14.1, 1, 0, 1),"
-					+"(76, 'Mycteroperca phenax', 12.4, 1, 0, 1),"
-					+"(77, 'Epinephelus posteli', 10.6, 1, 0, 1),"
-					+"(78, 'Epinephelus nigritus', 21.3, 1, 0, 1),"
-					+"(79, 'Epinephelus multinotatus', 16.0, 1, 0, 1),"
-					+"(80, 'Mycteroperca venenosa', 14.1, 1, 0, 1),"
-					
-					
-					+"(81, 'Mycteroperca interstitialis', 8.2 , 1, 0, 4),"
-					
-					+"(82, 'Hippoglossus hippoglossus', 63.4, 22, 0, 5),"
-					
-					+"(83, 'Paralichthys californicus', 26.7, 21, 0, 1),"
-					
-					+"(84, 'Hippoglossus stenolepis', 	61.2, 22, 0, 1),"
-					
-					+"(85, 'Seriola rivoliana',	54.4 ,	2, 0, 1),"
-					+"(86, 'Caranx lugubris',	14.0,	2, 0, 1),"
-					+"(87, 'Caranx hippos',		21.7 ,	2, 0, 1),"
-					+"(88, 'Caranx caninus',	11.3 ,	2, 0, 1),"
-					+"(89, 'Seriola peruana',	7.0 , 2, 0, 1),"
-					+"(90, 'Caranx latus',	13.9 ,	2, 0, 1),"
-					+"(91, 'Caranx fischeri',	18.2 ,2, 0, 1),"	
-					+"(92, 'Caranx bartholomaei',	12.8 ,2, 0, 1),"
-					+"(93, 'Lichia amia', 30.0, 2, 0, 1),"
-					+"(94, 'Euthynnus alletteratus', 10.7 , 13, 0, 1),"
-			
-					+"(95, 'Scomberomorus regalis',  7.4 , 13, 0, 1),"
-					+"(96, 'Scomberomorus cavalla', 35.3 , 13, 0, 1),"
-					+"(97, 'Scomberomorus commerson', 40.5 , 13, 0, 1),"
-					
-					
-					+"(98, 'Makaira indica', 	374.8, 30, 0, 1),"
-					+"(99, 'Makaira nigricans', 301.2 , 30, 0, 4),"
-					
-					+"(100, 'Makaira mazara',  259.0 , 30, 0, 1),"
-					+"(101, 'Kajikia audax', 164.2 , 30, 0, 1),"
-					+"(102, 'Kajikia albida', 42.5  , 30, 0, 4),"
-					
-					+"(103, 'Argyrosomus regius', 32.8  , 20, 0, 1),"
-					
-					+"(104, 'Pollachius pollachius', 5.5  , 18, 0, 1),"
-					
-					+"(105, 'Pagrus pagrus',  5.4 ,4, 0, 1),"
-					
-					+"(106, 'Caranx crysos',  4.6 , 2, 0, 1),"
-					+"(107, 'Oblada melanura',  -1 , 4, 2.0, 1),"
-					+"(108, 'Dicentrarchus labrax',  9.8 , 10, 0, 1),"
-					
-					+"(109, 'Sparus aurata',  6.9 , 4, 0, 1),"
-					+"(110, 'Diplodus puntazzo',  6.2 , 4, 0, 1),"
-					
-					+"(111, 'Lithognathus mormyrus',  -1, 4, 3.0, 1),"
-					
-					+"(112, 'Diplodus sargus',  2.87 , 4, 5.0, 1),"
-					
-					+"(113, 'Salema porgy', -1, 4, 3.0, 1),"
-					
-					+"(114, 'Epinephelus aeneus', 22.6, 1, 0, 1),"
-					
-					+"(115, 'Spondyliosoma cantharus', -1, 4, 5.0, 1),"
-					
-					+"(116, 'Zeus faber', -1, 32, 6.0, 1),"
-					
-					+"(117, 'Symphodus melops', -1, 33, 4.0, 1),"
-					
-					+"(118, 'Diplodus vulgaris', -1, 4, 1.0, 1),"
-					+"(119, 'Phycis phycis', -1, 34, 8.0, 1),"
-					+"(120, 'Polyprion americanus', -1, 8, 30.0, 1),"
-					+"(121, 'Pagrus auratus', 15.2, 4, 0, 1)";
-					
-			return insert;
-		}
+            String insert = "INSERT OR IGNORE INTO " + Fish.TABLE_NAME
+                    + "( " + ContentDescriptor.Fish.Cols.FISHID + Constants.COMMA_SEP + ContentDescriptor.Fish.Cols.LATINNAME + Constants.COMMA_SEP + ContentDescriptor.Fish.Cols.RECORDWEIGHT
+                    + Constants.COMMA_SEP + ContentDescriptor.Fish.Cols.FISHFAMILY + Constants.COMMA_SEP + ContentDescriptor.Fish.Cols.MAXALLOWEDCATCHWEIGHT + Constants.COMMA_SEP
+                    + ContentDescriptor.Fish.Cols.CONCERN + ") values "
+                    + "(1, 'Seriola dumerili', 75.4, 2, 0, 1),"
+                    + "(2, 'Seriola fasciata', 10, 2, 0, 1),"
+                    + "(3, 'Lophius piscatorius', 38.3, 3, 0, 1),"
+                    + "(4, 'Sphyraena afra', 25.0, 5, 0, 1),"
+                    + "(5, 'Sphyraena qenie', 16.4, 5, 0, 1),"
+                    + "(6, 'Sphyraena barracuda', 29.4, 5, 0, 1),"
+                    + "(7, 'Sphyraena argentea', 5.2, 5, 0, 1),"
+                    + "(8, 'Sphyraena jello', 18.5, 5, 0, 1),"
+                    + "(9, 'Sphyraena putnamae', 10.5, 5, 0, 1),"
+                    + "(10,'Sphyraena viridensis', 11.6, 5, 0, 1),"
+                    + "(11,'Sphyraena sphyraena', 3.6, 5, 0, 1),"
+                    + "(12,'Stereolepis gigas', 247.2, 8, 0, 6),"
+                    + "(13,'Paralabrax clathratus', 5.6, 1, 0, 1),"
+                    + "(14,'Dermatolepis dermatolepis', 10.6, 1, 0, 1),"
+                    + "(15,'Mullus', -1, 23, 2.0, 1),"
+                    + "(16, 'Morone saxatilis', 5.6, 10, 0, 1),"
+                    + "(17, 'Seriolella brama', 6.7, 11, 0, 1),"
+                    + "(18, 'Pomatomus saltatrix', 11.6, 6, 0, 4),"
+                    + "(19, 'Paristiopterus labiosus', 5.4, 12, 0, 1),"
+                    + "(20, 'Sarda sarda', 10.1, 13, 0, 1),"
+                    + "(21, 'Sarda chiliensis', 8.2, 13, 0, 1),"
+                    + "(22, 'Scorpaena scrofa', 3.6, 24, 5.0, 1),"
+                    + "(23, 'Monotaxis grandoculis', 6.7, 14, 0, 1),"
+                    + "(24, 'Argyrops spinifer', 4.7, 4, 0, 1),"
+                    + "(25, 'Balistes capriscus', -1, 25, 10.0, 1),"
+                    + "(26, 'Pterois', -1, 24, 1.5, 1),"
+                    + "(27, 'Weever', -1, 26, 3.0, 1),"
+                    + "(28, 'Scorpaenichthys marmoratus', 11.3, 15, 0, 1),"
+                    + "(29, 'Epinephelus analogus', 23.6, 1, 0, 1),"
+                    + "(30, 'Mugil cephalus', -1, 27, 10.0, 1),"
+                    + "(31, 'Muraena helena', -1, 28, 6.0, 1),"
+                    + "(32, 'Uranoscopus scaber', -1, 29, 4.0, 1),"
+                    + "(33, 'Lichia stella', -1, 2, 3, 1),"
+                    + "(34, 'Kyphosus sectatrix', 9.9, 16, 0, 1),"
+                    + "(35, 'Rachycentron canadum', 66.2, 17, 0, 1),"
+                    + "(36, 'Gadus morhua', 9.8, 18, 0, 4),"
+                    + "(37, 'Gadus macrocephaleus', 11.5, 18, 0, 1),"
+                    + "(38, 'Conger conger', 4.9, 19, 0, 1),"
+                    + "(39, 'Plectropomus laevis', 24.9, 1, 0, 1),"
+                    + "(40, 'Plectropomus leopardus', 7.2, 1, 0, 1),"
+                    + "(41, 'Plectropomus punctatus', 17.3, 1, 0, 1),"
+                    + "(42, 'Plectropomus pessuliferus', 13.1, 1, 0, 1),"
+                    + "(43, 'Plectropomus maculatus', 11.8, 1, 0, 1),"
+                    + "(44, 'Cynoscion stolzmanni', 10.5, 20, 0, 1),"
+                    + "(45, 'Dentex dentex', 12.7, 4, 0, 4),"
+                    + "(46, 'Dentex gibbosus', 9.9, 4, 0, 1),"
+                    + "(47, 'Coryphaena hippurus', 31.8, 7, 0, 1),"
+                    + "(48, 'Pogonias cromis', 45.9, 20, 0, 1),"
+                    + "(49, 'Boops boops', -1, 4, 2.0, 1),"
+                    + "(50, 'Sciaena umbra', -1, 20, 5.0, 1),"
+                    + "(51, 'Lethrinus olivaceus', 9.2, 14, 0, 1),"
+                    + "(52, 'Lethrinus erythracanthus', 8.7, 14, 0, 1),"
+                    + "(53, 'Lethrinus nebulosus', 5.8, 14, 0, 1),"
+                    + "(54, 'Lethrinus xanthochilus', 4.6, 14, 0, 1),"
+                    + "(55, 'Paralichthys brasiliensis', 10.1, 21, 0, 1),"
+                    + "(56, 'Platichthys stellatus', 6.0, 22, 0, 1),"
+                    + "(57, 'Paralichthys dentatus', 6.9, 21, 0, 1),"
+                    + "(58, 'Umbrina cirrosa', -1, 20, 12.0 , 4),"
+                    + "(59, 'Sparisoma cretense', -1, 31, 4.0, 1),"
+
+                    + "(60, 'Lophius americanus', 11.1, 3, 0, 1),"
+                    + "(61, 'Mycteroperca bonaci', 44.2, 1, 0, 1),"
+                    + "(62, 'Mycteroperca xenarcha', 55.8, 1, 0, 1),"
+                    + "(63, 'Epinephelus fuscoguttatus', 11.6, 1, 0, 4),"
+                    + "(64, 'Mycteroperca acutirostris', 10.2, 1, 0, 1),"
+                    + "(65, 'Epinephelus marginatus', 35.1, 1, 0, 4),"
+                    + "(66, 'Mycteroperca microlepis', 29.2, 1, 0, 4),"
+                    + "(67, 'Epinephelus costae', 7.8, 1, 0, 1),"
+                    + "(68, 'Mycteroperca jordani', 95.7, 1, 0, 5),"
+                    + "(69, 'Mycteroperca rosacea', 13.7, 1, 0, 1),"
+                    + "(70, 'Epinephelus malabaricus', 46.5, 1, 0, 1),"
+                    + "(71, 'Mycteroperca rubra', 7.0, 1, 0, 1),"
+                    + "(72, 'Epinephelus coioides', 19.8, 1, 0, 1),"
+                    + "(73, 'Epinephelus morio', 8.7, 1, 0, 4),"
+                    + "(74, 'Epinephelus adsensionis', 4.6, 1, 0, 1),"
+                    + "(75, 'Mycteroperca prionura', 14.1, 1, 0, 1),"
+                    + "(76, 'Mycteroperca phenax', 12.4, 1, 0, 1),"
+                    + "(77, 'Epinephelus posteli', 10.6, 1, 0, 1),"
+                    + "(78, 'Epinephelus nigritus', 21.3, 1, 0, 1),"
+                    + "(79, 'Epinephelus multinotatus', 16.0, 1, 0, 1),"
+                    + "(80, 'Mycteroperca venenosa', 14.1, 1, 0, 1),"
+
+
+                    + "(81, 'Mycteroperca interstitialis', 8.2 , 1, 0, 4),"
+
+                    + "(82, 'Hippoglossus hippoglossus', 63.4, 22, 0, 5),"
+
+                    + "(83, 'Paralichthys californicus', 26.7, 21, 0, 1),"
+
+                    + "(84, 'Hippoglossus stenolepis', 	61.2, 22, 0, 1),"
+
+                    + "(85, 'Seriola rivoliana',	54.4 ,	2, 0, 1),"
+                    + "(86, 'Caranx lugubris',	14.0,	2, 0, 1),"
+                    + "(87, 'Caranx hippos',		21.7 ,	2, 0, 1),"
+                    + "(88, 'Caranx caninus',	11.3 ,	2, 0, 1),"
+                    + "(89, 'Seriola peruana',	7.0 , 2, 0, 1),"
+                    + "(90, 'Caranx latus',	13.9 ,	2, 0, 1),"
+                    + "(91, 'Caranx fischeri',	18.2 ,2, 0, 1),"
+                    + "(92, 'Caranx bartholomaei',	12.8 ,2, 0, 1),"
+                    + "(93, 'Lichia amia', 30.0, 2, 0, 1),"
+                    + "(94, 'Euthynnus alletteratus', 10.7 , 13, 0, 1),"
+
+                    + "(95, 'Scomberomorus regalis',  7.4 , 13, 0, 1),"
+                    + "(96, 'Scomberomorus cavalla', 35.3 , 13, 0, 1),"
+                    + "(97, 'Scomberomorus commerson', 40.5 , 13, 0, 1),"
+
+
+                    + "(98, 'Makaira indica', 	374.8, 30, 0, 1),"
+                    + "(99, 'Makaira nigricans', 301.2 , 30, 0, 4),"
+
+                    + "(100, 'Makaira mazara',  259.0 , 30, 0, 1),"
+                    + "(101, 'Kajikia audax', 164.2 , 30, 0, 1),"
+                    + "(102, 'Kajikia albida', 42.5  , 30, 0, 4),"
+
+                    + "(103, 'Argyrosomus regius', 32.8  , 20, 0, 1),"
+
+                    + "(104, 'Pollachius pollachius', 5.5  , 18, 0, 1),"
+
+                    + "(105, 'Pagrus pagrus',  5.4 ,4, 0, 1),"
+
+                    + "(106, 'Caranx crysos',  4.6 , 2, 0, 1),"
+                    + "(107, 'Oblada melanura',  -1 , 4, 2.0, 1),"
+                    + "(108, 'Dicentrarchus labrax',  9.8 , 10, 0, 1),"
+
+                    + "(109, 'Sparus aurata',  6.9 , 4, 0, 1),"
+                    + "(110, 'Diplodus puntazzo',  6.2 , 4, 0, 1),"
+
+                    + "(111, 'Lithognathus mormyrus',  -1, 4, 3.0, 1),"
+
+                    + "(112, 'Diplodus sargus',  2.87 , 4, 5.0, 1),"
+
+                    + "(113, 'Salema porgy', -1, 4, 3.0, 1),"
+
+                    + "(114, 'Epinephelus aeneus', 22.6, 1, 0, 1),"
+
+                    + "(115, 'Spondyliosoma cantharus', -1, 4, 5.0, 1),"
+
+                    + "(116, 'Zeus faber', -1, 32, 6.0, 1),"
+
+                    + "(117, 'Symphodus melops', -1, 33, 4.0, 1),"
+
+                    + "(118, 'Diplodus vulgaris', -1, 4, 1.0, 1),"
+                    + "(119, 'Phycis phycis', -1, 34, 8.0, 1),"
+                    + "(120, 'Polyprion americanus', -1, 8, 30.0, 1),"
+                    + "(121, 'Pagrus auratus', 15.2, 4, 0, 1),"
+
+                    + "(122, 'Lutjanus Dentatus', 24.7, 35, 0, 4),"
+                    + "(123, 'Lutjanus agennes', 13.9, 35, 0, 1),"
+                    + "(124, 'Lutjanus cyanopterus', 55.5, 35, 0, 4),"
+                    + "(125, 'Macolor niger', 4.8, 35, 0, 1),"
+                    + "(126, 'Lutjanus colorado', 15.7, 35, 0, 1),"
+                    + "(127, 'Lutjanus jocu', 14.6, 35, 0, 1),"
+                    + "(128, 'Lutjanus sebae', 18.6, 35, 0, 1),"
+                    + "(129, 'Lutjanus goreensis', 8, 35, 0, 1),"
+                    + "(130, 'Lutjanus griseus', 8.2, 35, 0, 1),"
+                    + "(131, 'Lutjanus griseus cyanopterus hybird', 13.4, 35, 0, 1),"
+                    + "(132, 'Lutjanus sanguineus', 13.4, 35, 0, 1),"
+
+                    + "(133, 'Hoplopagrus guentheri', 17.5, 35, 0, 1),"
+                    + "(134, 'Macolor macularis', 5.1, 35, 0, 1),"
+                    + "(135, 'Lutjanus aratus', 19.5, 35, 0, 1),"
+                    + "(136, 'Lutjanus analis', 12.3, 35, 0, 3),"
+                    + "(137, 'Lutjanus campechanus', 14.1, 35, 0, 4),"
+                    + "(138, 'Lutjanus novemfasciatus', 36.7, 35, 0, 1),"
+                    + "(139, 'Lutjanus peru', 12.2, 35, 0, 1),"
+                    + "(140, 'Lutjanus goldiei', 6.5, 35, 0, 1),"
+                    + "(141, 'Lutjanus bohar', 12.7, 35, 0, 1),"
+                    + "(142, 'Lutjanus argentimaculatus', 10, 35, 0, 1),"
+                    + "(143, 'Lutjanus rivulatus', 17.3, 35, 0, 1),"
+                    + "(144, 'Lutjanus argentiventris', 6.6, 35, 0, 1),"
+                    + "(145, 'Octopus vulgaris', 10, 36, 0, 1)";
+
+            return insert;
+        }
+
+        public static String insertAdditionalSpecies0() {
+            String insert = "INSERT OR IGNORE INTO " + Fish.TABLE_NAME
+                    + "( " + ContentDescriptor.Fish.Cols.FISHID + Constants.COMMA_SEP + ContentDescriptor.Fish.Cols.LATINNAME + Constants.COMMA_SEP + ContentDescriptor.Fish.Cols.RECORDWEIGHT
+                    + Constants.COMMA_SEP + ContentDescriptor.Fish.Cols.FISHFAMILY + Constants.COMMA_SEP + ContentDescriptor.Fish.Cols.MAXALLOWEDCATCHWEIGHT + Constants.COMMA_SEP
+                    + ContentDescriptor.Fish.Cols.CONCERN + ") values "
+                    + "(122, 'Lutjanus Dentatus', 24.7, 35, 0, 4),"
+                    + "(123, 'Lutjanus agennes', 13.9, 35, 0, 1),"
+                    + "(124, 'Lutjanus cyanopterus', 55.5, 35, 0, 4),"
+                    + "(125, 'Macolor niger', 4.8, 35, 0, 1),"
+                    + "(126, 'Lutjanus colorado', 15.7, 35, 0, 1),"
+                    + "(127, 'Lutjanus jocu', 14.6, 35, 0, 1),"
+                    + "(128, 'Lutjanus sebae', 18.6, 35, 0, 1),"
+                    + "(129, 'Lutjanus goreensis', 8, 35, 0, 1),"
+                    + "(130, 'Lutjanus griseus', 8.2, 35, 0, 1),"
+                    + "(131, 'Lutjanus griseus cyanopterus hybird', 13.4, 35, 0, 1),"
+                    + "(132, 'Lutjanus sanguineus', 13.4, 35, 0, 1),"
+                    + "(133, 'Hoplopagrus guentheri', 17.5, 35, 0, 1),"
+                    + "(134, 'Macolor macularis', 5.1, 35, 0, 1),"
+                    + "(135, 'Lutjanus aratus', 19.5, 35, 0, 1),"
+                    + "(136, 'Lutjanus analis', 12.3, 35, 0, 3),"
+                    + "(137, 'Lutjanus campechanus', 14.1, 35, 0, 4),"
+                    + "(138, 'Lutjanus novemfasciatus', 36.7, 35, 0, 1),"
+                    + "(139, 'Lutjanus peru', 12.2, 35, 0, 1),"
+                    + "(140, 'Lutjanus goldiei', 6.5, 35, 0, 1),"
+                    + "(141, 'Lutjanus bohar', 12.7, 35, 0, 1),"
+                    + "(142, 'Lutjanus argentimaculatus', 10, 35, 0, 1),"
+                    + "(143, 'Lutjanus rivulatus', 17.3, 35, 0, 1),"
+                    + "(144, 'Lutjanus argentiventris', 6.6, 35, 0, 1),"
+                    + "(145, 'Octopus vulgaris', 6.6, 35, 0, 1)";
+            return insert;
+        }
 
     }
-        
     
     public static class FishAverageStatistic {
         public static final String TABLE_NAME = "FISHAVERAGESTATISTIC";

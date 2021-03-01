@@ -8,6 +8,7 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.graphics.Rect;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -79,8 +80,11 @@ import gr.liakos.spearo.util.Constants;
 import gr.liakos.spearo.util.DateUtils;
 import gr.liakos.spearo.util.LocationUtils;
 import gr.liakos.spearo.util.MetricConverter;
-import gr.liakos.spearo.util.MoonPhaseUtil;
 import gr.liakos.spearo.util.SpearoUtils;
+import uk.co.deanwild.materialshowcaseview.MaterialShowcaseSequence;
+import uk.co.deanwild.materialshowcaseview.MaterialShowcaseView;
+import uk.co.deanwild.materialshowcaseview.ShowcaseConfig;
+import uk.co.deanwild.materialshowcaseview.shape.RectangleShape;
 
 public class FrgFishingSessions
 		extends Fragment
@@ -140,6 +144,7 @@ public class FrgFishingSessions
 	Fish selectedFish;
 	Integer catchHour = null;
 	int catchDateMillis;
+	Button addCatchButton;
 
 	/**
 	 * session stuff
@@ -150,6 +155,7 @@ public class FrgFishingSessions
 	Calendar calendar;//for session date and session moon
 	Wind wind;
 	WindVolume windVolume;
+	String sessionImgUriPath;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -189,7 +195,40 @@ public class FrgFishingSessions
 		adView = ((AdView) v.findViewById(R.id.adViewNewSession));
 		new LoadAsyncAd().execute();
 
+
+
 		return v;
+	}
+
+	private void startShowcaseView() {
+
+		int[] pointA = new int[2];
+		autoCompleteFish.getLocationOnScreen(pointA);
+		Rect rectA = new Rect(pointA[0], pointA[1], pointA[0] + autoCompleteFish.getWidth(), pointA[1] + autoCompleteFish.getHeight());
+
+		ShowcaseConfig config = new ShowcaseConfig();
+		config.setDelay(100);
+		config.setShape(new RectangleShape(rectA, true));
+
+		MaterialShowcaseSequence sequence = new MaterialShowcaseSequence(getActivity(), Constants.SHOWCASE_FRG_SESSIONS);
+		sequence.setConfig(config);
+
+		String gotIt = getResources().getString(android.R.string.ok);
+
+		sequence.addSequenceItem(autoCompleteFish,
+				getResources().getString(R.string.showcase_auto_comp), gotIt);
+		sequence.addSequenceItem(pickerDepth,
+				getResources().getString(R.string.showcase_depth), gotIt);
+		sequence.addSequenceItem(pickerWeight,
+				getResources().getString(R.string.showcase_weight), gotIt);
+		sequence.addSequenceItem(spinnerCatchTime,
+				getResources().getString(R.string.showcase_catch_time), gotIt);
+		sequence.addSequenceItem(addCatchButton,
+				getResources().getString(R.string.showcase_add_catch), gotIt);
+		sequence.addSequenceItem(buttonCheckout,
+				getResources().getString(R.string.showcase_checkout), gotIt);
+
+		sequence.start();
 	}
 
 	void initializeAds() {
@@ -236,7 +275,7 @@ public class FrgFishingSessions
 	 * @param v
 	 */
 	void setAddCatchButton(View v) {
-		Button addCatchButton = (Button) v.findViewById(R.id.button_add_to_basket);
+		addCatchButton = (Button) v.findViewById(R.id.button_add_to_basket);
 		addCatchButton.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View view) {
@@ -476,6 +515,10 @@ public class FrgFishingSessions
 			textDateAndLocation.setText(DateUtils.dateFromMillis(sessionMillis));
 		}
 
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+			startShowcaseView();
+		}
+
 	}
 
 	/**
@@ -668,6 +711,7 @@ public class FrgFishingSessions
 		showAd();
 		sessionsFlipper.setDisplayedChild(POSITION_SHOW_SESSIONS);
 		((SpearoApplication) getActivity().getApplication()).uploadSessions();
+
 	}
 
 	/**
@@ -770,7 +814,12 @@ public class FrgFishingSessions
 		autoCompleteFish.dismissDropDown();
 		ActSpearoStatsMain activity = (ActSpearoStatsMain) getActivity();
 		selectedFish = Fish.getFromId(activity, fish.getFishId());
-		autoCompleteFish.setText(activity.getResources().getString(R.string.prey) + selectedFish.getCommonName());
+		String addedFishText = activity.getResources().getString(R.string.prey) + selectedFish.getCommonName();
+		autoCompleteFish.setText(addedFishText);
+
+		String addedFishButtonText = activity.getResources().getString(R.string.click_to_add) + Constants.SPACE + Constants.SINGLE_QUOTE +  selectedFish.getCommonName() + Constants.SINGLE_QUOTE;
+		addCatchButton.setText(addedFishButtonText);
+
 	}
 
 	/**
@@ -781,6 +830,8 @@ public class FrgFishingSessions
 		FishingSession session = new FishingSession();
 		session.setFishingDate(sessionMillis);
 		session.setSessionImage(sessionImgBytes);
+		session.setSessionImageUriPath(sessionImgUriPath);
+
 		if (sessionCatchesList.isEmpty()) {
 			session.setUploadedToMongo(true);
 		} else {
@@ -860,6 +911,7 @@ public class FrgFishingSessions
 		spinnerCatchTime.setSelection(0);
 		catchHour = null;
 		catchDateMillis = 0;
+		addCatchButton.setText(getActivity().getResources().getText(R.string.add_catch));
 	}
 
 	/**
@@ -869,6 +921,7 @@ public class FrgFishingSessions
 		autocompleteFragment.setText(Constants.EMPTY);
 		location = null;
 		sessionImgBytes = null;
+		sessionImgUriPath = null;
 		wind = Wind.NOT_KNOWN;
 		windVolume = WindVolume.NOT_KNOWN;
 		googleMap.clear();
@@ -999,6 +1052,11 @@ public class FrgFishingSessions
 		saveSessionActions();
 	}
 
+	public void setSessionUriAndSave(String uriPath) {
+		this.sessionImgUriPath = uriPath;
+		saveSessionActions();
+	}
+
 	List<FishingSession> getFishingSessions(){
 		return ((SpearoApplication) this.getActivity().getApplication()).getFishingSessions();
 	}
@@ -1121,7 +1179,7 @@ public class FrgFishingSessions
 	        adRequest = new AdRequest.Builder().build();
 	    }
 
-	private class LoadAsyncAd extends AsyncTask<Void, Void, Void> {
+     private class LoadAsyncAd extends AsyncTask<Void, Void, Void> {
 
 	        protected void onPreExecute() {
 	        }

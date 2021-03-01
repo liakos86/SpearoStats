@@ -56,6 +56,7 @@
 
 	<string name="prey">Prey: </string>
 	<string name="search_hint">e.g \'Seriola\'</string>
+	<string name="click_to_add">Click to add </string>
 
 	<string name="confirm_catches">Please confirm</string>
 
@@ -194,6 +195,34 @@
 	<string name="Phycis_phycis">Forkbeard</string>
 	<string name="Polyprion_americanus">Atlantic wreckfish</string>
 
+	<string name="Lutjanus_Dentatus" translatable="false">Snapper, African Brown</string>
+	<string name="Lutjanus_agennes" translatable="false">Snapper, African Red</string><!-- done -->
+	<string name="Lutjanus_cyanopterus" translatable="false">Snapper, Atlantic Cubera</string><!-- done -->
+	<string name="Macolor_niger" translatable="false">Snapper, Black and White</string><!-- done -->
+	<string name="Lutjanus_colorado" translatable="false">Snapper, Colorado</string><!-- done -->
+	<string name="Lutjanus_jocu" translatable="false">Snapper, Dog</string><!-- done -->
+	<string name="Lutjanus_sebae" translatable="false">Snapper, Emperor Red</string><!-- done -->
+	<string name="Lutjanus_goreensis" translatable="false">Snapper, Gorean</string><!-- done -->
+	<string name="Lutjanus_griseus" translatable="false">Snapper, Gray (Mangrove)</string><!-- done -->
+	<string name="Lutjanus_griseus_cyanopterus_hybird" translatable="false">Snapper, Gray x Cubera hybrid</string>
+	<string name="Lutjanus_sanguineus" translatable="false">Snapper, Humphead</string><!-- done -->
+
+	<string name="Hoplopagrus_guentheri" translatable="false">Snapper, Mexican Barred</string><!-- done -->
+	<string name="Macolor_macularis" translatable="false">Snapper, Midnight</string><!-- done -->
+	<string name="Lutjanus_aratus" translatable="false">Snapper, Mullet</string><!-- done -->
+	<string name="Lutjanus_analis" translatable="false">Snapper, Mutton</string><!-- done -->
+	<string name="Lutjanus_campechanus" translatable="false">Snapper, Northern Red</string><!-- done -->
+	<string name="Lutjanus_novemfasciatus" translatable="false">Snapper, Pacific Cubera</string><!-- done -->
+	<string name="Lutjanus_peru" translatable="false">Snapper, Pacific Red</string><!-- done -->
+	<string name="Lutjanus_goldiei" translatable="false">Snapper, Papuan Black</string>
+	<string name="Lutjanus_bohar" translatable="false">Snapper, Red Two Spot</string><!-- done -->
+	<string name="Lutjanus_argentimaculatus" translatable="false">Snapper, River</string><!-- done -->
+	<string name="Lutjanus_rivulatus" translatable="false">Snapper, Scribbled</string><!-- done -->
+	<string name="Lutjanus_argentiventris" translatable="false">Snapper, Yellow</string><!-- done -->
+
+
+	<string name="Octopus_vulgaris">Octopus, common</string><!-- done -->
+
 	<!-- END FISH-->
 
 	<string name="welcome">Hello spearo</string>
@@ -272,6 +301,19 @@
 
 	<string name="email_us">email us</string>
 
+	<string name="showcase_sessions">This is the place to store your fishing trip sessions!</string>
+	<string name="showcase_stats">You can see your personal stats per fish species here!</string>
+	<string name="showcase_global">The global SpearoStats are available here for a small fee!</string>
+	<string name="showcase_map">You can see the map representation of your fishing trips here!</string>
+
+	<string name="showcase_auto_comp">1. Type the fish species that you caught here</string>
+	<string name="showcase_depth">2. If you know the depth add it here</string>
+	<string name="showcase_weight">3. If you know the weight add it here</string>
+	<string name="showcase_catch_time">4. If you know the catch time add it here</string>
+	<string name="showcase_add_catch">5. Click to add the catch</string>
+	<string name="showcase_checkout">6. Finally click here to save the fishing session</string>
+
+
 	<string name="frg_fishing_sessions">This is the place to store your fishing trip sessions! Begin a new session by clicking the round icon at the bottom right of the screen and start entering the required info. Date (required), Place (optional) and finally Fish catches. The place is only visible by you and will be used to draw it on the map for you to navigate to.</string>
 	<string name="frg_personal_stats">Here you can see your personal stats per fish species. Your total catches and average values for depth and weight are calculated. Also the best catch hour for summer or winter is extracted from your saved catches.</string>
 	<string name="frg_global_stats">The global SpearoStats are available here for a small fee. Total catches, average depth and weight per species are unlocked. Best catch hour for summer or winter is calculated among all SpearoStats community data.</string>
@@ -338,5 +380,14 @@
 	<string name="wind_north_west_full">Northwest</string>
 	<string name="wind_south_east_full">Southeast</string>
 	<string name="wind_south_west_full">Southwest</string>
+
+	<string name="post_cancelled">Post was cancelled</string>
+	<string name="post_success">Post was successful!</string>
+	<string name="post_in_progress">Preparing post…</string>
+	<string name="fb_login_success">Facebook login success! You can now share!</string>
+
+	<string name="showcase_fb">Click to share your fishing trips on Facebook!</string>
+
+
 
 </resources>

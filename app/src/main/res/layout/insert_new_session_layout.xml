@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
      <RelativeLayout    
         xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    	xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="@dimen/four">
@@ -22,19 +20,18 @@
          <gr.liakos.spearo.application.ClearableAutoCompleteTextView 
              android:layout_below="@+id/textview_session_date_location"
              android:layout_marginBottom="@dimen/eight"
-             						android:layout_gravity="center_vertical" 
-             						android:layout_width="match_parent" 
-             						android:layout_height="@dimen/standard_view_height"
-                                  android:hint="@string/search_hint" 
-                                  android:textSize="@dimen/fifteen_sp"
-                                  android:id="@+id/auto_complete_fish"
-                                  android:lineSpacingExtra="3dp"
-                                  android:background="@drawable/edit_text_back"
-                                  android:dropDownWidth="match_parent"
-                                  android:singleLine="true"
-                                  android:ellipsize="end"
-                                  android:padding="@dimen/four"
-                                  
+			 android:layout_gravity="center_vertical"
+			 android:layout_width="match_parent"
+			 android:layout_height="@dimen/standard_view_height"
+			  android:hint="@string/search_hint"
+			  android:textSize="@dimen/fifteen_sp"
+			  android:id="@+id/auto_complete_fish"
+			  android:lineSpacingExtra="3dp"
+			  android:background="@drawable/edit_text_back"
+			  android:dropDownWidth="match_parent"
+			  android:singleLine="true"
+			  android:ellipsize="end"
+			  android:padding="@dimen/four"
                                 />
          
         <include android:id="@+id/pickers"
@@ -70,9 +67,7 @@
         android:src="@drawable/drop" />
 
 </RelativeLayout>
-        
-        
-      
+
         <Button
             android:layout_below="@+id/spinnerLayout"
                style="@style/buttonStyle"
@@ -81,6 +76,8 @@
     	     android:paddingEnd="@dimen/twenty"
     	     android:drawablePadding="@dimen/four"
     	    android:gravity="center"
+			android:textStyle="bold"
+			android:maxLines="1"
                 android:layout_width="match_parent"
                 android:text="@string/add_catch"
                 android:id="@+id/button_add_to_basket"

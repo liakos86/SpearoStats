@@ -58,6 +58,8 @@
         <string name="press_for_more">premere per altre informazioni&#8230;</string>
 
         <string name="prey">Preda:</string>
+        <string name="click_to_add">Aggiungere</string>
+
         <string name="search_hint">e.g \'Seriola\'</string>
         <string name="confirm_catches">Si prega di confermare</string>
 
@@ -127,6 +129,8 @@
     <string name="Symphodus_melops">Tordo</string>
     <string name="Phycis_phycis">Musdea, mostella, Maggiore Forkbeard</string>
     <string name="Polyprion_americanus">Cernia di fondale, Cernia canina</string>
+
+    <string name="Octopus_vulgaris">Polpo</string>
 
     <!-- END FISH -->
 
@@ -206,6 +210,18 @@
 
         <string name="email_us">Contattaci</string>
 
+        <string name="showcase_sessions">Qui puoi salvare le tue sessioni di pesca!</string>
+        <string name="showcase_stats">Qui puoi vedere le tue statistiche personali per specie di pesci!</string>
+        <string name="showcase_global">Le SpearoStats globali sono disponibili qui con un piccolo compenso!</string>
+        <string name="showcase_map">Qui puoi vedere la rappresentazione cartografica delle tue sessioni di pesca!</string>
+
+        <string name="showcase_auto_comp">1. Digita il pesce</string>
+        <string name="showcase_depth">2. Digita la profondità</string>
+        <string name="showcase_weight">3. Digitare il peso</string>
+        <string name="showcase_catch_time">4. Digitare l\'ora della cattura</string>
+        <string name="showcase_add_catch">5. Aggiungi la cattura</string>
+        <string name="showcase_checkout">6. Infine clicca qui per salvare</string>
+
 
         <string name="frg_fishing_sessions">Qui puoi salvare le tue sessioni di pesca! Inizia una nuova sessione facendo clic sull\'icona rotonda in basso a destra, e immetti le informazioni richieste. Data (obbligatorio) , Località (opzionale) e infine, Catture di pesci. La località è visibile solo a te e sarà usata per aiutarti a navigare sulla mappa.</string>
         <string name="frg_personal_stats">Qui puoi vedere le tue statistiche personali per specie di pesci. Le catture totali e i valori medi di profondità e peso sono stati calcolati. Inoltre, l\'ora migliore per pescare in estate o in inverno è estratta dalle tue catture salvate.</string>
@@ -274,5 +290,7 @@
         <string name="wind_north_west_full">Nordovest</string>
         <string name="wind_south_east_full">Sudest</string>
         <string name="wind_south_west_full">Sudovest</string>
+
+        <string name="showcase_fb">Clicca per condividere su facebook</string>
 
 </resources>
