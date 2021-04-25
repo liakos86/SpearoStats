@@ -33,12 +33,19 @@ import org.acra.sender.HttpSender;
 
 import com.google.android.gms.ads.MobileAds;
 
+import android.app.AlarmManager;
 import android.app.Application;
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
+
+import androidx.core.app.NotificationCompat;
 
 @ReportsCrashes(formKey = "",
         httpMethod = HttpSender.Method.POST,
@@ -77,10 +84,10 @@ public class SpearoApplication extends Application {
 	  
 	  /**
 	   * 1. Initialize ADS sdk.
-	   * 2. Initialize ACRA crash reporting.
-	   * 3. Load data from db.
-	   * 4. Initialize user.
-	   * 5. Start async inventory query for premium.
+	   * 2. Load data from db.
+	   * 3. Initialize user.
+	   * 4. Start async inventory query for premium.
+	   * 5. Schedule alarm for weekly stats every sunday.
 	   * 
 	   */
 	@Override
@@ -90,9 +97,31 @@ public class SpearoApplication extends Application {
         MobileAds.initialize(this);
         new AsyncLoadFishDataFromDb(this).execute();
         initializeUser();
+
+        //setWeeklyStatsNotification();
+
 	}
-	
-    void initializeUser() {
+
+//	void setWeeklyStatsNotification() {
+//		Calendar calendar = Calendar.getInstance();
+//		calendar.set(Calendar.DAY_OF_WEEK, Calendar.FRIDAY);
+//		calendar.set(Calendar.HOUR_OF_DAY, 14);
+//		calendar.set(Calendar.MINUTE, 9);
+//		calendar.set(Calendar.SECOND, 0);
+//		if(calendar.getTimeInMillis() < System.currentTimeMillis()) {
+//			calendar.add(Calendar.DAY_OF_YEAR, 7);
+//		}
+//
+//		Intent intent = new Intent(getApplicationContext(), NotificationReceiver.class);
+//		PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(), 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+//		AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+//
+//		if (alarmManager != null) {
+//			alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY * 7, pendingIntent);
+//		}
+//	}
+
+	void initializeUser() {
     	SharedPreferences app_preferences = getSharedPreferences(Constants.PREFERENCES, Context.MODE_PRIVATE);
 		User user = SpearoUtils.getUserFromSp(getApplicationContext(), app_preferences);
 		this.user = user;
@@ -126,10 +155,6 @@ public class SpearoApplication extends Application {
     
     public List<FishingSession> getFishingSessions() {
 		return fishingSessions;
-	}
-
-	public List<FishCatch> getFishCatches() {
-		return fishCatches;
 	}
 
 	public boolean isSessionsHaveChanged() {

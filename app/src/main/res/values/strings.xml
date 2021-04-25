@@ -387,7 +387,9 @@
 	<string name="fb_login_success">Facebook login success! You can now share!</string>
 
 	<string name="showcase_fb">Click to share your fishing trips on Facebook!</string>
-
+	<string name="weekly_stats">Your weekly stats are ready</string>
+	<string name="open">open</string>
+	<string name="weekly_stats_analyzed">View detailed analysis</string>
 
 
 </resources>

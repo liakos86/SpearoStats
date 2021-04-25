@@ -141,7 +141,13 @@ public class Database extends SQLiteOpenHelper {
         int sSessionWindVolumePosition = 7;
         int sSessionImgUriPosition = 8;
 
-        Cursor c = mContext.getContentResolver().query(ContentDescriptor.FishingSession.CONTENT_URI, FROM, null,
+//        long aWeekAgo = 0L;
+//        if (millisFrom > 0) {
+//            aWeekAgo =System.currentTimeMillis() - millisFrom;
+//        }
+
+        String selection = null;//ContentDescriptor.FishingSession.Cols.FISHINGDATE + " > " + aWeekAgo;
+        Cursor c = mContext.getContentResolver().query(ContentDescriptor.FishingSession.CONTENT_URI, FROM, selection,
                 null, null);
 
         List<FishingSession> fishingSessions = new ArrayList<FishingSession>();

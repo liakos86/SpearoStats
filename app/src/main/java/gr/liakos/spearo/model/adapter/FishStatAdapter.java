@@ -26,13 +26,9 @@ import android.widget.TextView;
 
 public class FishStatAdapter extends ArrayAdapter<FishAverageStatistic> {
 
-	boolean communityStats;
-	boolean isMetric;
-    public void setCommunityStats(boolean communityStats) {
-		this.communityStats = communityStats;
-	}
+    boolean isMetric;
 
-	int layoutResourceId;
+    int layoutResourceId;
     List<FishAverageStatistic> fishStats;
     Activity activity;
     

@@ -284,5 +284,8 @@
 	<string name="post_success">Το post έγινε με επιτυχία!</string>
 	<string name="post_in_progress">Το post σας ετοιμάζεται…</string>
 	<string name="showcase_fb">Πατήστε για να μοιραστείτε την ψαριά σας στο Facebook!</string>
+	<string name="weekly_stats">Δείτε τα εβδομαδιαία σας στατιστικά</string>
+	<string name="open">άνοιγμα</string>
+	<string name="weekly_stats_analyzed">Δείτε αναλυτικά</string>
 
 </resources>

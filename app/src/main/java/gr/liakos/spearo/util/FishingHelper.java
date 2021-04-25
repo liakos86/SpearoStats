@@ -1,8 +1,8 @@
 package gr.liakos.spearo.util;
 
-import gr.liakos.spearo.bean.ListPair;
 import gr.liakos.spearo.enums.Season;
 import gr.liakos.spearo.enums.StatMode;
+import gr.liakos.spearo.model.bean.FishNumericStatistic;
 import gr.liakos.spearo.model.bean.FishStatistic;
 import gr.liakos.spearo.model.object.Fish;
 import gr.liakos.spearo.model.object.FishAverageStatistic;
@@ -10,7 +10,6 @@ import gr.liakos.spearo.model.object.FishCatch;
 import gr.liakos.spearo.model.object.FishingSession;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -232,8 +231,8 @@ public class FishingHelper {
 	/**
 	 * Replace the old entry with the sum of the two entry values.
 	 * 
-	 * @param newSeasonCatchesPerHourDay
-	 * @param oldSeasonCatchesPerHourDay
+	 * @param newSeasonCatchesPerHourDay the incoming values
+	 * @param oldSeasonCatchesPerHourDay the existing values
 	 */
 	static void mergeHourMaps(Map<Season, Map<Integer, Integer>> newSeasonCatchesPerHourDay,
 			Map<Season, Map<Integer, Integer>> oldSeasonCatchesPerHourDay) {
@@ -279,32 +278,28 @@ public class FishingHelper {
 		}
 		return max;
 	}
-	
-	
-	public static ListPair divideIntoMonths(List<FishingSession> allSessions, Context ctx){
-		Map<String, List<FishingSession>> sessionsPerMonth = new HashMap<String, List<FishingSession>>();
-		for (FishingSession fishingSession : allSessions) {
-			String monthAndYear = DateUtils.getMonthAndYear(fishingSession, ctx);
-			List<FishingSession> existing = sessionsPerMonth.get(monthAndYear);
-			if (existing == null){
-				existing = new ArrayList<FishingSession>();
-				sessionsPerMonth.put(monthAndYear, existing);
-			}
-			existing.add(fishingSession);
-		}
-		return sessionListsPerMonth(sessionsPerMonth);
-	}
-	
-	static ListPair sessionListsPerMonth(Map<String, List<FishingSession>> sessionsMap){
-		ListPair lp = new ListPair();
-		for (Map.Entry<String, List<FishingSession>> entry : sessionsMap.entrySet() ){
-			lp.getParents().add(entry.getKey());
-			List<FishingSession> fishingSessions = entry.getValue();
-			Collections.sort(fishingSessions);
-			Collections.reverse(fishingSessions);
-			lp.getChildren().add(fishingSessions);
-		}
-		return lp;
-	}
+
+//	public static List<FishNumericStatistic> getWeeklyStats(List<FishingSession> sessions){
+//		Map<Integer, FishNumericStatistic> statsMap = new HashMap<>();
+//		for (FishingSession session : sessions){
+//			for (FishCatch katch : session.getFishCatches()){
+//				FishNumericStatistic fishNumericStatistic = statsMap.get(katch.getFishId());
+//				if (fishNumericStatistic == null){
+//					fishNumericStatistic = new FishNumericStatistic();
+//					fishNumericStatistic.setFish(katch.getFish());
+//					fishNumericStatistic.setFishId(katch.getFishId());
+//					fishNumericStatistic.setTotalCatches(0);
+//					statsMap.put(katch.getFishId(), fishNumericStatistic);
+//				}
+//
+//				int newCatches = fishNumericStatistic.getTotalCatches() + 1;
+//				fishNumericStatistic.setTotalCatches(newCatches);
+//
+//			}
+//		}
+//		List<FishNumericStatistic> stats = new ArrayList<>();
+//		stats.addAll(statsMap.values());
+//		return stats;
+//	}
 
 }
