@@ -40,6 +40,7 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.google.android.material.snackbar.Snackbar;
 
 public class ActSettings
@@ -217,13 +218,13 @@ extends Activity implements AsyncSaveUserListener {
 	}
 
 	void updateCheckboxText(String metricLocale) {
-		CheckBox metricImperialCheckBox = (CheckBox) findViewById(R.id.checkbox_metric_imperial);
+		CheckBox metricImperialCheckBox = findViewById(R.id.checkbox_metric_imperial);
 		metricImperialCheckBox.setText(metricLocale);
 	}
 
 	void setProfilePicSource(Uri selectedImage) {
-		ImageView changeProfilePic = (ImageView) findViewById(R.id.imageViewChangePic);
-		ProgressBar prg = (ProgressBar) findViewById(R.id.progressBarProfilePic);
+		ImageView changeProfilePic = findViewById(R.id.imageViewChangePic);
+		ProgressBar prg = findViewById(R.id.progressBarProfilePic);
 		if (selectedImage == null){
 			if (SpearoUtils.customProfPicIsSet(getApplication())){
 				new AsyncLoadProfilePic(getApplication(), changeProfilePic, prg).execute();
@@ -233,8 +234,10 @@ extends Activity implements AsyncSaveUserListener {
 			}
 			return;
 		}
-		
-	  changeProfilePic.setImageURI(selectedImage);
+
+		Glide.with(getApplicationContext()).load(selectedImage).into(changeProfilePic);
+
+	  //changeProfilePic.setImageURI(selectedImage);
 	}
 
   void setProfilePicChangeListener() {
@@ -381,7 +384,7 @@ extends Activity implements AsyncSaveUserListener {
 			byte[] imgByteArray = null;
 
 			try {
-				uriPath = String.valueOf(uri);// RealPathUtil.getRealPath(getApplicationContext(), uri);
+				uriPath = String.valueOf(uri);
 			}catch (Exception e){
 				uriPath = null;
 				imgByteArray = storeImageByteArray();

@@ -28,6 +28,7 @@ import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.cj.videoprogressview.LightProgressView;
 import com.facebook.share.model.ShareHashtag;
 import com.facebook.share.model.ShareLinkContent;
@@ -224,8 +225,10 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter {
 
                 if (uriPath != null){
                     try {
-                        sessionUri = Uri.parse(uriPath);
-                        fishingSessionIcon.setImageURI(sessionUri);
+
+                        Glide.with(mContext).load(uriPath).into(fishingSessionIcon);
+//                        sessionUri = Uri.parse(uriPath);
+//                        fishingSessionIcon.setImageURI(sessionUri);
                         if(fishingSessionIcon.getDrawable() == null){//the image referenced by the uri is deleted
                             sessionUri = null;
                             setFirstFishIcon(fishingSession, res);

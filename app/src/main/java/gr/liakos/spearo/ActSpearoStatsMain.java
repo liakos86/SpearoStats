@@ -581,7 +581,6 @@ implements LocationListener {
 
 		if (uri != null){
 			try {
-				//String uriPath = RealPathUtil.getRealPath(getApplicationContext(), uri);
 				frgSessions.setSessionUriAndSave(String.valueOf(uri));
 			}catch(Exception e){
 				String saveThis = null;

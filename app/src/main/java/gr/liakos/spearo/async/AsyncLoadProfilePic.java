@@ -14,6 +14,8 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 
+import com.bumptech.glide.Glide;
+
 public class AsyncLoadProfilePic extends AsyncTask<Void, Void, Void> {
     Application application;
     ImageView img;
@@ -61,8 +63,11 @@ public class AsyncLoadProfilePic extends AsyncTask<Void, Void, Void> {
 
     	//uri from sp
     	if (imagePathUri != null){
-            Uri imageUri = Uri.parse(imagePathUri);
-            img.setImageURI(imageUri);
+
+            Glide.with(application).load(imagePathUri).into(img);
+
+           // Uri imageUri = Uri.parse(imagePathUri);
+           // img.setImageURI(imageUri);
 
             if (img.getDrawable() == null){//image of uri is deleted.
                 Uri defaultImageUri = Uri.parse("android.resource://gr.liakos.spearo/"+R.drawable.spear2_edited); // use this default image uri if user didn't saved any image to sharedprefrence .

@@ -1,5 +1,26 @@
 package gr.liakos.spearo;
 
+import android.app.Application;
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
+import android.os.AsyncTask;
+
+import com.google.android.gms.ads.MobileAds;
+
+import org.acra.ACRA;
+import org.acra.ReportField;
+import org.acra.ReportingInteractionMode;
+import org.acra.annotation.ReportsCrashes;
+import org.acra.sender.HttpSender;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import gr.liakos.spearo.application.MyAcraSender;
 import gr.liakos.spearo.async.AsyncLoadCommunityDataFromMongo;
 import gr.liakos.spearo.async.AsyncSaveUserMongo;
@@ -17,35 +38,6 @@ import gr.liakos.spearo.util.ConsistencyChecker;
 import gr.liakos.spearo.util.Constants;
 import gr.liakos.spearo.util.FishingHelper;
 import gr.liakos.spearo.util.SpearoUtils;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import org.acra.ACRA;
-import org.acra.ReportField;
-import org.acra.ReportingInteractionMode;
-import org.acra.annotation.ReportsCrashes;
-import org.acra.sender.HttpSender;
-
-import com.google.android.gms.ads.MobileAds;
-
-import android.app.AlarmManager;
-import android.app.Application;
-import android.app.Notification;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
-import android.content.Context;
-import android.content.Intent;
-import android.content.SharedPreferences;
-import android.content.SharedPreferences.Editor;
-import android.graphics.drawable.Drawable;
-import android.os.AsyncTask;
-
-import androidx.core.app.NotificationCompat;
 
 @ReportsCrashes(formKey = "",
         httpMethod = HttpSender.Method.POST,
@@ -98,28 +90,11 @@ public class SpearoApplication extends Application {
         new AsyncLoadFishDataFromDb(this).execute();
         initializeUser();
 
-        //setWeeklyStatsNotification();
+
+        //new NotificationHelper(getApplicationContext()).scheduleNotification();
+
 
 	}
-
-//	void setWeeklyStatsNotification() {
-//		Calendar calendar = Calendar.getInstance();
-//		calendar.set(Calendar.DAY_OF_WEEK, Calendar.FRIDAY);
-//		calendar.set(Calendar.HOUR_OF_DAY, 14);
-//		calendar.set(Calendar.MINUTE, 9);
-//		calendar.set(Calendar.SECOND, 0);
-//		if(calendar.getTimeInMillis() < System.currentTimeMillis()) {
-//			calendar.add(Calendar.DAY_OF_YEAR, 7);
-//		}
-//
-//		Intent intent = new Intent(getApplicationContext(), NotificationReceiver.class);
-//		PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(), 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-//		AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
-//
-//		if (alarmManager != null) {
-//			alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY * 7, pendingIntent);
-//		}
-//	}
 
 	void initializeUser() {
     	SharedPreferences app_preferences = getSharedPreferences(Constants.PREFERENCES, Context.MODE_PRIVATE);
