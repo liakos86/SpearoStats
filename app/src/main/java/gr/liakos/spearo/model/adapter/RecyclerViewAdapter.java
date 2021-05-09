@@ -19,7 +19,6 @@ import android.view.Window;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -31,12 +30,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.cj.videoprogressview.LightProgressView;
 import com.facebook.share.model.ShareHashtag;
-import com.facebook.share.model.ShareLinkContent;
 import com.facebook.share.model.SharePhoto;
 import com.facebook.share.model.SharePhotoContent;
 
-import java.io.File;
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.Calendar;
 import java.util.List;
@@ -71,16 +67,18 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter {
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener {
 
-        public ImageView fishingSessionIcon;
-        public TextView sessionCatchesNumText;
-        public TextView sessionDateText;
-        public TextView sessionWindText;
-        public LightProgressView moonPercentageView;
-        public Button shareButton;
-        public Float moonPercentage = null;
-        public MoonPhase moonPhase = null;
-        public Bitmap sessionImage = null;
-        public Uri sessionUri = null;
+        ImageView fishingSessionIcon;
+        TextView sessionCatchesNumText;
+        TextView sessionDateText;
+        TextView sessionWindText;
+        LightProgressView moonPercentageView;
+        Button shareButton;
+        Float moonPercentage = null;
+        MoonPhase moonPhase = null;
+        Bitmap sessionImage = null;
+        //Uri sessionUri = null;
+
+        boolean validUriPath;
 
         FishingSession item;
 
@@ -98,22 +96,18 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter {
         }
 
         public void setData(FishingSession item) {
-            sessionImage = null;
-            sessionUri = null;
-
+//            sessionUri = null;
             this.item = item;
 
             sessionCatchesNumText.setText(String.valueOf(item.getFishCatches().size()));
-
             String dateString = DateUtils.dateFromMillis(item.getFishingDate());
             sessionDateText.setText(dateString);
-
             Resources res = mContext.getResources();
             setWindTextAndImg(item, res);
             setSessionImg(item, res);
-            setMoonPhaseTextAndImg(item, res);
+            setMoonPhaseTextAndImg(item);
 
-            if (sessionImage == null && sessionUri == null){
+            if (sessionImage == null && !validUriPath){
                 shareButton.setVisibility(View.GONE);
                 shareButton.setOnClickListener(null);
             }else {
@@ -121,14 +115,12 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter {
                 shareButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        setShareListener();
+                        doShare();
                     }
                 });
-
             }
 
             showFbShowcase();
-
         }
 
         private void showFbShowcase() {
@@ -147,13 +139,16 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter {
 
         }
 
-        private void setShareListener() {
+        /**
+         * A deleted image can still be cached in Glide.
+         * The validUriPath will be true, but the attempt to parse the uri path will throw an exception.
+         */
+        void doShare() {
             Bitmap bitmap =  null;
-             if (sessionUri != null){
-
+            if (validUriPath){
                 try {
                     ContentResolver cr = fragment.getActivity().getBaseContext().getContentResolver();
-                    InputStream inputStream = cr.openInputStream(sessionUri);
+                    InputStream inputStream = cr.openInputStream(Uri.parse(item.getSessionImageUriPath()));
                     BitmapFactory.Options options = new BitmapFactory.Options();
                     options.inScaled = false;
                     bitmap = BitmapFactory.decodeStream(inputStream, null, options);
@@ -164,6 +159,10 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter {
                 bitmap = sessionImage;
             }
 
+            share(bitmap);
+        }
+
+        void share(Bitmap bitmap) {
             SharePhoto photo = new SharePhoto.Builder()
                     .setBitmap(bitmap)
                     .build();
@@ -197,8 +196,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter {
             sessionWindText.setCompoundDrawablesWithIntrinsicBounds(0, 0, fishingSession.getSessionWind().getDrawable(), 0);
         }
 
-        void setMoonPhaseTextAndImg(FishingSession fishingSession,
-                                     Resources res) {
+        void setMoonPhaseTextAndImg(FishingSession fishingSession) {
                 Calendar sessionCal = DateUtils.getCalendarWithTime(fishingSession.getFishingDate());
                 sessionCal.set(Calendar.HOUR_OF_DAY, 12);
                 MoonPhaseUtil util = new MoonPhaseUtil(sessionCal);
@@ -214,40 +212,35 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter {
          * If there is a bytearray or uri path for image try to set it.
          * If user has deleted the image, catch the exception and set the first fish icon.
          *
+         * Glide uses cache, so a deleted image will not disappear instantly.
+         *
          * @param fishingSession
          * @param res
          */
         void setSessionImg(FishingSession fishingSession, Resources res) {
-            if (fishingSession.getSessionImage() == null && fishingSession.getSessionImageUriPath()==null){
+            sessionImage = null;
+            validUriPath = false;
+
+            if (fishingSession.getSessionImage() == null && fishingSession.getSessionImageUriPath()==null){//no image bytes or uri
                 setFirstFishIcon(fishingSession, res);
             }else{
                 String uriPath = fishingSession.getSessionImageUriPath();
-
                 if (uriPath != null){
                     try {
-
-                        Glide.with(mContext).load(uriPath).into(fishingSessionIcon);
-//                        sessionUri = Uri.parse(uriPath);
-//                        fishingSessionIcon.setImageURI(sessionUri);
-                        if(fishingSessionIcon.getDrawable() == null){//the image referenced by the uri is deleted
-                            sessionUri = null;
-                            setFirstFishIcon(fishingSession, res);
-                        }
-
+                        Glide.with(mContext).asBitmap().load(uriPath).into(fishingSessionIcon);
+                        validUriPath = true;
                     }catch(Exception e){
-                        sessionUri = null;
+                        validUriPath = false;
                         setFirstFishIcon(fishingSession, res);
                     }
-
-                    return;
+                }else {// session image not null
+                    BitmapFactory.Options options = new BitmapFactory.Options();
+                    options.inScaled = false;
+                    byte[] array = Base64.decode(fishingSession.getSessionImage(), Base64.NO_WRAP);
+                    Bitmap bmp = BitmapFactory.decodeByteArray(array, 0, array.length, options);
+                    fishingSessionIcon.setImageBitmap(bmp);
+                    sessionImage = bmp;
                 }
-
-                BitmapFactory.Options options = new BitmapFactory.Options();
-                options.inScaled = false;
-                byte[] array = Base64.decode(fishingSession.getSessionImage(), Base64.NO_WRAP);
-                Bitmap bmp = BitmapFactory.decodeByteArray(array, 0, array.length, options);
-                fishingSessionIcon.setImageBitmap(bmp);
-                sessionImage = bmp;
             }
         }
 
@@ -258,7 +251,10 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter {
             }else{
                 drawableFromFish = new SpearoUtils(mContext).getGridDrawableFromFish(fishingSession.getFishCatches().get(0).getFish());
             }
-            fishingSessionIcon.setImageDrawable(drawableFromFish);
+
+            Glide.with(mContext).load(drawableFromFish).into(fishingSessionIcon);
+
+           // fishingSessionIcon.setImageDrawable(drawableFromFish);
         }
 
         @Override

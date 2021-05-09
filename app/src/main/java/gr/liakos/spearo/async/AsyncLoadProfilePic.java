@@ -64,14 +64,16 @@ public class AsyncLoadProfilePic extends AsyncTask<Void, Void, Void> {
     	//uri from sp
     	if (imagePathUri != null){
 
-            Glide.with(application).load(imagePathUri).into(img);
+    	    try {
+                Glide.with(application).load(imagePathUri).into(img);
+            }catch(Exception e){
+//            Uri imageUri = Uri.parse(imagePathUri);
+//            img.setImageURI(imageUri);
 
-           // Uri imageUri = Uri.parse(imagePathUri);
-           // img.setImageURI(imageUri);
-
-            if (img.getDrawable() == null){//image of uri is deleted.
+          //  if (img.getDrawable() == null){//image of uri is deleted.
                 Uri defaultImageUri = Uri.parse("android.resource://gr.liakos.spearo/"+R.drawable.spear2_edited); // use this default image uri if user didn't saved any image to sharedprefrence .
-                img.setImageURI(defaultImageUri);
+                //img.setImageURI(defaultImageUri);
+                Glide.with(application).load(defaultImageUri).into(img);
             }
 
             return;
@@ -80,7 +82,7 @@ public class AsyncLoadProfilePic extends AsyncTask<Void, Void, Void> {
     	//no uri, no byte array
     	if (array == null ){
     		Uri defaultImageUri = Uri.parse("android.resource://gr.liakos.spearo/"+R.drawable.spear2_edited); // use this default image uri if user didn't saved any image to sharedprefrence .
-   		 	img.setImageURI(defaultImageUri);
+            Glide.with(application).load(defaultImageUri).into(img);
     		return;
     	}
 

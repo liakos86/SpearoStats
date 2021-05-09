@@ -384,7 +384,7 @@
 	<string name="post_cancelled">Post was cancelled</string>
 	<string name="post_success">Post was successful!</string>
 	<string name="post_in_progress">Preparing post…</string>
-	<string name="fb_login_success">Facebook login success! You can now share!</string>
+	<string name="fb_login_success">Facebook login success! Click again to share!</string>
 
 	<string name="showcase_fb">Click to share your fishing trips on Facebook!</string>
 	<string name="weekly_stats">Your weekly stats are ready</string>

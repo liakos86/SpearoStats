@@ -13,6 +13,7 @@ import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.graphics.Bitmap;
 import android.net.Uri;
 
 public class FishingSession implements Comparable<FishingSession>{
@@ -32,8 +33,6 @@ public class FishingSession implements Comparable<FishingSession>{
 	String sessionImage;
 
 	String sessionImageUriPath;
-	
-	//MoonPhase sessionMoon;
 	
 	Wind sessionWind;
 
@@ -128,22 +127,6 @@ public class FishingSession implements Comparable<FishingSession>{
 
 	public void setSessionWindVolume(WindVolume sessionWindVolume) {
 		this.sessionWindVolume = sessionWindVolume;
-	}
-
-	public Double getRecordCatchWeight(){
-		Double record = 0d;
-		for (FishCatch fCatch : fishCatches){
-			Double weight = fCatch.getWeight();
-			if  (weight != null && weight > record){
-				record = weight;
-			}
-		}
-		
-		if (record > 0){
-			return record;
-		}
-		
-		return null;
 	}
 
 	public static FishingSession getFromId(Context context, long id) {
