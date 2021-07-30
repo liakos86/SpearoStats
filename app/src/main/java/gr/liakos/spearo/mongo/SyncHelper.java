@@ -71,20 +71,29 @@ public class SyncHelper {
          MongoCollection<Document> species = getMongoCollection(MongoConstants.COLLECTION_FISH);
          FindIterable<Document> find = species.find();
  		List<FishStatistic> atlasStats = new ArrayList<FishStatistic>();
- 		for (Document document : find) {
- 			String json = document.toJson();
- 			FishStatistic stat = (FishStatistic) new Gson().fromJson(json, new TypeToken<FishStatistic>() {}.getType());
- 			stat.initSeasonHoursMap();
- 			atlasStats.add(stat);
- 		}
+ 		try {
+
+			for (Document document : find) {
+				String json = document.toJson();
+				FishStatistic stat = (FishStatistic) new Gson().fromJson(json, new TypeToken<FishStatistic>() {
+				}.getType());
+				stat.initSeasonHoursMap();
+				atlasStats.add(stat);
+			}
+
+		}catch(Exception e){
+			System.out.println(e.getMessage());
+		}finally {
+			mongoClient.close();
+		}
  		
- 		mongoClient.close();
+
  		return atlasStats;
     }
 
 	public void uploadAtlasStats(Map<Fish, FishStatistic> toBeUploaded){
 
-    	if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.M){
+    	if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.N){
 			return;
 		}
 

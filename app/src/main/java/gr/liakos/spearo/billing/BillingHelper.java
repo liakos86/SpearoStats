@@ -1,6 +1,7 @@
 package gr.liakos.spearo.billing;
 
 import android.app.Activity;
+import android.view.View;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -12,6 +13,8 @@ import com.android.billingclient.api.BillingClient;
 import com.android.billingclient.api.BillingClientStateListener;
 import com.android.billingclient.api.BillingFlowParams;
 import com.android.billingclient.api.BillingResult;
+import com.android.billingclient.api.ConsumeParams;
+import com.android.billingclient.api.ConsumeResponseListener;
 import com.android.billingclient.api.Purchase;
 import com.android.billingclient.api.PurchasesUpdatedListener;
 import com.android.billingclient.api.SkuDetails;
@@ -27,10 +30,9 @@ import gr.liakos.spearo.def.AsyncListener;
 import gr.liakos.spearo.util.BillingSecurity;
 
 import static com.android.billingclient.api.BillingClient.SkuType.INAPP;
+import static gr.liakos.spearo.util.Constants.SKU_PREMIUM_STATS;
 
 public class BillingHelper implements PurchasesUpdatedListener {
-
-    static final String SKU_PREMIUM_USER = "premium";
 
     private Activity activity;
 
@@ -63,11 +65,11 @@ public class BillingHelper implements PurchasesUpdatedListener {
                     //if purchase list is empty that means item is not purchased
                     //Or purchase is refunded or canceled
                     else{
-                        listener.onPurchaseAttemptFinished(false);
+                        listener.onPurchaseStatsAttemptFinished(false);
                         // savePurchaseValueToPref(false);
                     }
                 }else{
-                    listener.onPurchaseAttemptFinished(false);
+                    listener.onPurchaseStatsAttemptFinished(false);
                 }
             }
 
@@ -95,7 +97,7 @@ public class BillingHelper implements PurchasesUpdatedListener {
                     } else {
 
                         if (null != asyncListener){
-                           asyncListener.onPurchaseAttemptFinished(false);
+                           asyncListener.onPurchaseStatsAttemptFinished(false);
                         }
 
                        // Toast.makeText(activity.getApplicationContext(),"Error "+billingResult.getDebugMessage(), Toast.LENGTH_SHORT).show();
@@ -110,7 +112,7 @@ public class BillingHelper implements PurchasesUpdatedListener {
 
     private void initiatePurchase() {
         List<String> skuList = new ArrayList<>();
-        skuList.add(SKU_PREMIUM_USER);
+        skuList.add(SKU_PREMIUM_STATS);
         SkuDetailsParams.Builder params = SkuDetailsParams.newBuilder();
         params.setSkusList(skuList).setType(INAPP);
         billingClient.querySkuDetailsAsync(params.build(),
@@ -128,7 +130,7 @@ public class BillingHelper implements PurchasesUpdatedListener {
                             else{
 
                                 if (null != asyncListener){
-                                    asyncListener.onPurchaseAttemptFinished(false);
+                                    asyncListener.onPurchaseStatsAttemptFinished(false);
                                 }
                                 //try to add item/product id "consumable" inside managed product in google play console
                                 //Toast.makeText(activity.getApplicationContext(),"Purchase Item not Found",Toast.LENGTH_SHORT).show();
@@ -138,7 +140,7 @@ public class BillingHelper implements PurchasesUpdatedListener {
                               //      " Error "+billingResult.getDebugMessage(), Toast.LENGTH_SHORT).show();
 
                             if (null != asyncListener){
-                                asyncListener.onPurchaseAttemptFinished(false);
+                                asyncListener.onPurchaseStatsAttemptFinished(false);
                             }
 
                         }
@@ -163,14 +165,14 @@ public class BillingHelper implements PurchasesUpdatedListener {
         //if purchase cancelled
         else if (billingResult.getResponseCode() == BillingClient.BillingResponseCode.USER_CANCELED) {
             if (null != asyncListener){
-                asyncListener.onPurchaseAttemptFinished(false);
+                asyncListener.onPurchaseStatsAttemptFinished(false);
             }
             //Toast.makeText(activity.getApplicationContext(),"Purchase Canceled",Toast.LENGTH_SHORT).show();
         }
         // Handle any other error msgs
         else {
             if (null != asyncListener){
-                asyncListener.onPurchaseAttemptFinished(false);
+                asyncListener.onPurchaseStatsAttemptFinished(false);
             }
             //Toast.makeText(activity.getApplicationContext(),"Error "+billingResult.getDebugMessage(),Toast.LENGTH_SHORT).show();
         }
@@ -179,7 +181,7 @@ public class BillingHelper implements PurchasesUpdatedListener {
     void handlePurchases(List<Purchase>  purchases) {
         for(Purchase purchase:purchases) {
             //if item is purchased
-            if (SKU_PREMIUM_USER.equals(purchase.getSku()) && purchase.getPurchaseState() == Purchase.PurchaseState.PURCHASED)
+            if (SKU_PREMIUM_STATS.equals(purchase.getSku()) && purchase.getPurchaseState() == Purchase.PurchaseState.PURCHASED)
             {
 
                 this.purchase = purchase;
@@ -187,7 +189,7 @@ public class BillingHelper implements PurchasesUpdatedListener {
                 if (!verifyValidSignature(purchase.getOriginalJson(), purchase.getSignature())) {
                     // Invalid purchase
                     // show error to user
-                    asyncListener.onPurchaseAttemptFinished(false);
+                    asyncListener.onPurchaseStatsAttemptFinished(false);
                     //Toast.makeText(activity.getApplicationContext(), "Error : Invalid Purchase", Toast.LENGTH_SHORT).show();
                     return;
                 }
@@ -202,20 +204,20 @@ public class BillingHelper implements PurchasesUpdatedListener {
                 }
                 //else item is purchased and also acknowledged
                 else {
-                    asyncListener.onPurchaseAttemptFinished(true);
+                    asyncListener.onPurchaseStatsAttemptFinished(true);
                 }
             }
             //if purchase is pending
-            else if( SKU_PREMIUM_USER.equals(purchase.getSku()) && purchase.getPurchaseState() == Purchase.PurchaseState.PENDING)
+            else if( SKU_PREMIUM_STATS.equals(purchase.getSku()) && purchase.getPurchaseState() == Purchase.PurchaseState.PENDING)
             {
-                asyncListener.onPurchaseAttemptFinished(false);
+                asyncListener.onPurchaseStatsAttemptFinished(false);
                 Toast.makeText(activity.getApplicationContext(),
                         "Purchase is Pending. Please complete Transaction", Toast.LENGTH_SHORT).show();
             }
             //if purchase is unknown
-            else if(SKU_PREMIUM_USER.equals(purchase.getSku()) && purchase.getPurchaseState() == Purchase.PurchaseState.UNSPECIFIED_STATE)
+            else if(SKU_PREMIUM_STATS.equals(purchase.getSku()) && purchase.getPurchaseState() == Purchase.PurchaseState.UNSPECIFIED_STATE)
             {
-                asyncListener.onPurchaseAttemptFinished(false);
+                asyncListener.onPurchaseStatsAttemptFinished(false);
                 Toast.makeText(activity.getApplicationContext(), "Purchase Status Unknown", Toast.LENGTH_SHORT).show();
             }
         }
@@ -226,9 +228,9 @@ public class BillingHelper implements PurchasesUpdatedListener {
         public void onAcknowledgePurchaseResponse(BillingResult billingResult) {
             if(billingResult.getResponseCode()==BillingClient.BillingResponseCode.OK){
                 //Toast.makeText(activity, "ACK", Toast.LENGTH_SHORT).show();
-                asyncListener.onPurchaseAttemptFinished(true);
+                asyncListener.onPurchaseStatsAttemptFinished(true);
             }else{
-                asyncListener.onPurchaseAttemptFinished(false);
+                asyncListener.onPurchaseStatsAttemptFinished(false);
             }
         }
     };
@@ -237,10 +239,10 @@ public class BillingHelper implements PurchasesUpdatedListener {
 //        @Override
 //        public void onConsumeResponse(BillingResult billingResult, String purchaseToken) {
 //            if (billingResult.getResponseCode() == BillingClient.BillingResponseCode.OK) {
-//             asyncListener.onPurchaseAttemptFinished(false);
+//             asyncListener.onPurchaseStatsAttemptFinished(false);
 //                Toast.makeText(activity.getApplicationContext(), "Item Consumed", Toast.LENGTH_SHORT).show();
 //            }else{
-//                asyncListener.onPurchaseAttemptFinished(false);
+//                asyncListener.onPurchaseStatsAttemptFinished(false);
 //            }
 //        }
 //    };

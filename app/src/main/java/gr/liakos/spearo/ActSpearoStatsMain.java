@@ -61,6 +61,7 @@ import java.util.Map;
 import gr.liakos.spearo.application.BaseFrgActivityWithBottomButtons;
 import gr.liakos.spearo.application.NonSwipeableViewPager;
 import gr.liakos.spearo.async.AsyncLoadProfilePic;
+import gr.liakos.spearo.billing.BillingDiagramsHelper;
 import gr.liakos.spearo.billing.BillingHelper;
 import gr.liakos.spearo.def.AsyncListener;
 import gr.liakos.spearo.fragment.FrgFishingSessions;
@@ -102,8 +103,9 @@ implements LocationListener {
      * The total size of the pager objects
      */
     private static final int PAGER_SIZE = 4;
-	private BillingHelper billingHelper;
+	private BillingHelper billingStatsHelper;
 
+	private BillingDiagramsHelper billingDiagramsHelper;
 
 	@Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -252,14 +254,11 @@ implements LocationListener {
 	void checkMapPermissions(){
 		if ((ContextCompat.checkSelfPermission(
 				this, Manifest.permission.ACCESS_COARSE_LOCATION) ==
-				PackageManager.PERMISSION_GRANTED) &&
-				(ContextCompat.checkSelfPermission(
-						this, Manifest.permission.ACCESS_FINE_LOCATION) ==
-						PackageManager.PERMISSION_GRANTED)){
+				PackageManager.PERMISSION_GRANTED)){
 			mapPermissionGiven = true;
 			locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 400, 1000, this);
 		}else{
-			requestPermissions(new String[] { Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION },
+			requestPermissions(new String[] { Manifest.permission.ACCESS_COARSE_LOCATION },
 					Constants.PERMISSIONS_MAP_CODE);
 		}
 	}
@@ -422,6 +421,7 @@ implements LocationListener {
                 }else if (fragment instanceof FrgFishingStatsGlobal) {
                 }else if (fragment instanceof FrgFishingStats) {
                    ((FrgFishingStats) fragment).fixAverageStatsIfNeeded();
+					((FrgFishingStats) fragment).statsShowCase();
                 }else if (fragment instanceof FrgMyPlaces){
                 	collapseAppbar();
                 	FrgMyPlaces frgMyPlaces = (FrgMyPlaces) fragment;
@@ -616,47 +616,56 @@ implements LocationListener {
      * Retrive google licence key from Google Play Console:
      * Development tools --> Services and APIs
      */
-	public void queryInventoryForPremium(AsyncListener listener) {
+	public void queryInventoryForStats(AsyncListener listener) {
+		if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.N){
+			listener.onPurchaseStatsAttemptFinished(false);
+		}else{
+			billingStatsHelper.queryInventory(listener);
+		}
 
-		billingHelper.queryInventory(listener);
+	}
+
+	public void queryInventoryForDiagrams(AsyncListener listener) {
+		billingDiagramsHelper.queryInventory(listener);
 	}
 	
 	void setupPurchaseListener() {
-		billingHelper = new BillingHelper(this);
+		billingStatsHelper = new BillingHelper(this);
+		billingDiagramsHelper = new BillingDiagramsHelper(this);
 	}
 
-	public void purchase(View view) {
-		billingHelper.purchase();
+	public void purchasePremiumStats() {
+		billingStatsHelper.purchase();
+	}
+
+	public void purchasePremiumDiagrams() {
+		billingDiagramsHelper.purchase();
 	}
 
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
-		if(billingHelper!=null){
-			billingHelper.endConnection();
+		if(billingStatsHelper !=null){
+			billingStatsHelper.endConnection();
 		}
 	}
 
 	@Override
 	public void onLocationChanged(@NonNull Location location) {
 		locationManager.removeUpdates(this);
-		LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
-		currentLatLng = latLng;
+		currentLatLng = new LatLng(location.getLatitude(), location.getLongitude());
 	}
 
 	@Override
 	public void onProviderEnabled(@NonNull String provider) {
-
 	}
 
 	@Override
 	public void onProviderDisabled(@NonNull String provider) {
-
 	}
 
 	@Override
 	public void onStatusChanged(String provider, int status, Bundle extras) {
-
 	}
 
 	public LatLng getCurrentLatLng() {
@@ -667,5 +676,14 @@ implements LocationListener {
 		return mapPermissionGiven;
 	}
 
+	//TODO: delete
+//	public void consumePremium(View v) {
+//		billingStatsHelper.consume(v);
+//	}
+//
+//	//TODO: delete
+//	public void consumeDiagrams(View v) {
+//		billingDiagramsHelper.consume(v);
+//	}
 }
 	

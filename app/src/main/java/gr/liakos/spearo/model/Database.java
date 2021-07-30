@@ -1,7 +1,6 @@
 
 package gr.liakos.spearo.model;
 
-import gr.liakos.spearo.enums.MoonPhase;
 import gr.liakos.spearo.enums.Wind;
 import gr.liakos.spearo.enums.WindVolume;
 import gr.liakos.spearo.model.bean.FishStatistic;
@@ -93,15 +92,25 @@ public class Database extends SQLiteOpenHelper {
     /**
      * Adds a fishing session. Return the id in order to use for catches insertion.
      *
-     * @param fishingSession
-     * @return
+     * @param fishingSession the session
      */
-    public void addFishingSession(FishingSession fishingSession) {
+    public void addOrUpdateFishingSession(FishingSession fishingSession) {
         ContentResolver resolver = mContext.getContentResolver();
-        Uri uri = resolver.insert(ContentDescriptor.FishingSession.CONTENT_URI, FishingSession.asContentValues(fishingSession));
-        int fishingSessionId = Integer.valueOf(uri.getLastPathSegment());
-        for (FishCatch fishCatch : fishingSession.getFishCatches()) {
-            fishCatch.setFishingSessionId(fishingSessionId);
+        Integer fishingSessionId = null;
+        if (fishingSession.getFishingSessionId().equals(Database.INVALID_ID)) {
+            Uri uri = resolver.insert(ContentDescriptor.FishingSession.CONTENT_URI, FishingSession.asContentValues(fishingSession));
+            fishingSessionId = Integer.valueOf(uri.getLastPathSegment());
+        }else{
+            fishingSessionId = fishingSession.getFishingSessionId();
+            resolver.delete(ContentDescriptor.FishCatch.CONTENT_URI, ContentDescriptor.FishCatch.Cols.FISHINGSESSIONID +"="+fishingSession.getFishingSessionId(), null);
+        }
+
+        saveCatches(fishingSessionId, fishingSession.getFishCatches());
+    }
+
+    void saveCatches(Integer id, List<FishCatch> fishCatches){
+        for (FishCatch fishCatch : fishCatches) {
+            fishCatch.setFishingSessionId(id);
             addFishCatch(fishCatch);
         }
     }

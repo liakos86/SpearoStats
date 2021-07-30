@@ -58,10 +58,39 @@
         <item name="android:ellipsize">end</item>
          <item name="android:singleLine">true</item>
     </style>
+
+    <style name="redButtonStyle">
+        <item name="android:layout_marginBottom">@dimen/four</item>
+        <item name="android:padding">@dimen/eight</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_centerHorizontal">true</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:background">@drawable/button_selector_red</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/white_back</item>
+        <item name="android:textSize">@dimen/twelve_sp</item>
+        <item name="android:layout_height">@dimen/thirty_six</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:singleLine">true</item>
+    </style>
+
+    <style name="greenButtonStyle">
+        <item name="android:padding">@dimen/eight</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_centerInParent">true</item>
+        <item name="android:textAllCaps">true</item>
+        <item name="android:background">@drawable/button_selector_green</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/white_back</item>
+        <item name="android:textSize">@dimen/fifteen_sp</item>
+        <item name="android:layout_height">@dimen/standard_view_height</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:singleLine">true</item>
+    </style>
     
     <style name="buttonStyleTall">
         <item name="android:textAllCaps">false</item>
-        <item name="android:background">@drawable/button_selector</item>
+        <item name="android:background">@drawable/button_selector_green</item>
         <item name="android:textStyle">bold</item>
         <item name="android:textColor">@color/white_back</item>
         <item name="android:textSize">@dimen/fifteen_sp</item>

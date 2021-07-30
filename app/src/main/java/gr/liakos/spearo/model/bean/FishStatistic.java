@@ -2,6 +2,7 @@ package gr.liakos.spearo.model.bean;
 
 import gr.liakos.spearo.enums.Season;
 
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -24,10 +25,10 @@ public class FishStatistic {
 	double totalDepth;
 	
 	double recordWeight;
-	
-	
+
 	Map<Season, Map<Integer, Integer>> seasonCatchesPerHourDay;
-	
+
+
 	public FishStatistic(){
 		initSeasonHoursMap();
 	}
@@ -72,10 +73,6 @@ public class FishStatistic {
 		this.totalDepth = totalDepth;
 	}
 
-//	public Map<Integer, Integer> getCatchesPerHourDay() {
-//		return catchesPerHourDay;
-//	}
-
 	public double getRecordWeight() {
 		return recordWeight;
 	}
@@ -93,260 +90,6 @@ public class FishStatistic {
 	}
 	
 	/*************/
-	
-//	int hour0;
-//    int hour1;
-//    int hour2;
-//    int hour3;
-//    int hour4;
-//    int hour5;
-//    int hour6;
-//    int hour7;
-//    int hour8;
-//    int hour9;
-//    int hour10;
-//    int hour11;
-//    int hour12;
-//    int hour13;
-//    int hour14;
-//    int hour15;
-//    int hour16;
-//    int hour17;
-//    int hour18;
-//    int hour19;
-//    int hour20;
-//    int hour21;
-//    int hour22;
-//    int hour23;
-//	public int getHour0() {
-//		if (hour0 == 0){
-//			return getCatchesPerHourDay().get(0);
-//		}
-//		
-//		return hour0;
-//	}
-//	public void setHour0(int hour0) {
-//		this.hour0 = hour0;
-//	}
-//	public int getHour1() {
-//		if (hour1 == 0){
-//			return getCatchesPerHourDay().get(1);
-//		}
-//		return hour1;
-//	}
-//	public void setHour1(int hour1) {
-//		this.hour1 = hour1;
-//	}
-//	public int getHour2() {
-//		if (hour2 == 0){
-//			return getCatchesPerHourDay().get(2);
-//		}
-//		return hour2;
-//	}
-//	public void setHour2(int hour2) {
-//		this.hour2 = hour2;
-//	}
-//	public int getHour3() {
-//		if (hour3 == 0){
-//			return getCatchesPerHourDay().get(3);
-//		}
-//		return hour3;
-//	}
-//	public void setHour3(int hour3) {
-//		this.hour3 = hour3;
-//	}
-//	public int getHour4() {
-//		if (hour4 == 0){
-//			return getCatchesPerHourDay().get(4);
-//		}
-//		return hour4;
-//	}
-//	public void setHour4(int hour4) {
-//		this.hour4 = hour4;
-//	}
-//	public int getHour5() {
-//		if (hour5 == 0){
-//			return getCatchesPerHourDay().get(5);
-//		}
-//		return hour5;
-//	}
-//	public void setHour5(int hour5) {
-//		this.hour5 = hour5;
-//	}
-//	public int getHour6() {
-//		if (hour6 == 0){
-//			return getCatchesPerHourDay().get(6);
-//		}
-//		return hour6;
-//	}
-//	public void setHour6(int hour6) {
-//		this.hour6 = hour6;
-//	}
-//	public int getHour7() {
-//		if (hour7 == 0){
-//			return getCatchesPerHourDay().get(7);
-//		}
-//		return hour7;
-//	}
-//	public void setHour7(int hour7) {
-//		this.hour7 = hour7;
-//	}
-//	public int getHour8() {
-//		if (hour8 == 0){
-//			return getCatchesPerHourDay().get(8);
-//		}
-//		return hour8;
-//	}
-//	public void setHour8(int hour8) {
-//		this.hour8 = hour8;
-//	}
-//	public int getHour9() {
-//		if (hour9 == 0){
-//			return getCatchesPerHourDay().get(9);
-//		}
-//		return hour9;
-//	}
-//	public void setHour9(int hour9) {
-//		this.hour9 = hour9;
-//	}
-//	public int getHour10() {
-//		if (hour10 == 0){
-//			return getCatchesPerHourDay().get(10);
-//		}
-//		return hour10;
-//	}
-//	public void setHour10(int hour10) {
-//		this.hour10 = hour10;
-//	}
-//	public int getHour11() {
-//		if (hour11 == 0){
-//			return getCatchesPerHourDay().get(11);
-//		}
-//		return hour11;
-//	}
-//	public void setHour11(int hour11) {
-//		this.hour11 = hour11;
-//	}
-//	public int getHour12() {
-//		if (hour0 == 12){
-//			return getCatchesPerHourDay().get(12);
-//		}
-//		return hour12;
-//	}
-//	public void setHour12(int hour12) {
-//		this.hour12 = hour12;
-//	}
-//	public int getHour13() {
-//		if (hour0 == 13){
-//			return getCatchesPerHourDay().get(13);
-//		}
-//		return hour13;
-//	}
-//	public void setHour13(int hour13) {
-//		this.hour13 = hour13;
-//	}
-//	public int getHour14() {
-//		if (hour14 == 0){
-//			return getCatchesPerHourDay().get(14);
-//		}
-//		return hour14;
-//	}
-//	public void setHour14(int hour14) {
-//		this.hour14 = hour14;
-//	}
-//	public int getHour15() {
-//		if (hour15 == 0){
-//			return getCatchesPerHourDay().get(15);
-//		}
-//		return hour15;
-//	}
-//	public void setHour15(int hour15) {
-//		this.hour15 = hour15;
-//	}
-//	public int getHour16() {
-//		if (hour16 == 0){
-//			return getCatchesPerHourDay().get(16);
-//		}
-//		return hour16;
-//	}
-//	public void setHour16(int hour16) {
-//		this.hour16 = hour16;
-//	}
-//	public int getHour17() {
-//		if (hour17 == 0){
-//			return getCatchesPerHourDay().get(17);
-//		}
-//		return hour17;
-//	}
-//	public void setHour17(int hour17) {
-//		this.hour17 = hour17;
-//	}
-//	public int getHour18() {
-//		if (hour18 == 0){
-//			return getCatchesPerHourDay().get(18);
-//		}
-//		return hour18;
-//	}
-//	public void setHour18(int hour18) {
-//		this.hour18 = hour18;
-//	}
-//	public int getHour19() {
-//		if (hour19 == 0){
-//			return getCatchesPerHourDay().get(19);
-//		}
-//		return hour19;
-//	}
-//	public void setHour19(int hour19) {
-//		this.hour19 = hour19;
-//	}
-//	public int getHour20() {
-//		if (hour20 == 0){
-//			return getCatchesPerHourDay().get(20);
-//		}
-//		return hour20;
-//	}
-//	public void setHour20(int hour20) {
-//		this.hour20 = hour20;
-//	}
-//	public int getHour21() {
-//		if (hour21 == 0){
-//			return getCatchesPerHourDay().get(21);
-//		}
-//		return hour21;
-//	}
-//	public void setHour21(int hour21) {
-//		this.hour21 = hour21;
-//	}
-//	public int getHour22() {
-//		if (hour22 == 0){
-//			return getCatchesPerHourDay().get(22);
-//		}
-//		return hour22;
-//	}
-//	public void setHour22(int hour22) {
-//		this.hour22 = hour22;
-//	}
-//	public int getHour23() {
-//		if (hour0 == 23){
-//			return getCatchesPerHourDay().get(23);
-//		}
-//		return hour23;
-//	}
-//	public void setHour23(int hour23) {
-//		this.hour23 = hour23;
-//	}
-
-//	public void initHoursMap() {
-//		if (catchesPerHourDay != null){
-//			return;
-//		}
-//		
-//		catchesPerHourDay = new HashMap<Integer, Integer>();
-//		for (int i=0; i<24; i++) {
-//			catchesPerHourDay.put(i, 0);
-//		}
-//		
-//	}
 	
 	public void initSeasonHoursMap() {
 		if (seasonCatchesPerHourDay != null){
@@ -864,7 +607,63 @@ public class FishStatistic {
 		return seasonCatchesPerHourDay;
 	}
 
+	public Map<Integer, Integer> summerHours(){
+		Map<Integer, Integer> summerHours = new HashMap<>();
+		summerHours.put(0, hourSummer0);
+		summerHours.put(1, hourSummer1);
+		summerHours.put(2, hourSummer2);
+		summerHours.put(3, hourSummer3);
+		summerHours.put(4, hourSummer4);
+		summerHours.put(5, hourSummer5);
+		summerHours.put(6, hourSummer6);
+		summerHours.put(7, hourSummer7);
+		summerHours.put(8, hourSummer8);
+		summerHours.put(9, hourSummer9);
+		summerHours.put(10, hourSummer10);
+		summerHours.put(11, hourSummer11);
+		summerHours.put(12, hourSummer12);
+		summerHours.put(13, hourSummer13);
+		summerHours.put(14, hourSummer14);
+		summerHours.put(15, hourSummer15);
+		summerHours.put(16, hourSummer16);
+		summerHours.put(17, hourSummer17);
+		summerHours.put(18, hourSummer18);
+		summerHours.put(19, hourSummer19);
+		summerHours.put(20, hourSummer20);
+		summerHours.put(21, hourSummer21);
+		summerHours.put(22, hourSummer22);
+		summerHours.put(23, hourSummer23);
+		return summerHours;
+	}
 
+	public Map<Integer, Integer> winterHours(){
+		Map<Integer, Integer> winterHours = new HashMap<>();
+		winterHours.put(0, hourWinter0);
+		winterHours.put(1, hourWinter1);
+		winterHours.put(2, hourWinter2);
+		winterHours.put(3, hourWinter3);
+		winterHours.put(4, hourWinter4);
+		winterHours.put(5, hourWinter5);
+		winterHours.put(6, hourWinter6);
+		winterHours.put(7, hourWinter7);
+		winterHours.put(8, hourWinter8);
+		winterHours.put(9, hourWinter9);
+		winterHours.put(10, hourWinter10);
+		winterHours.put(11, hourWinter11);
+		winterHours.put(12, hourWinter12);
+		winterHours.put(13, hourWinter13);
+		winterHours.put(14, hourWinter14);
+		winterHours.put(15, hourWinter15);
+		winterHours.put(16, hourWinter16);
+		winterHours.put(17, hourWinter17);
+		winterHours.put(18, hourWinter18);
+		winterHours.put(19, hourWinter19);
+		winterHours.put(20, hourWinter20);
+		winterHours.put(21, hourWinter21);
+		winterHours.put(22, hourWinter22);
+		winterHours.put(23, hourWinter23);
+		return winterHours;
+	}
 	
 	
 }

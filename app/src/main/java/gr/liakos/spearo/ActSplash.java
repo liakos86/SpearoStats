@@ -65,13 +65,19 @@ public class ActSplash extends BaseFrgActivityWithBottomButtons {
     	ImageView iv = (ImageView) findViewById(R.id.img_splash);
     	ObjectAnimator scaleDown = ObjectAnimator.ofPropertyValuesHolder(
     	                    iv,
-    	                    PropertyValuesHolder.ofFloat("scaleX", 1.05f),
-    	                    PropertyValuesHolder.ofFloat("scaleY", 1.05f));
-    	scaleDown.setDuration(310);
+    	                    PropertyValuesHolder.ofFloat("scaleX", 1.25f),
+    	                    PropertyValuesHolder.ofFloat("scaleY", 1.25f));
+    	scaleDown.setDuration(500);
     	scaleDown.setRepeatCount(ObjectAnimator.INFINITE);
     	scaleDown.setRepeatMode(ObjectAnimator.REVERSE);
     	scaleDown.setInterpolator(new FastOutSlowInInterpolator());
     	scaleDown.start();
+
+//		ObjectAnimator animation = ObjectAnimator.ofFloat(iv, "translationY", -500f);
+//		animation.setDuration(20000);
+//		animation.setRepeatCount(ObjectAnimator.INFINITE);
+//		//animation.set
+//		animation.start();
 	}
 
 	void startMain() {

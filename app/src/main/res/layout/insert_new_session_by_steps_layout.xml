@@ -1,0 +1,221 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	android:padding="@dimen/four">
+    
+         <TextView 
+             android:layout_alignParentTop="true"
+             android:padding="@dimen/four"
+             android:gravity="center"
+             android:maxLines="2"
+             android:ellipsize="end"
+             android:layout_width="match_parent"
+             android:layout_height="@dimen/standard_view_height"
+             android:id="@+id/textview_session_date_location"
+             android:textColor="@color/white_back"/>
+
+	<LinearLayout
+		android:layout_below="@id/textview_session_date_location"
+		android:id="@+id/layout_fish_select"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:orientation="vertical">
+
+	<TextView
+		android:padding="@dimen/four"
+		android:gravity="center"
+		android:maxLines="2"
+		android:ellipsize="end"
+		android:textSize="@dimen/twenty_sp"
+		android:layout_width="match_parent"
+		android:layout_height="@dimen/standard_view_height"
+		android:id="@+id/textview_what_fish_question"
+		android:background="@color/colorAccent"
+		android:textStyle="bold"
+		android:text="@string/textview_what_fish_question"
+		android:textColor="@color/white_back"
+		android:layout_marginBottom="@dimen/four"/>
+
+         <gr.liakos.spearo.application.ClearableAutoCompleteTextView 
+             android:layout_below="@+id/textview_what_fish_question"
+             android:layout_marginBottom="@dimen/eight"
+			 android:layout_gravity="center_vertical"
+			 android:layout_width="match_parent"
+			 android:layout_height="@dimen/standard_view_height"
+			  android:hint="@string/search_hint"
+			  android:textSize="@dimen/fifteen_sp"
+			  android:id="@+id/auto_complete_fish"
+			  android:lineSpacingExtra="3dp"
+			  android:background="@drawable/edit_text_back"
+			  android:dropDownWidth="match_parent"
+			  android:singleLine="true"
+			  android:ellipsize="end"
+			  android:padding="@dimen/four"/>
+
+	</LinearLayout>
+
+	<RelativeLayout
+		android:id="@+id/layout_fish_catch_meta"
+		android:layout_width="match_parent"
+		android:layout_below="@+id/layout_fish_select"
+		android:layout_height="match_parent">
+
+		<TextView
+			android:layout_alignParentTop="true"
+			android:padding="@dimen/four"
+			android:gravity="center"
+			android:maxLines="2"
+			android:ellipsize="end"
+			android:textSize="@dimen/twenty_sp"
+			android:layout_width="match_parent"
+			android:layout_height="@dimen/standard_view_height"
+			android:id="@+id/textview_fish_meta_question"
+			android:background="@color/colorAccent"
+			android:textStyle="bold"
+			android:textColor="@color/white_back"
+			android:layout_marginBottom="@dimen/four"/>
+         
+        <include android:id="@+id/pickers"
+            	 android:layout_below="@+id/textview_fish_meta_question"
+                 android:layout_width="fill_parent"
+                 android:layout_height="wrap_content"
+                 layout="@layout/number_pickers"/>
+
+	<RelativeLayout
+		 android:layout_below="@+id/pickers"
+		 android:id="@+id/spinnerLayout"
+		 android:layout_marginBottom="@dimen/eight"
+    	 android:layout_width="match_parent"
+    	 android:layout_height="@dimen/standard_view_height"
+    	 android:background="@drawable/spinner_border"
+    	 android:orientation="horizontal">
+
+		<Spinner
+			android:id="@+id/spinnerCatchTime"
+			android:layout_width="match_parent"
+			android:layout_height="@dimen/standard_view_height"
+			android:layout_centerVertical="true"
+			android:layout_alignParentStart="true"
+			android:background="@android:color/transparent"
+			android:spinnerMode="dropdown" />
+
+		<ImageView
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_alignParentEnd="true"
+			android:layout_centerVertical="true"
+			android:src="@drawable/drop" />
+
+	</RelativeLayout>
+
+        <Button
+            android:layout_below="@+id/spinnerLayout"
+			style="@style/buttonStyle"
+			android:drawableStart="@drawable/hook"
+    	    android:paddingStart="@dimen/thirty"
+    	    android:paddingEnd="@dimen/twenty"
+    	    android:drawablePadding="@dimen/four"
+    	    android:gravity="center"
+			android:textStyle="bold"
+			android:maxLines="1"
+            android:layout_width="match_parent"
+            android:text="@string/add_catch"
+            android:id="@+id/button_add_to_basket" />
+	</RelativeLayout>
+
+	<LinearLayout
+		android:layout_alignParentTop="true"
+		android:layout_marginTop="@dimen/four"
+		android:id="@+id/layout_complete_session_or_add_fish_layout"
+		android:orientation="vertical"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content">
+
+		<TextView
+			android:padding="@dimen/four"
+			android:gravity="center"
+			android:maxLines="2"
+			android:ellipsize="end"
+			android:textSize="@dimen/twenty_sp"
+			android:layout_width="match_parent"
+			android:layout_height="@dimen/standard_view_height"
+			android:background="@color/colorAccent"
+			android:textStyle="bold"
+			android:textColor="@color/white_back"
+			android:layout_marginBottom="@dimen/fifty"
+			android:text="@string/complete_session_or_add_fish"
+			/>
+
+
+
+	<LinearLayout
+
+		android:orientation="horizontal"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content">
+
+		<Button
+			style="@style/buttonStyleTall"
+			android:text="@string/add_one_more_catch"
+			android:drawableStart="@drawable/add_60"
+			android:layout_width="@dimen/zero"
+			android:layout_weight="1"
+			android:paddingStart="@dimen/eight"
+			android:paddingEnd="@dimen/four"
+			android:id="@+id/button_add_one_more_catch"
+			android:layout_marginEnd="@dimen/four"
+			/>
+
+		<Button
+			style="@style/buttonStyleTall"
+			android:drawableStart="@drawable/save_60"
+			android:drawablePadding="@dimen/four"
+			android:paddingStart="@dimen/twelve"
+			android:layout_width="@dimen/zero"
+			android:layout_weight="1"
+			android:id="@+id/button_checkout_basket"
+			/>
+	</LinearLayout>
+
+		<FrameLayout
+			android:layout_marginBottom="@dimen/one_hundred"
+			android:id="@+id/frameLayoutSessionCatches"
+			android:layout_width="match_parent"
+			android:layout_height="@dimen/two_hundred"
+			android:layout_gravity="center"
+			/>
+	</LinearLayout>
+
+	<Button
+		style="@style/redButtonStyle"
+		android:id="@+id/folaButton"
+		android:text="@string/fola"
+		android:layout_above="@+id/adViewNewSession"
+		android:drawableStart="@drawable/alert_jellyfish"/>
+
+	<com.google.android.gms.ads.AdView
+		android:layout_above="@+id/button_cancel"
+		xmlns:ads="http://schemas.android.com/apk/res-auto"
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content"
+		android:id="@+id/adViewNewSession"
+		ads:adSize="BANNER"
+		ads:adUnitId="@string/adId_frg_sessions_banner_layout"
+		android:layout_marginBottom="@dimen/eight"/>
+
+	<Button
+		android:layout_alignParentBottom="true"
+		style="@style/buttonStyle"
+		android:text="@string/cancel_session_entry"
+		android:drawableStart="@drawable/cancel_60"
+		android:drawablePadding="@dimen/four"
+		android:paddingStart="@dimen/twelve"
+		android:layout_width="match_parent"
+		android:id="@+id/button_cancel"
+
+		android:layout_marginBottom="@dimen/eight"
+		/>
+       
+</RelativeLayout>

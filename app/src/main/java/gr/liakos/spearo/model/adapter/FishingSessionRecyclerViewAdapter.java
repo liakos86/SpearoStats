@@ -20,7 +20,6 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.core.content.res.ResourcesCompat;
@@ -53,13 +52,13 @@ import gr.liakos.spearo.util.SpearoUtils;
 import uk.co.deanwild.materialshowcaseview.MaterialShowcaseView;
 
 
-public class RecyclerViewAdapter extends RecyclerView.Adapter {
+public class FishingSessionRecyclerViewAdapter extends RecyclerView.Adapter {
 
     List<FishingSession> mValues;
     Context mContext;
     FrgFishingSessions fragment;
 
-    public RecyclerViewAdapter(Context context, List<FishingSession> values, FrgFishingSessions frg) {
+    public FishingSessionRecyclerViewAdapter(Context context, List<FishingSession> values, FrgFishingSessions frg) {
         mValues = values;
         mContext = context;
         this.fragment = frg;
@@ -76,10 +75,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter {
         Float moonPercentage = null;
         MoonPhase moonPhase = null;
         Bitmap sessionImage = null;
-        //Uri sessionUri = null;
-
         boolean validUriPath;
-
         FishingSession item;
 
         public ViewHolder(View v) {
@@ -96,7 +92,6 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter {
         }
 
         public void setData(FishingSession item) {
-//            sessionUri = null;
             this.item = item;
 
             sessionCatchesNumText.setText(String.valueOf(item.getFishCatches().size()));
@@ -106,7 +101,21 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter {
             setWindTextAndImg(item, res);
             setSessionImg(item, res);
             setMoonPhaseTextAndImg(item);
+            setShareButton();
+            showFbShowcase();
+            //setEditSessionButton();
+        }
 
+//        private void setEditSessionButton() {
+//            editSessionButton.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View v) {
+//                    fragment.editSession(item);
+//                }
+//            });
+//        }
+
+        private void setShareButton() {
             if (sessionImage == null && !validUriPath){
                 shareButton.setVisibility(View.GONE);
                 shareButton.setOnClickListener(null);
@@ -119,13 +128,15 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter {
                     }
                 });
             }
-
-            showFbShowcase();
         }
 
         private void showFbShowcase() {
 
             if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
+                return;
+            }
+
+            if (item.getSessionImageUriPath() == null){
                 return;
             }
 
@@ -170,7 +181,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter {
             SharePhotoContent content = new SharePhotoContent.Builder()
                     .addPhoto(photo)
                     .setShareHashtag(new ShareHashtag.Builder().setHashtag("#SpearoStats").build())
-                    .setPageId("104780914788737")
+                    .setPageId(Constants.FACEBOOK_APP_ID)
                     .build();
 
             ((ActSpearoStatsMain) fragment.getActivity()).tryToShare(content);
@@ -356,10 +367,9 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter {
     }
 
     @Override
-    public RecyclerViewAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public FishingSessionRecyclerViewAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
         View view = LayoutInflater.from(mContext).inflate(R.layout.gridview_row, parent, false);
-
         return new ViewHolder(view);
     }
 

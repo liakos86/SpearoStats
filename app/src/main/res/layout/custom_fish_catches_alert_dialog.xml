@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical" >
     
     
     
-     <TextView 
+     <TextView
+         android:layout_alignParentTop="true"
          android:padding="@dimen/twelve"
          android:text="@string/confirm_catches"
         android:layout_width="match_parent"
@@ -18,10 +19,13 @@
         android:textStyle="bold"
         android:singleLine="true"
         android:ellipsize="end"
+         android:id="@+id/please_confirm"
         />
     
     
     
-     <ListView android:layout_width="match_parent"  android:layout_height="match_parent" android:id="@+id/listViewSessionCatches"/>
+     <ListView android:layout_below="@+id/please_confirm" android:layout_width="match_parent"  android:layout_height="match_parent" android:id="@+id/listViewSessionCatches"/>
 
-</LinearLayout>
+     <include android:layout_alignParentBottom="true" layout="@layout/alert_buttons_layout"
+         android:layout_height="@dimen/standard_view_height" android:layout_width="match_parent" />
+</RelativeLayout>

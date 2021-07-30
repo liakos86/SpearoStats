@@ -17,7 +17,6 @@ import androidx.fragment.app.FragmentPagerAdapter;
 public class MyPagerAdapter extends FragmentPagerAdapter {
 
     Fragment[] fragments;
-    Activity activity;
 
     public MyPagerAdapter(FragmentManager supportFragmentManager, int pageCount) {
         super(supportFragmentManager);
@@ -47,14 +46,14 @@ public class MyPagerAdapter extends FragmentPagerAdapter {
                 }
                 break;
             }
-            
+
             case 2: {
                 if (fragments[position] == null) {
                     fragments[position] = FrgFishingStatsGlobal.init(2);
                 }
                 break;
             }
-            
+
             case 3: {
                 if (fragments[position] == null) {
                     fragments[position] = FrgMyPlaces.init(3);
@@ -62,14 +61,8 @@ public class MyPagerAdapter extends FragmentPagerAdapter {
                 break;
             }
         }
-        
+
         return fragments[position];
     }
-
-	public Fragment[] getFragments() {
-		return fragments;
-	}
-    
-    
 
 }

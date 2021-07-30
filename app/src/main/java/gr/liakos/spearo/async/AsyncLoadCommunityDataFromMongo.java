@@ -48,6 +48,10 @@ public class AsyncLoadCommunityDataFromMongo extends AsyncTask<Void, Void, List<
         	communityAvgStats = database.fetchCommunityData();
         	
         }
+
+
+		FishingHelper.assignHoursPerSeasonGlobal(communityAvgStats, communityStats);
+
     	
 		newRecord = database.updateRecordsFromCommunityData(communityStats);
 		application.setNewCommunityDataRecord(newRecord);
@@ -62,7 +66,8 @@ public class AsyncLoadCommunityDataFromMongo extends AsyncTask<Void, Void, List<
 
     @Override
     protected void onPostExecute(List<FishAverageStatistic> stats) {
-    	application.refreshCommunityData(stats);
+
+		application.refreshCommunityData(stats);
         asyncListener.onAsyncCommunityStatsFinished(stats);
     }
 }

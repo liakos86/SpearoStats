@@ -53,7 +53,7 @@ public class DateUtils {
 		}
 	}
 	
-	static String getMonthName(int pos, Context context){
+	public static String getMonthName(int pos, Context context){
 		Resources resources = context.getResources();
 		switch (pos){
 			case Calendar.JANUARY:

@@ -1,42 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:orientation="vertical"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	android:orientation="vertical"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="@color/primary_grey">
-                
-    	<ProgressBar
-            android:layout_width="match_parent"
-            android:visibility="gone"
-            android:layout_height="@dimen/standard_view_height"
-            android:layout_centerInParent="true"
-            android:id="@+id/premiumLayoutProgressBar"
-            />
-                
-    		<TextView 
-    		    android:id="@+id/premiumText"
-    		    android:drawableTop="@drawable/premium"
-    		    android:drawablePadding="@dimen/four"
-    		    android:layout_alignParentTop="true"
-    		    android:padding="@dimen/twelve"
-    		    android:layout_width="match_parent"
-    		    android:layout_height="wrap_content"
-    		    android:textColor="@color/white_back"
-    		    android:textSize="@dimen/fifteen_sp"
-    		    android:layout_marginBottom="@dimen/four"/>
-                
-    		<Button
-                style="@style/buttonStyle"
-		        android:layout_below="@+id/premiumText"
-    		    android:layout_margin="@dimen/eight"
-                android:layout_width="match_parent"
-                android:text="@string/go_premium"
-                android:id="@+id/button_go_premium"
-                />
+
+
+	<TextView
+		android:layout_margin="@dimen/six"
+		android:layout_centerInParent="true"
+		android:visibility="gone"
+		android:layout_alignParentTop="true"
+		android:textColor="@color/white_back"
+		android:id="@+id/textViewVersionAndroid"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:text="@string/android_version_check"
+		app:drawableTopCompat="@drawable/android_version" />
     		
             <gr.liakos.spearo.custom.NestedScrollingListView
                  android:id="@+id/listview_fishing_stats_global"
-                android:layout_alignParentTop="true"
+              android:layout_alignParentTop="true"
                   android:layout_width="match_parent"
                   android:layout_height="wrap_content"
                 />  

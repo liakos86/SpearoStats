@@ -145,7 +145,9 @@
         <string name="skip">Salta</string>
         <string name="cancel">Annulla</string>
         <string name="save">Salva</string>
-        <string name="go_premium">Aggiorna a premium</string>
+
+        <string name="go_premium_diagrams">Aggiorna a premium (diagrams)!</string>
+        <string name="go_premium_data">Aggiorna a premium (data)!</string>
         <string name="fish">pesce</string>
         <string name="fishes">pesci</string>
         <string name="marker_text">la località</string>
@@ -291,6 +293,11 @@
         <string name="wind_south_east_full">Sudest</string>
         <string name="wind_south_west_full">Sudovest</string>
 
+        <string name="textview_what_fish_question">Che pesce hai catturato?</string>
+        <string name="textview_fish_meta_question">Informazioni su %1$s</string>
+
         <string name="showcase_fb">Clicca per condividere su facebook</string>
+    <string name="complete_session_or_add_fish" />
+    <string name="add_one_more_catch" />
 
 </resources>

@@ -1,14 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="gr.liakos.spearo"
-    android:versionCode="42"
-    android:versionName="1.8">
+    android:versionCode="46"
+    android:versionName="1.11">
 
     <uses-feature
         android:name="android.hardware.wifi"
         android:required="true" />
 
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
@@ -75,14 +74,6 @@
             android:label="@string/app_name"
             android:screenOrientation="portrait" />
 
-        <!--<activity
-            android:name=".ActWeeklyStats"
-            android:label="@string/app_name"
-            android:exported="true"
-            android:parentActivityName=".ActSpearoStatsMain"
-            android:launchMode="singleTask"
-            android:screenOrientation="portrait" />-->
-
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
@@ -97,18 +88,6 @@
         <provider android:authorities="com.facebook.app.FacebookContentProvider1132667657194859"
             android:name="com.facebook.FacebookContentProvider"
             android:exported="true"/>
-
-       <!-- <receiver
-            android:name=".custom.notification.NotificationReceiver"/>
-
-
-        <receiver
-            android:name=".custom.notification.NotificationBootReceiver"
-            android:enabled="false">
-            <intent-filter>
-                <action android:name="android.intent.action.BOOT_COMPLETED" />
-            </intent-filter>
-        </receiver>-->
 
 
     </application>

@@ -8,6 +8,8 @@ public interface AsyncListener {
 	
 	void onAsyncCommunityStatsFinished(List<FishAverageStatistic> stats);
 
-	void onPurchaseAttemptFinished(boolean success);
+	void onPurchaseStatsAttemptFinished(boolean success);
+
+	void onPurchaseDiagramsAttemptFinished(boolean success);
 
 }

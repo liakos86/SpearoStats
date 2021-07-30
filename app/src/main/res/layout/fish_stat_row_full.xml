@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<LinearLayout   xmlns:android="http://schemas.android.com/apk/res/android"
+    			xmlns:app="http://schemas.android.com/apk/res/gr.liakos.spearo"
+                xmlns:tools="http://schemas.android.com/tools"
+    			android:baselineAligned="false"
+    			android:layout_width="match_parent"
+    			android:orientation="vertical"
+                android:layout_height="wrap_content" 
+                android:background="@drawable/stat_row_selector"
+                tools:ignore="ResAuto">
+
+    <LinearLayout
+    			android:layout_width="match_parent"
+    			android:orientation="horizontal"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/six"
+               >
+
+    <ImageView
+            android:id="@+id/statImageViewFish"
+            android:layout_weight="2"
+            android:layout_gravity="center"
+            android:layout_width="@dimen/zero"
+            android:layout_height="match_parent"  />
+        
+        <LinearLayout android:layout_width="0dp"
+            android:layout_marginStart="@dimen/four"
+        android:layout_height="wrap_content"
+        android:layout_weight="3"
+        android:orientation="vertical"
+        android:layout_gravity="start|center_vertical"
+       >
+    
+        <TextView  
+              android:id="@+id/statTextCommonName"
+              style="@style/rowTextView"
+              android:drawableStart="@drawable/info_30"
+              android:layout_marginBottom="@dimen/four"/>
+    
+    <TextView 
+              android:id="@+id/statTextRecordWeight" 
+               android:drawableStart="@drawable/record_30"
+               style="@style/rowTextView"
+               android:layout_marginBottom="@dimen/four"
+               />
+    
+    <TextView 
+              android:id="@+id/statTextAvgWeight" 
+               android:drawableStart="@drawable/scale_30"
+               style="@style/rowTextView"
+               android:layout_marginBottom="@dimen/four"/>
+    
+    <TextView 
+              android:id="@+id/statTextCommonSummerHour" 
+              android:drawableStart="@drawable/clock_30_summer20"
+              style="@style/rowTextView"
+              />
+    
+    </LinearLayout>
+    
+         <LinearLayout android:layout_width="0dp"
+             android:layout_marginStart="@dimen/four"
+        android:layout_height="wrap_content"
+        android:layout_weight="3"
+        android:orientation="vertical"
+        android:layout_gravity="start|center_vertical"
+        >
+    
+             <TextView 
+              android:id="@+id/statTextTotalCatches" 
+              android:drawableStart="@drawable/no_fish_30"
+               style="@style/rowTextView"
+               android:layout_marginBottom="@dimen/four"
+              />
+    
+              <TextView  
+              android:id="@+id/statTextWorldRecord"
+              android:drawableStart="@drawable/wr_30"
+              style="@style/rowTextView"
+               android:layout_marginBottom="@dimen/four"/>
+    
+    <TextView 
+              android:id="@+id/statTextAvgDepth" 
+              android:drawableStart="@drawable/dive_30"
+              style="@style/rowTextView"
+               android:layout_marginBottom="@dimen/four"/>
+    
+    <TextView 
+              android:id="@+id/statTextCommonWinterHour" 
+              android:drawableStart="@drawable/clock_30_winter20"
+              style="@style/rowTextView"/>
+    
+    </LinearLayout>
+
+    </LinearLayout>
+
+    <com.synnapps.carouselview.CarouselView
+        app:indicatorGravity="top|center_horizontal"
+
+        android:id="@+id/carouselDiagramsView"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/one_hundred_fifty"
+        app:fillColor="@color/interval_blue"
+        app:pageColor="#00000000"
+        app:radius="@dimen/six"
+        app:slideInterval="2000"
+        app:strokeColor="#FF777777"
+        android:background="@color/white_back"
+        app:strokeWidth="1dp"/>
+
+    <RelativeLayout
+        android:id="@+id/no_premium_carousel"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/one_hundred_twenty"
+        android:background="@drawable/diagram_only_blur">
+
+        <Button
+            android:id="@+id/goPremium"
+            android:text="@string/go_premium_diagrams"
+            style="@style/greenButtonStyle"/>
+
+    </RelativeLayout>
+
+</LinearLayout>

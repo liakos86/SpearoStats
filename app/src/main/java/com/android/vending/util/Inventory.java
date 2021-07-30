@@ -39,14 +39,14 @@
 //    }
 //
 //    /**
-//     * Returns purchase information for a given product, or null if there is no purchase.
+//     * Returns purchasePremiumStats information for a given product, or null if there is no purchasePremiumStats.
 //     */
 //    public Purchase getPurchase(String sku) {
 //        return mPurchaseMap.get(sku);
 //    }
 //
 //    /**
-//     * Returns whether or not there exists a purchase of the given product.
+//     * Returns whether or not there exists a purchasePremiumStats of the given product.
 //     */
 //    public boolean hasPurchase(String sku) {
 //        return mPurchaseMap.containsKey(sku);
@@ -60,11 +60,11 @@
 //    }
 //
 //    /**
-//     * Erase a purchase (locally) from the inventory, given its product ID. This just
+//     * Erase a purchasePremiumStats (locally) from the inventory, given its product ID. This just
 //     * modifies the Inventory object locally and has no effect on the server! This is
 //     * useful when you have an existing Inventory object which you know to be up to date,
 //     * and you have just consumed an item successfully, which means that erasing its
-//     * purchase data from the Inventory you already have is quicker than querying for
+//     * purchasePremiumStats data from the Inventory you already have is quicker than querying for
 //     * a new Inventory.
 //     */
 //    public void erasePurchase(String sku) {

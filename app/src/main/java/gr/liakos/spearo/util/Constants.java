@@ -3,6 +3,14 @@ package gr.liakos.spearo.util;
 
 public interface Constants {
 
+	String SKU_PREMIUM_STATS = "premium";
+
+	String SKU_PREMIUM_DIAGRAMS = "premium_diagrams_user";
+
+	String FACEBOOK_APP_ID = "104780914788737";
+
+	String PAGE_ACCESS_TOKEN = "EAAQGJ71bDWsBAPYE5iukxJB07DSST97mOEZCZB2DOjZA5WM6j3ZBYuRfKhwnZCHeU4lWk3qcYCT66zWZCUDJhlob7P25vguBky9kZA5IKr1tg8x7eRLL1ava866Iov0JakpMXTmzjlRkeuvqt376VeI0hhb0Mew69VZBPBqivMWhZC0LWWGZCvvM75";
+
 	String DATE_FORMAT = "dd-MM-yyyy";
 
 	String DATETIME_FORMAT = "dd-MM-yyyy HH:mm";
@@ -71,7 +79,11 @@ public interface Constants {
 
     String SHOWCASE_ACT_MAIN = "SHOWCASE_ID";
 
-	String SHOWCASE_FRG_SESSIONS = "SHOWCASE_FRG_SESSIONS";
+	String SHOWCASE_STATS = "SHOWCASE_STATS_ID";
 
     String SHOWCASE_FB = "SHOWCASE_FB";
+
+	String FACEBOOK_URL = "https://www.facebook.com/spearoStats";
+
+    String DOT = ".";
 }

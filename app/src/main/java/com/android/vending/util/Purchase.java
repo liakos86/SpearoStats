@@ -19,7 +19,7 @@
 //import org.json.JSONObject;
 //
 ///**
-// * Represents an in-app billing purchase.
+// * Represents an in-app billing purchasePremiumStats.
 // */
 //public class Purchase {
 //    String mItemType;  // ITEM_TYPE_INAPP or ITEM_TYPE_SUBS

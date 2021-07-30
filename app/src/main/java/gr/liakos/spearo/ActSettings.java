@@ -41,12 +41,18 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.facebook.AccessToken;
+import com.facebook.GraphRequest;
+import com.facebook.GraphResponse;
+import com.facebook.HttpMethod;
 import com.google.android.material.snackbar.Snackbar;
+
+import org.json.JSONException;
 
 public class ActSettings
 extends Activity implements AsyncSaveUserListener {
-	
-	
+
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -61,11 +67,78 @@ extends Activity implements AsyncSaveUserListener {
 		setupFishRequestButton();
 		
 		setupEmailTextView();
+
+		setupLikeButton();
+
+		getInsights();
 	}
-	
-	
+
+	private void setupLikeButton() {
+		Button likeButton = findViewById(R.id.button_fb_like);
+		likeButton.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				Uri uri = Uri.parse(Constants.FACEBOOK_URL); // missing 'http://' will cause crashed
+				Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+				startActivity(intent);
+
+			}
+		});
+	}
+
+
+	void getPageToken(){
+//		/* make the API call */
+//		new GraphRequest(
+//				AccessToken.getCurrentAccessToken(),
+//				"/"+ Constants.FACEBOOK_APP_ID +"?fields=access_token",
+//				null,
+//				HttpMethod.GET,
+//				new GraphRequest.Callback() {
+//					public void onCompleted(GraphResponse response) {
+//						Toast.makeText(getApplicationContext(), response.getRawResponse(), Toast.LENGTH_LONG).show();
+//						try {
+//							pageToken = response.getJSONObject().getString("access_token");
+//						} catch (Exception e) {
+//							Toast.makeText(getApplicationContext(), "TOKEN ERROR", Toast.LENGTH_LONG).show();
+//						}
+//						getInsights();
+//					}
+//				}
+//		).executeAsync();
+	}
+
+	void getInsights(){
+		AccessToken accessToken = new AccessToken(Constants.PAGE_ACCESS_TOKEN, Constants.FACEBOOK_APP_ID, "10158556348971234", null, null, null, null, null, null, null);
+
+		new GraphRequest(
+				accessToken,
+				"/" + Constants.FACEBOOK_APP_ID +"/insights?metric=page_fans",
+				null,
+				HttpMethod.GET,
+				new GraphRequest.Callback() {
+					public void onCompleted(GraphResponse response) {
+						String fans= "";
+						try {
+							 fans = response.getJSONObject().getJSONArray("data").getJSONObject(0).getJSONArray("values").getJSONObject(0).getString("value");
+							updateLikeButtonText(fans);
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+
+					}
+				}
+		).executeAsync();
+	}
+
+	private void updateLikeButtonText(String fans) {
+		Button likeButton = findViewById(R.id.button_fb_like);
+		likeButton.setText("(" + fans + ") Like");
+	}
+
+
 	void setupEmailTextView() {
-		TextView email = (TextView) findViewById(R.id.text_email_us);
+		TextView email = findViewById(R.id.text_email_us);
 		email.setOnClickListener(new OnClickListener() {
 			
 			@Override

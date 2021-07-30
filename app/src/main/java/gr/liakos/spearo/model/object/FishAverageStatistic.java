@@ -1,5 +1,6 @@
 package gr.liakos.spearo.model.object;
 
+import gr.liakos.spearo.enums.Season;
 import gr.liakos.spearo.model.ContentDescriptor;
 import gr.liakos.spearo.model.Database;
 import android.content.ContentResolver;
@@ -7,6 +8,8 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
+
+import java.util.Map;
 
 
 public class FishAverageStatistic implements Comparable<FishAverageStatistic>{
@@ -28,7 +31,12 @@ public class FishAverageStatistic implements Comparable<FishAverageStatistic>{
 	Integer mostCommonSummerHour;
 	
 	Integer mostCommonWinterHour;
-	
+
+	Map<Integer, Integer> catchesPerMonth;
+
+
+	Map<Season, Map<Integer, Integer>> catchesPerHourPerSeason;
+
 	public FishAverageStatistic(){
 		this.fishAvgId = Database.INVALID_ID;
 	}
@@ -108,13 +116,21 @@ public class FishAverageStatistic implements Comparable<FishAverageStatistic>{
 	public void setFishId(Integer fishId) {
 		this.fishId = fishId;
 	}
-	
-	public Integer getFishAvgId() {
-		return fishAvgId;
+
+	public void setCatchesPerMonth(Map<Integer,Integer> catchesPerMonth) {
+		this.catchesPerMonth = catchesPerMonth;
 	}
 
-	public void setFishAvgId(Integer fishAvgId) {
-		this.fishAvgId = fishAvgId;
+	public Map<Integer, Integer> getCatchesPerMonth() {
+		return catchesPerMonth;
+	}
+
+	public void setCatchesPerHourPerSeason(Map<Season, Map<Integer, Integer>> catchesPerHourPerSeason) {
+		this.catchesPerHourPerSeason = catchesPerHourPerSeason;
+	}
+
+	public Map<Season, Map<Integer, Integer>> getCatchesPerHourPerSeason() {
+		return catchesPerHourPerSeason;
 	}
 
 	public static FishAverageStatistic getFromId(Context context, long id) {
@@ -195,5 +211,5 @@ public class FishAverageStatistic implements Comparable<FishAverageStatistic>{
 	public int compareTo(FishAverageStatistic arg0) {
 		return this.totalCatches - arg0.getTotalCatches();
 	}
-	
+
 }

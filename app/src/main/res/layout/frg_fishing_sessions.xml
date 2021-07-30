@@ -15,7 +15,7 @@
 
 	<!-- 1. New fishing session here  -->
 
-	<include layout="@layout/insert_new_session_layout"/>
+	<include layout="@layout/insert_new_session_by_steps_layout"/>
 
 	<!-- 2. when no sessions yet  -->
 

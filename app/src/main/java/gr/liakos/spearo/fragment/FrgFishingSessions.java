@@ -1,5 +1,6 @@
 package gr.liakos.spearo.fragment;
 
+import android.animation.ObjectAnimator;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Context;
@@ -7,9 +8,11 @@ import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.graphics.Rect;
+import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -20,8 +23,11 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.Button;
 import android.widget.DatePicker;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.ViewFlipper;
@@ -49,7 +55,6 @@ import com.google.android.libraries.places.widget.AutocompleteSupportFragment;
 import com.google.android.libraries.places.widget.listener.PlaceSelectionListener;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -69,7 +74,7 @@ import gr.liakos.spearo.model.Database;
 import gr.liakos.spearo.model.adapter.AutoCompleteSearchAdapter;
 import gr.liakos.spearo.model.adapter.CustomSpinnerAdapter;
 import gr.liakos.spearo.model.adapter.FishingSessionCatchesAdapter;
-import gr.liakos.spearo.model.adapter.RecyclerViewAdapter;
+import gr.liakos.spearo.model.adapter.FishingSessionRecyclerViewAdapter;
 import gr.liakos.spearo.model.adapter.WindSpinnerAdapter;
 import gr.liakos.spearo.model.adapter.WindVolumeSpinnerAdapter;
 import gr.liakos.spearo.model.object.Fish;
@@ -81,8 +86,8 @@ import gr.liakos.spearo.util.DateUtils;
 import gr.liakos.spearo.util.LocationUtils;
 import gr.liakos.spearo.util.MetricConverter;
 import gr.liakos.spearo.util.SpearoUtils;
+import gr.liakos.spearo.util.helper.AlertDialogHelper;
 import uk.co.deanwild.materialshowcaseview.MaterialShowcaseSequence;
-import uk.co.deanwild.materialshowcaseview.MaterialShowcaseView;
 import uk.co.deanwild.materialshowcaseview.ShowcaseConfig;
 import uk.co.deanwild.materialshowcaseview.shape.RectangleShape;
 
@@ -113,6 +118,7 @@ public class FrgFishingSessions
 	NumberPicker pickerWeight;
 	FishingSessionCatchesAdapter sessionCatchesAdapter;
 	Button buttonCheckout;
+	Button buttonCancelAndExit;
 	Spinner spinnerCatchTime;
 
 	/**
@@ -134,7 +140,7 @@ public class FrgFishingSessions
 	 * Other stuff
 	 */
 	TextView textDateAndLocation;
-	RecyclerViewAdapter recyclerViewAdapter;
+	FishingSessionRecyclerViewAdapter recyclerViewAdapter;
 	View.OnTouchListener inScrollTouchListener;
 	SpearoUtils spearoUtils;
 
@@ -145,6 +151,10 @@ public class FrgFishingSessions
 	Integer catchHour = null;
 	int catchDateMillis;
 	Button addCatchButton;
+	RelativeLayout layoutFishCatchMeta;
+	LinearLayout layoutInsertButtons;
+	LinearLayout layoutFishSelect;
+	TextView textViewFishCatchMeta;
 
 	/**
 	 * session stuff
@@ -156,6 +166,9 @@ public class FrgFishingSessions
 	Wind wind;
 	WindVolume windVolume;
 	String sessionImgUriPath;
+	Integer sessionId = Database.INVALID_ID;
+	FrameLayout layoutSessionCatches;
+	Button folaButton;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -182,54 +195,56 @@ public class FrgFishingSessions
 		setConfirmLocationButton(v);
 		setDeleteLocationButton(v);
 		setSaveFishingSessionButton(v);
-		setReturnHomeButton(v);
+		setAddOneMoreCatchButton(v);
+		setCancelAndExitButton(v);
 		setAddCatchButton(v);
 		setInScrollViewTouchListener();
 		setFloatingAddButtonListenersForNewSession(v);
 		updateCheckoutButtonText();
 
+		clearCatchViews();
+		clearSessionViews();
+
 		if (fishingSessions.isEmpty()) {
 			sessionsFlipper.setDisplayedChild(POSITION_NO_SESSIONS);
 		}
 
-		adView = ((AdView) v.findViewById(R.id.adViewNewSession));
+		adView = v.findViewById(R.id.adViewNewSession);
 		new LoadAsyncAd().execute();
-
-
 
 		return v;
 	}
 
-	private void startShowcaseView() {
-
-		int[] pointA = new int[2];
-		autoCompleteFish.getLocationOnScreen(pointA);
-		Rect rectA = new Rect(pointA[0], pointA[1], pointA[0] + autoCompleteFish.getWidth(), pointA[1] + autoCompleteFish.getHeight());
-
-		ShowcaseConfig config = new ShowcaseConfig();
-		config.setDelay(100);
-		config.setShape(new RectangleShape(rectA, true));
-
-		MaterialShowcaseSequence sequence = new MaterialShowcaseSequence(getActivity(), Constants.SHOWCASE_FRG_SESSIONS);
-		sequence.setConfig(config);
-
-		String gotIt = getResources().getString(android.R.string.ok);
-
-		sequence.addSequenceItem(autoCompleteFish,
-				getResources().getString(R.string.showcase_auto_comp), gotIt);
-		sequence.addSequenceItem(pickerDepth,
-				getResources().getString(R.string.showcase_depth), gotIt);
-		sequence.addSequenceItem(pickerWeight,
-				getResources().getString(R.string.showcase_weight), gotIt);
-		sequence.addSequenceItem(spinnerCatchTime,
-				getResources().getString(R.string.showcase_catch_time), gotIt);
-		sequence.addSequenceItem(addCatchButton,
-				getResources().getString(R.string.showcase_add_catch), gotIt);
-		sequence.addSequenceItem(buttonCheckout,
-				getResources().getString(R.string.showcase_checkout), gotIt);
-
-		sequence.start();
-	}
+//	private void startShowcaseView() {
+//
+//		int[] pointA = new int[2];
+//		autoCompleteFish.getLocationOnScreen(pointA);
+//		Rect rectA = new Rect(pointA[0], pointA[1], pointA[0] + autoCompleteFish.getWidth(), pointA[1] + autoCompleteFish.getHeight());
+//
+//		ShowcaseConfig config = new ShowcaseConfig();
+//		config.setDelay(100);
+//		config.setShape(new RectangleShape(rectA, true));
+//
+//		MaterialShowcaseSequence sequence = new MaterialShowcaseSequence(getActivity(), Constants.SHOWCASE_FRG_SESSIONS);
+//		sequence.setConfig(config);
+//
+//		String gotIt = getResources().getString(android.R.string.ok);
+//
+//		sequence.addSequenceItem(autoCompleteFish,
+//				getResources().getString(R.string.showcase_auto_comp), gotIt);
+//		sequence.addSequenceItem(pickerDepth,
+//				getResources().getString(R.string.showcase_depth), gotIt);
+//		sequence.addSequenceItem(pickerWeight,
+//				getResources().getString(R.string.showcase_weight), gotIt);
+//		sequence.addSequenceItem(spinnerCatchTime,
+//				getResources().getString(R.string.showcase_catch_time), gotIt);
+//		sequence.addSequenceItem(addCatchButton,
+//				getResources().getString(R.string.showcase_add_catch), gotIt);
+//		sequence.addSequenceItem(buttonCheckout,
+//				getResources().getString(R.string.showcase_checkout), gotIt);
+//
+//		sequence.start();
+//	}
 
 	void initializeAds() {
 		mInterstitialAd = new InterstitialAd(getActivity());
@@ -265,6 +280,7 @@ public class FrgFishingSessions
 				((ActSpearoStatsMain) getActivity()).collapseAppbar();
 				location = null;
 				goToNewSessionChild();
+
 			}
 		});
 	}
@@ -291,8 +307,57 @@ public class FrgFishingSessions
 				spearoUtils.snack(sessionsFlipper, selectedFish.getCommonName() + Constants.SPACE + getResources().getString(R.string.added));
 				updateCheckoutButtonText();
 				clearCatchViews();
+
+				addSessionCatchesImages();
+
+				//confirmFishCatchesAlertDialog(true);
+
+				layoutFishCatchMeta.setVisibility(View.GONE);
+
+				layoutInsertButtons.setVisibility(View.VISIBLE);
 			}
 		});
+	}
+
+	void addSessionCatchesImages() {
+
+		layoutSessionCatches.removeAllViews();
+
+		int leftMargin = 50;
+		int delay = 0;
+		for (FishCatch fishCatch : sessionCatchesList) {
+
+			ImageView iv = new ImageView(getContext());
+
+			Drawable drawable = new SpearoUtils(getContext()).getDrawableFromFish(fishCatch.getFish());
+			iv.setImageDrawable(drawable);
+
+			FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+
+			lp.setMargins(leftMargin, 50, 0, 0);
+
+
+			//lp.addRule(RelativeLayout.CENTER_IN_PARENT, RelativeLayout.TRUE);
+
+			lp.height = 150;
+			lp.width = 150;
+			lp.gravity = Gravity.CENTER;
+
+			leftMargin += 50;
+			delay += 200;
+
+			layoutSessionCatches.addView(iv, lp);
+
+			ObjectAnimator animation = ObjectAnimator.ofFloat(iv, "translationX", 80f);
+			animation.setDuration(1000);
+			animation.setRepeatCount(0);
+			animation.setStartDelay(delay);
+			//animation.set
+			animation.start();
+
+
+		}
+
 	}
 
 	/**
@@ -320,7 +385,25 @@ public class FrgFishingSessions
 	 *
 	 * @param v
 	 */
-	void setReturnHomeButton(final View v) {
+	void setAddOneMoreCatchButton(final View v) {
+		Button buttonCancel = (Button) v.findViewById(R.id.button_add_one_more_catch);
+		buttonCancel.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View view) {
+				//confirmReturnAlertDialog();
+				clearCatchViews();
+				layoutFishSelect.setVisibility(View.VISIBLE);
+			}
+		});
+	}
+
+	/**
+	 * User is on the insert catches 'page'.
+	 * He can return to sessions page. All data entry is deleted.
+	 *
+	 * @param v
+	 */
+	void setCancelAndExitButton(final View v) {
 		Button buttonCancel = (Button) v.findViewById(R.id.button_cancel);
 		buttonCancel.setOnClickListener(new OnClickListener() {
 			@Override
@@ -331,28 +414,6 @@ public class FrgFishingSessions
 	}
 
 	/**
-	 * Confirm the return to sessions view.
-	 */
-	void confirmReturnAlertDialog() {
-		AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getActivity());
-		dialogBuilder.setPositiveButton(getResources().getString(R.string.yes), new DialogInterface.OnClickListener() {
-			public void onClick(DialogInterface dialog, int id) {
-				clearAndGoToSessions();
-			}
-		})
-		.setNegativeButton(getResources().getString(R.string.no), new DialogInterface.OnClickListener() {
-			public void onClick(DialogInterface dialog, int id) {
-				dialog.cancel();
-			}
-
-		})
-		.setMessage(getResources().getString(R.string.cancel_session_entry_alert));
-
-		AlertDialog alertDialog = dialogBuilder.create();
-		alertDialog.show();
-	}
-
-	/**
 	 * User cannot insert a new species record.
 	 * It has to be official first.
 	 *
@@ -360,19 +421,7 @@ public class FrgFishingSessions
 	 * @param attempt
 	 */
 	void alertRecordAttemptFor(Fish fish, Double attempt) {
-
-		AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getActivity());
-		dialogBuilder.setNegativeButton(getResources().getString(R.string.cancel),
-				new DialogInterface.OnClickListener() {
-					public void onClick(DialogInterface dialog, int id) {
-						dialog.cancel();
-					}
-
-				})
-				.setMessage(fish.getCommonName() + Constants.COLON + Constants.SPACE + getResources().getString(R.string.record_entry_attempt_alert) + Constants.SPACE + attempt);
-
-		AlertDialog alertDialog = dialogBuilder.create();
-		alertDialog.show();
+		AlertDialogHelper.alertDialogWithPositive(getActivity(), getResources().getString(R.string.cancel), null, fish.getCommonName() + Constants.COLON + Constants.SPACE + getResources().getString(R.string.record_entry_attempt_alert) + Constants.SPACE + attempt);
 	}
 
 	/**
@@ -501,11 +550,10 @@ public class FrgFishingSessions
 	 * User has selected date, wind, wind power and location optionally.
 	 * Moon will be automatically calculated.
 	 *
-	 * @throws IOException
-	 *
 	 */
 	void goToNewSessionChild() {
 		sessionsFlipper.setDisplayedChild(POSITION_NEW_SESSION);
+		layoutFishSelect.setVisibility(View.VISIBLE);
 
 		AddressWithCountry addressWithCountry = new LocationUtils().getAddressFromLocation(location, getActivity().getApplicationContext());
 		String addressFromLocation = addressWithCountry.getAddress();
@@ -515,9 +563,9 @@ public class FrgFishingSessions
 			textDateAndLocation.setText(DateUtils.dateFromMillis(sessionMillis));
 		}
 
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-			startShowcaseView();
-		}
+//		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+//			startShowcaseView();
+//		}
 
 	}
 
@@ -533,175 +581,12 @@ public class FrgFishingSessions
 	}
 
 	/**
-	 * User selects the date he went fishing in milliseconds.
-	 */
-	void beginDateAlertDialog() {
-		AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getActivity());
-		View dialogView = getActivity().getLayoutInflater().inflate(R.layout.custom_date_alert_dialog, null);
-		dialogBuilder.setView(dialogView);
-		DatePicker sessionPicker = (DatePicker) dialogView.findViewById(R.id.sessionDatePicker);
-		TextView sessionDateTextView = (TextView) dialogView.findViewById(R.id.sessionDateText);
-		sessionDateTextView.setText(getResources().getString(R.string.session_date));
-
-		dialogBuilder.setPositiveButton(getResources().getString(R.string.confirm), new DialogInterface.OnClickListener() {
-			public void onClick(DialogInterface dialog, int id) {
-				int day = sessionPicker.getDayOfMonth();
-				int month = sessionPicker.getMonth();
-				int year = sessionPicker.getYear();
-				calendar = Calendar.getInstance();
-				calendar.set(year, month, day);
-				sessionMillis = calendar.getTime().getTime();
-
-				beginWindInteraction();
-			}
-		}).setNegativeButton(getResources().getString(R.string.exit), new DialogInterface.OnClickListener() {
-			public void onClick(DialogInterface dialog, int id) {
-				clearAndGoToSessions();
-			}
-		}).setCancelable(false);
-
-		AlertDialog alertDialog = dialogBuilder.create();
-		alertDialog.show();
-	}
-
-	/**
-	 * User selects the wind direction and volume.
-	 */
-	void beginWindInteraction() {
-		AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getActivity());
-		View dialogView = getActivity().getLayoutInflater().inflate(R.layout.custom_wind_alert_dialog, null);
-		dialogBuilder.setView(dialogView);
-		Spinner spinnerWind = (Spinner) dialogView.findViewById(R.id.spinner_wind);
-		String[] windsArray = getResources().getStringArray(R.array.winds);
-		final List<Wind> winds = Wind.forSpinner();
-		WindSpinnerAdapter adapter = new WindSpinnerAdapter(getActivity(), android.R.layout.simple_spinner_item, windsArray, winds);
-		spinnerWind.setAdapter(adapter);
-
-		Spinner spinnerWindVolume = (Spinner) dialogView.findViewById(R.id.spinner_wind_volume);
-		String[] windsVolArray = getResources().getStringArray(R.array.windVolumes);
-		final List<WindVolume> windVols = WindVolume.forSpinner();
-		WindVolumeSpinnerAdapter volAdapter = new WindVolumeSpinnerAdapter(getActivity(), android.R.layout.simple_spinner_item, windsVolArray, windVols);
-		spinnerWindVolume.setAdapter(volAdapter);
-
-		spinnerWind.setOnItemSelectedListener(new OnItemSelectedListener() {
-			@Override
-			public void onItemSelected(AdapterView<?> arg0, View arg1, int position, long arg3) {
-				wind = Wind.ofPosition(winds.get(position).getPosition());
-
-				if (Wind.NO_WIND.equals(wind)){
-					spinnerWindVolume.setVisibility(View.INVISIBLE);
-					windVolume = WindVolume.NOT_KNOWN;
-				}else{
-					spinnerWindVolume.setVisibility(View.VISIBLE);
-				}
-
-			}
-
-			@Override
-			public void onNothingSelected(AdapterView<?> arg0) {}
-		});
-
-		spinnerWindVolume.setOnItemSelectedListener(new OnItemSelectedListener() {
-			@Override
-			public void onItemSelected(AdapterView<?> arg0, View arg1, int position, long arg3) {
-				windVolume = WindVolume.ofPosition(windVols.get(position).getPosition());
-			}
-
-			@Override
-			public void onNothingSelected(AdapterView<?> arg0) { }
-		});
-
-		dialogBuilder.setPositiveButton(getResources().getString(R.string.confirm), new DialogInterface.OnClickListener() {
-			public void onClick(DialogInterface dialog, int id) {
-				beginMapInteraction();
-			}
-		}).setNegativeButton(getResources().getString(R.string.exit), new DialogInterface.OnClickListener() {
-			public void onClick(DialogInterface dialog, int id) {
-				clearAndGoToSessions();
-			}
-		}).setCancelable(false);
-
-		AlertDialog alertDialog = dialogBuilder.create();
-		alertDialog.show();
-	}
-
-	/**
-	 * Before persisting a session, the user has to confirm the catches he entered.
-	 * The width and height of alert window is fixed.
-	 */
-	void confirmFishCatchesAlertDialog() {
-		AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getActivity());
-		View dialogView = getActivity().getLayoutInflater().inflate(R.layout.custom_fish_catches_alert_dialog, null);
-
-		Rect displayRectangle = new Rect();
-		Window window = getActivity().getWindow();
-		window.getDecorView().getWindowVisibleDisplayFrame(displayRectangle);
-
-		dialogView.setMinimumWidth((int) (displayRectangle.width() * 0.9f));
-		dialogView.setMinimumHeight((int) (displayRectangle.height() * 0.6f));
-		dialogBuilder.setView(dialogView);
-
-		ListView sessionCatchesListView = (ListView) dialogView.findViewById(R.id.listViewSessionCatches);
-		sessionCatchesListView.setAdapter(sessionCatchesAdapter);
-
-		dialogBuilder.setPositiveButton(
-				getResources().getString(R.string.confirm),
-				new DialogInterface.OnClickListener() {
-					public void onClick(DialogInterface dialog, int id) {
-						if (sessionCatchesList.isEmpty()) {
-							confirmFolaAlertDialog();
-							return;
-						}
-						alertSessionImage();
-					}
-				})
-				.setNegativeButton(
-						getResources().getString(R.string.cancel),
-						new DialogInterface.OnClickListener() {
-							public void onClick(DialogInterface dialog, int id) {
-								dialog.cancel();
-							}
-
-						});
-
-		AlertDialog alertDialog = dialogBuilder.create();
-		alertDialog.show();
-	}
-
-	/**
-	 * User confirms his bad luck, when no catches.
-	 */
-	void confirmFolaAlertDialog() {
-		AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getActivity());
-		View dialogView = getActivity().getLayoutInflater().inflate(R.layout.custom_fola_alert_dialog, null);
-		dialogBuilder.setView(dialogView);
-		dialogBuilder.setPositiveButton(
-				getResources().getString(R.string.confirm_fola),
-				new DialogInterface.OnClickListener() {
-					public void onClick(DialogInterface dialog, int id) {
-						saveSessionActions();
-					}
-				})
-				.setNegativeButton(
-						getResources().getString(R.string.cancel),
-						new DialogInterface.OnClickListener() {
-							public void onClick(DialogInterface dialog, int id) {
-								dialog.cancel();
-							}
-
-						});
-
-		AlertDialog alertDialog = dialogBuilder.create();
-		alertDialog.show();
-	}
-
-	/**
 	 * All actions regarding saving a session.
 	 * Views are then cleared. Objects are re-initialized.
 	 * The interstitial ad is shown.
 	 */
 	void saveSessionActions() {
-		FishingSession newSession = saveFishingSession();
+		FishingSession newSession = saveOrUpdateFishingSession();
 		clearCatchViews();
 		clearSessionViews();
 		updateSessions();
@@ -712,29 +597,6 @@ public class FrgFishingSessions
 		sessionsFlipper.setDisplayedChild(POSITION_SHOW_SESSIONS);
 		((SpearoApplication) getActivity().getApplication()).uploadSessions();
 
-	}
-
-	/**
-	 * Prompt for image insertion for session.
-	 */
-	void alertSessionImage() {
-		AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getActivity());
-		dialogBuilder.setPositiveButton(getResources().getString(R.string.yes), new DialogInterface.OnClickListener() {
-			public void onClick(DialogInterface dialog, int id) {
-				selectImage();
-			}
-		})
-		.setNegativeButton(getResources().getString(R.string.no), new DialogInterface.OnClickListener() {
-			public void onClick(DialogInterface dialog, int id) {
-				dialog.cancel();
-				saveSessionActions();
-			}
-
-		})
-		.setMessage(getResources().getString(R.string.session_image));
-
-		AlertDialog alertDialog = dialogBuilder.create();
-		alertDialog.show();
 	}
 
 	/**
@@ -765,7 +627,7 @@ public class FrgFishingSessions
 		} else {
 			editor.putInt(Constants.SUSPICIOUS_STREAK, 0);
 		}
-		editor.commit();
+		editor.apply();
 	}
 
 	/**
@@ -791,14 +653,14 @@ public class FrgFishingSessions
 
 	/**
 	 * {@link GridRecyclerView} view to display the sessions.
-	 * {@link RecyclerViewAdapter} to handle the data.
+	 * {@link FishingSessionRecyclerViewAdapter} to handle the data.
 	 * {@link GridLayoutManager} to handle the grid animations.
 	 *
 	 * @param v
 	 */
 	public void createSessionsList(View v) {
 		GridRecyclerView recyclerView = v.findViewById(R.id.recyclerView);
-		recyclerViewAdapter = new RecyclerViewAdapter(getActivity(), fishingSessions, this);
+		recyclerViewAdapter = new FishingSessionRecyclerViewAdapter(getActivity(), fishingSessions, this);
 		recyclerView.setAdapter(recyclerViewAdapter);
 
 		GridLayoutManager manager = new GridLayoutManager(getActivity(), 3, GridLayoutManager.VERTICAL, false);
@@ -820,21 +682,30 @@ public class FrgFishingSessions
 		String addedFishButtonText = activity.getResources().getString(R.string.click_to_add) + Constants.SPACE + Constants.SINGLE_QUOTE +  selectedFish.getCommonName() + Constants.SINGLE_QUOTE;
 		addCatchButton.setText(addedFishButtonText);
 
+		textViewFishCatchMeta.setText(getActivity().getResources().getString(R.string.textview_fish_meta_question, selectedFish.getCommonName()));
+		textViewFishCatchMeta.setCompoundDrawablesWithIntrinsicBounds(new SpearoUtils(getContext()).getDrawableFromFish(fish), null, null, null);
+
+		layoutFishSelect.setVisibility(View.GONE);
+		layoutFishCatchMeta.setVisibility(View.VISIBLE);
+		folaButton.setVisibility(View.GONE);
 	}
 
 	/**
 	 * If no catches, it does not need a mongo upload.
 	 * After saving the session display the interstitial ad.
 	 */
-	FishingSession saveFishingSession() {
+	FishingSession saveOrUpdateFishingSession() {
 		FishingSession session = new FishingSession();
+
+		session.setFishingSessionId(sessionId);
 		session.setFishingDate(sessionMillis);
 		session.setSessionImage(sessionImgBytes);
 		session.setSessionImageUriPath(sessionImgUriPath);
 
-		if (sessionCatchesList.isEmpty()) {
+		if (sessionCatchesList.isEmpty() || sessionId > 0) {
 			session.setUploadedToMongo(true);
-		} else {
+		}
+		else {
 			session.getFishCatches().addAll(sessionCatchesList);
 		}
 		if (location != null) {
@@ -851,7 +722,7 @@ public class FrgFishingSessions
 
 		ActSpearoStatsMain activity = (ActSpearoStatsMain) getActivity();
 		Database db = new Database(activity);
-		db.addFishingSession(session);
+		db.addOrUpdateFishingSession(session);
 		return session;
 	}
 
@@ -864,6 +735,7 @@ public class FrgFishingSessions
 	 * @param v
 	 */
 	void setViews(View v) {
+
 		autocompleteFragment = (AutocompleteSupportFragment) getChildFragmentManager().findFragmentById(R.id.autocomplete_fragment);
 		autocompleteFragment.setPlaceFields(Arrays.asList(Place.Field.ID, Place.Field.NAME, Place.Field.LAT_LNG));
 		autocompleteFragment.setHint(getResources().getString(R.string.map_search_hint));
@@ -884,6 +756,26 @@ public class FrgFishingSessions
 		transparentImageViewOverMap = (ImageView) v.findViewById(R.id.transparent_img);
 		sessionsFlipper = (ViewFlipper) v.findViewById(R.id.fishing_sessions_flipper);
 		textDateAndLocation = (TextView) v.findViewById(R.id.textview_session_date_location);
+
+		layoutFishSelect = v.findViewById(R.id.layout_fish_select);
+		layoutFishCatchMeta = v.findViewById(R.id.layout_fish_catch_meta);
+		layoutInsertButtons = v.findViewById(R.id.layout_complete_session_or_add_fish_layout);
+		textViewFishCatchMeta = v.findViewById(R.id.textview_fish_meta_question);
+
+		layoutSessionCatches = v.findViewById(R.id.frameLayoutSessionCatches);
+
+		folaButton = v.findViewById(R.id.folaButton);
+		folaButton.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				if (!sessionCatchesList.isEmpty()){
+					return;
+				}
+
+				confirmFolaAlertDialog();
+			}
+		});
+
 		setupPickers(v);
 	}
 
@@ -912,6 +804,10 @@ public class FrgFishingSessions
 		catchHour = null;
 		catchDateMillis = 0;
 		addCatchButton.setText(getActivity().getResources().getText(R.string.add_catch));
+
+		layoutFishCatchMeta.setVisibility(View.INVISIBLE);
+		layoutInsertButtons.setVisibility(View.INVISIBLE);
+		layoutFishSelect.setVisibility(View.INVISIBLE);
 	}
 
 	/**
@@ -919,17 +815,21 @@ public class FrgFishingSessions
 	 */
 	void clearSessionViews() {
 		autocompleteFragment.setText(Constants.EMPTY);
+		sessionId = Database.INVALID_ID;
 		location = null;
 		sessionImgBytes = null;
 		sessionImgUriPath = null;
 		wind = Wind.NOT_KNOWN;
 		windVolume = WindVolume.NOT_KNOWN;
-		googleMap.clear();
+		if (googleMap != null) {
+			googleMap.clear();
+		}
 		sessionCatchesList.clear();
 		sessionCatchesAdapter.notifyDataSetChanged();
-		sessionMillis = 0l;
+		sessionMillis = 0L;
 		textDateAndLocation.setText(Constants.EMPTY);
 		updateCheckoutButtonText();
+		folaButton.setVisibility(View.VISIBLE);
 	}
 
 	/**
@@ -1108,6 +1008,8 @@ public class FrgFishingSessions
 		sessionCatchesList.remove(fishCatch);
 		sessionCatchesAdapter.notifyDataSetChanged();
 		updateCheckoutButtonText();
+
+		addSessionCatchesImages();
 	}
 
 	/**
@@ -1179,7 +1081,21 @@ public class FrgFishingSessions
 	        adRequest = new AdRequest.Builder().build();
 	    }
 
-     private class LoadAsyncAd extends AsyncTask<Void, Void, Void> {
+//	public void editSession(FishingSession item) {
+//		clearCatchViews();
+//		clearSessionViews();
+//		sessionId = item.getFishingSessionId();
+//		sessionCatchesList.addAll(item.getFishCatches());
+//		sessionCatchesAdapter.notifyDataSetChanged();
+//		sessionMillis = item.getFishingDate();
+//		location = new LatLng(item.getLatitude(), item.getLongitude());
+//		updateCheckoutButtonText();
+//		collapseAppbar();
+//		goToNewSessionChild();
+//		AlertDialogHelper.alertDialogWithPositive(getActivity(), getResources().getString(android.R.string.ok), null, getResources().getString(R.string.editing_session_alert));
+//	}
+
+	private class LoadAsyncAd extends AsyncTask<Void, Void, Void> {
 
 	        protected void onPreExecute() {
 	        }
@@ -1196,5 +1112,315 @@ public class FrgFishingSessions
 	        }
 
 	    }
+
+
+	/**
+	 * ALERT DIALOGS
+	 *
+	 *
+	 */
+
+	/**
+	 * User confirms his bad luck, when no catches.
+	 */
+	void confirmFolaAlertDialog() {
+		AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getActivity());
+		View dialogView = getActivity().getLayoutInflater().inflate(R.layout.custom_fola_alert_dialog, null);
+		dialogBuilder.setView(dialogView);
+//		dialogBuilder.setPositiveButton(
+//				getResources().getString(R.string.confirm_fola),
+//				new DialogInterface.OnClickListener() {
+//					public void onClick(DialogInterface dialog, int id) {
+//						saveSessionActions();
+//					}
+//				})
+//				.setNegativeButton(
+//						getResources().getString(R.string.cancel),
+//						new DialogInterface.OnClickListener() {
+//							public void onClick(DialogInterface dialog, int id) {
+//								dialog.cancel();
+//							}
+//
+//						});
+
+		AlertDialog alertDialog = dialogBuilder.create();
+
+		Button positiveButton = dialogView.findViewById(R.id.alertConfirmButton);
+		positiveButton.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				alertDialog.cancel();
+				saveSessionActions();
+
+			}
+		});
+
+		Button negativeButton = dialogView.findViewById(R.id.alertCloseButton);
+		negativeButton.setText(getResources().getString(R.string.close));
+		negativeButton.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				alertDialog.cancel();
+			}
+		});
+
+		alertDialog.show();
+
+	}
+
+	/**
+	 * Before persisting a session, the user has to confirm the catches he entered.
+	 * The width and height of alert window is fixed.
+	 */
+	void confirmFishCatchesAlertDialog() {
+		AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getActivity());
+		View dialogView = getActivity().getLayoutInflater().inflate(R.layout.custom_fish_catches_alert_dialog, null);
+
+		Rect displayRectangle = new Rect();
+		Window window = getActivity().getWindow();
+		window.getDecorView().getWindowVisibleDisplayFrame(displayRectangle);
+
+		dialogView.setMinimumWidth((int) (displayRectangle.width() * 0.9f));
+		dialogView.setMinimumHeight((int) (displayRectangle.height() * 0.6f));
+		dialogBuilder.setView(dialogView);
+
+		ListView sessionCatchesListView = (ListView) dialogView.findViewById(R.id.listViewSessionCatches);
+		sessionCatchesListView.setAdapter(sessionCatchesAdapter);
+//		dialogBuilder.setPositiveButton(
+//				getResources().getString(R.string.confirm),
+//				new DialogInterface.OnClickListener() {
+//					public void onClick(DialogInterface dialog, int id) {
+//						if (sessionCatchesList.isEmpty()) {
+//							confirmFolaAlertDialog();
+//							return;
+//						}
+//						alertSessionImage();
+//					}
+//				});
+//
+//
+//		dialogBuilder
+//				.setNegativeButton(
+//						getResources().getString(R.string.close),
+//						new DialogInterface.OnClickListener() {
+//							public void onClick(DialogInterface dialog, int id) {
+//								clearCatchViews();
+//							}
+//
+//						});
+
+		AlertDialog alertDialog = dialogBuilder.create();
+		Button positiveButton = dialogView.findViewById(R.id.alertConfirmButton);
+		positiveButton.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				alertDialog.cancel();
+				if (sessionCatchesList.isEmpty()) {
+					confirmFolaAlertDialog();
+					return;
+				}
+				alertSessionImage();
+
+			}
+		});
+
+		Button negativeButton = dialogView.findViewById(R.id.alertCloseButton);
+		negativeButton.setText(getResources().getString(R.string.close));
+		negativeButton.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				alertDialog.cancel();
+				//clearCatchViews();
+
+			}
+		});
+
+
+
+		alertDialog.show();
+	}
+
+	/**
+	 * Confirm the return to sessions view.
+	 */
+	void confirmReturnAlertDialog() {
+		AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getActivity());
+		dialogBuilder.setPositiveButton(getResources().getString(R.string.yes), new DialogInterface.OnClickListener() {
+			public void onClick(DialogInterface dialog, int id) {
+				clearAndGoToSessions();
+			}
+		})
+				.setNegativeButton(getResources().getString(R.string.no), new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int id) {
+						dialog.cancel();
+					}
+
+				})
+				.setMessage(getResources().getString(R.string.cancel_session_entry_alert));
+
+		AlertDialog alertDialog = dialogBuilder.create();
+		alertDialog.show();
+	}
+
+	/**
+	 * User selects the date he went fishing in milliseconds.
+	 */
+	void beginDateAlertDialog() {
+		AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getActivity());
+		View dialogView = getActivity().getLayoutInflater().inflate(R.layout.custom_date_alert_dialog, null);
+		dialogBuilder.setView(dialogView);
+		DatePicker sessionPicker = (DatePicker) dialogView.findViewById(R.id.sessionDatePicker);
+		TextView sessionDateTextView = (TextView) dialogView.findViewById(R.id.sessionDateText);
+		sessionDateTextView.setText(getResources().getString(R.string.session_date));
+
+
+
+		dialogBuilder
+//				.
+//				setPositiveButton(getResources().getString(R.string.confirm), new DialogInterface.OnClickListener() {
+//			public void onClick(DialogInterface dialog, int id) {
+//
+//			}
+//		}).setNegativeButton(getResources().getString(R.string.exit), new DialogInterface.OnClickListener() {
+//			public void onClick(DialogInterface dialog, int id) {
+//				clearAndGoToSessions();
+//			}
+//		})
+				.setCancelable(false);
+
+		AlertDialog alertDialog = dialogBuilder.create();
+		Button positiveButton = dialogView.findViewById(R.id.alertConfirmButton);
+		positiveButton.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				alertDialog.cancel();
+				int day = sessionPicker.getDayOfMonth();
+				int month = sessionPicker.getMonth();
+				int year = sessionPicker.getYear();
+				calendar = Calendar.getInstance();
+				calendar.set(year, month, day);
+				sessionMillis = calendar.getTime().getTime();
+				beginWindInteraction();
+			}
+		});
+
+		Button negativeButton = dialogView.findViewById(R.id.alertCloseButton);
+		negativeButton.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				alertDialog.cancel();
+				clearAndGoToSessions();
+			}
+		});
+
+		alertDialog.show();
+	}
+
+	/**
+	 * User selects the wind direction and volume.
+	 */
+	void beginWindInteraction() {
+		AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getActivity());
+		View dialogView = getActivity().getLayoutInflater().inflate(R.layout.custom_wind_alert_dialog, null);
+		dialogBuilder.setView(dialogView);
+		Spinner spinnerWind = (Spinner) dialogView.findViewById(R.id.spinner_wind);
+		String[] windsArray = getResources().getStringArray(R.array.winds);
+		final List<Wind> winds = Wind.forSpinner();
+		WindSpinnerAdapter adapter = new WindSpinnerAdapter(getActivity(), android.R.layout.simple_spinner_item, windsArray, winds);
+		spinnerWind.setAdapter(adapter);
+
+		Spinner spinnerWindVolume = (Spinner) dialogView.findViewById(R.id.spinner_wind_volume);
+		String[] windsVolArray = getResources().getStringArray(R.array.windVolumes);
+		final List<WindVolume> windVols = WindVolume.forSpinner();
+		WindVolumeSpinnerAdapter volAdapter = new WindVolumeSpinnerAdapter(getActivity(), android.R.layout.simple_spinner_item, windsVolArray, windVols);
+		spinnerWindVolume.setAdapter(volAdapter);
+
+		spinnerWind.setOnItemSelectedListener(new OnItemSelectedListener() {
+			@Override
+			public void onItemSelected(AdapterView<?> arg0, View arg1, int position, long arg3) {
+				wind = Wind.ofPosition(winds.get(position).getPosition());
+
+				if (Wind.NO_WIND.equals(wind)){
+					spinnerWindVolume.setVisibility(View.INVISIBLE);
+					windVolume = WindVolume.NOT_KNOWN;
+				}else{
+					spinnerWindVolume.setVisibility(View.VISIBLE);
+				}
+
+			}
+
+			@Override
+			public void onNothingSelected(AdapterView<?> arg0) {}
+		});
+
+		spinnerWindVolume.setOnItemSelectedListener(new OnItemSelectedListener() {
+			@Override
+			public void onItemSelected(AdapterView<?> arg0, View arg1, int position, long arg3) {
+				windVolume = WindVolume.ofPosition(windVols.get(position).getPosition());
+			}
+
+			@Override
+			public void onNothingSelected(AdapterView<?> arg0) { }
+		});
+
+		dialogBuilder
+//				.setPositiveButton(getResources().getString(R.string.confirm), new DialogInterface.OnClickListener() {
+//			public void onClick(DialogInterface dialog, int id) {
+//				beginMapInteraction();
+//			}
+//		}).setNegativeButton(getResources().getString(R.string.exit), new DialogInterface.OnClickListener() {
+//			public void onClick(DialogInterface dialog, int id) {
+//				clearAndGoToSessions();
+//			}
+//		})
+				.setCancelable(false);
+
+		AlertDialog alertDialog = dialogBuilder.create();
+
+		Button positiveButton = dialogView.findViewById(R.id.alertConfirmButton);
+		positiveButton.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				alertDialog.cancel();
+				beginMapInteraction();
+			}
+		});
+
+		Button negativeButton = dialogView.findViewById(R.id.alertCloseButton);
+		negativeButton.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				alertDialog.cancel();
+				clearAndGoToSessions();
+
+			}
+		});
+
+
+		alertDialog.show();
+	}
+
+	/**
+	 * Prompt for image insertion for session.
+	 */
+	void alertSessionImage() {
+		AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getActivity());
+		dialogBuilder.setPositiveButton(getResources().getString(R.string.yes), new DialogInterface.OnClickListener() {
+			public void onClick(DialogInterface dialog, int id) {
+				selectImage();
+			}
+		})
+				.setNegativeButton(getResources().getString(R.string.no), new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int id) {
+						dialog.cancel();
+						saveSessionActions();
+					}
+
+				})
+				.setMessage(getResources().getString(R.string.session_image));
+
+		AlertDialog alertDialog = dialogBuilder.create();
+		alertDialog.show();
+	}
 
 }

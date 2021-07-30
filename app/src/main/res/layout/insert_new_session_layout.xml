@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-     <RelativeLayout    
-        xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:padding="@dimen/four">
-    
+<RelativeLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	android:padding="@dimen/four">
+<!--
          <TextView 
              android:layout_alignParentTop="true"
              android:padding="@dimen/four"
@@ -14,8 +14,7 @@
              android:layout_width="match_parent"
              android:layout_height="@dimen/standard_view_height"
              android:id="@+id/textview_session_date_location"
-             android:textColor="@color/white_back"
-             />
+             android:textColor="@color/white_back"/>
 
          <gr.liakos.spearo.application.ClearableAutoCompleteTextView 
              android:layout_below="@+id/textview_session_date_location"
@@ -31,76 +30,73 @@
 			  android:dropDownWidth="match_parent"
 			  android:singleLine="true"
 			  android:ellipsize="end"
-			  android:padding="@dimen/four"
-                                />
+			  android:padding="@dimen/four"/>
          
         <include android:id="@+id/pickers"
-            android:layout_below="@+id/auto_complete_fish"
+            	 android:layout_below="@+id/auto_complete_fish"
                  android:layout_width="fill_parent"
                  android:layout_height="wrap_content"
                  layout="@layout/number_pickers"/>
-        
-        
-        <RelativeLayout
-             android:layout_below="@+id/pickers"
-             android:id="@+id/spinnerLayout"
-             android:layout_marginBottom="@dimen/eight"
-    	android:layout_width="match_parent"
-    	android:layout_height="@dimen/standard_view_height"
-    	android:background="@drawable/spinner_border"
-    	android:orientation="horizontal">
 
-    <Spinner
-        android:id="@+id/spinnerCatchTime"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/standard_view_height"
-        android:layout_centerVertical="true"
-        android:layout_alignParentStart="true"
-        android:background="@android:color/transparent"
-        android:spinnerMode="dropdown" />
+	<RelativeLayout
+		 android:layout_below="@+id/pickers"
+		 android:id="@+id/spinnerLayout"
+		 android:layout_marginBottom="@dimen/eight"
+    	 android:layout_width="match_parent"
+    	 android:layout_height="@dimen/standard_view_height"
+    	 android:background="@drawable/spinner_border"
+    	 android:orientation="horizontal">
 
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_centerVertical="true"
-        android:src="@drawable/drop" />
+		<Spinner
+			android:id="@+id/spinnerCatchTime"
+			android:layout_width="match_parent"
+			android:layout_height="@dimen/standard_view_height"
+			android:layout_centerVertical="true"
+			android:layout_alignParentStart="true"
+			android:background="@android:color/transparent"
+			android:spinnerMode="dropdown" />
 
-</RelativeLayout>
+		<ImageView
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_alignParentEnd="true"
+			android:layout_centerVertical="true"
+			android:src="@drawable/drop" />
+
+	</RelativeLayout>
 
         <Button
             android:layout_below="@+id/spinnerLayout"
-               style="@style/buttonStyle"
-    	     android:drawableStart="@drawable/hook"
-    	     android:paddingStart="@dimen/thirty"
-    	     android:paddingEnd="@dimen/twenty"
-    	     android:drawablePadding="@dimen/four"
+			style="@style/buttonStyle"
+			android:drawableStart="@drawable/hook"
+    	    android:paddingStart="@dimen/thirty"
+    	    android:paddingEnd="@dimen/twenty"
+    	    android:drawablePadding="@dimen/four"
     	    android:gravity="center"
 			android:textStyle="bold"
 			android:maxLines="1"
-                android:layout_width="match_parent"
-                android:text="@string/add_catch"
-                android:id="@+id/button_add_to_basket"
-                />
+            android:layout_width="match_parent"
+            android:text="@string/add_catch"
+            android:id="@+id/button_add_to_basket" />
         
        <com.google.android.gms.ads.AdView
-	    android:layout_above="@+id/layout_insert_buttons"
-	    xmlns:ads="http://schemas.android.com/apk/res-auto"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/adViewNewSession"
-                ads:adSize="BANNER"
-                ads:adUnitId="@string/adId_frg_sessions_banner_layout"
-                />   
+	    	android:layout_above="@+id/layout_insert_buttons"
+	    	xmlns:ads="http://schemas.android.com/apk/res-auto"
+			android:layout_width="fill_parent"
+			android:layout_height="wrap_content"
+			android:id="@+id/adViewNewSession"
+			ads:adSize="BANNER"
+			ads:adUnitId="@string/adId_frg_sessions_banner_layout"/>
         
-         <LinearLayout  
-             android:layout_marginTop="@dimen/four"
+         <LinearLayout
+			 android:layout_marginTop="@dimen/four"
              android:id="@+id/layout_insert_buttons"
-            android:layout_alignParentBottom="true"
-            android:orientation="horizontal"
-        android:layout_width="match_parent" 
-        android:layout_height="wrap_content">
-    	 <Button
+			 android:layout_alignParentBottom="true"
+			 android:orientation="horizontal"
+			 android:layout_width="match_parent"
+			 android:layout_height="wrap_content">
+
+			 <Button
                 style="@style/buttonStyleTall"
                 android:text="@string/cancel_session_entry"
     	     	android:drawableStart="@drawable/cancel_60"
@@ -110,18 +106,18 @@
                 android:paddingEnd="@dimen/four"
                 android:id="@+id/button_cancel"
                 android:layout_marginEnd="@dimen/four"
-                /> 
+                />
                 
-    	 <Button
+			 <Button
                 style="@style/buttonStyleTall"
-    	     android:drawableStart="@drawable/save_60"
-    	     android:drawablePadding="@dimen/four"
-    	     android:paddingStart="@dimen/twelve"
+    	     	android:drawableStart="@drawable/save_60"
+    	     	android:drawablePadding="@dimen/four"
+    	     	android:paddingStart="@dimen/twelve"
                 android:layout_width="@dimen/zero"
                 android:layout_weight="2"
                 android:id="@+id/button_checkout_basket"
                 />
 
     	 	 </LinearLayout>
-       
-    </RelativeLayout>
+       -->
+</RelativeLayout>

@@ -20,13 +20,25 @@
             />
 
    <Button
-        android:layout_gravity="top"
-        android:layout_height="@dimen/thirty_six"
-        android:layout_width="@dimen/thirty_six"
+        android:layout_gravity="top|start"
+        android:layout_height="@dimen/thirty"
+        android:layout_width="@dimen/thirty"
+       android:layout_margin="@dimen/four"
         android:id="@+id/shareButton"
        android:background="@drawable/fb_button_selector"
 
        />
+
+    <!--<Button
+        android:visibility="gone"
+        android:layout_gravity="top|end"
+        android:layout_margin="@dimen/four"
+        android:layout_height="@dimen/thirty"
+        android:layout_width="@dimen/thirty"
+        android:id="@+id/editSessionButton"
+        android:background="@drawable/pencil"
+
+        />-->
 
      <RelativeLayout
          android:layout_gravity="bottom"
@@ -75,13 +87,6 @@
              app:lpv_moon_color="@android:color/white"
              app:lpv_halo_height="0dp"
              app:lpv_halo_width="0dp"/>
-
-           <!--  <TextView
-                 android:id="@+id/sessionMoonPhaseText"
-                 android:layout_below="@+id/sessionCatchesNumText"
-                 android:layout_toEndOf="@+id/moon_percentage"
-                 android:layout_alignParentBottom="true"
-                 style="@style/gridTextView" />-->
 
              <TextView
                  android:id="@+id/sessionWindText"

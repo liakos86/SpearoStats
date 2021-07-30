@@ -1,108 +1,71 @@
 package gr.liakos.spearo.model.viewholder;
 
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-public class FishStatisticViewHolder {
-	
-	private ImageView fishIcon;
-	
-	private TextView commonName;
-	
-	private TextView fishFamily;
-	
-	private TextView recordWeight;
-	
-	private TextView worldRecordWeight;
-	
-	private TextView avgWeight;
-	
-	private TextView avgDepth;
-	
-	private TextView totalCatches;
-	
-	private TextView mostCommonSummerHour;
-	
-	private TextView mostCommonWinterHour;
+import com.synnapps.carouselview.CarouselView;
+import com.synnapps.carouselview.ViewListener;
 
-	public ImageView getFishIcon() {
-		return fishIcon;
+public class FishStatisticViewHolder extends  FishStatisticViewHolderBasic{
+
+	private ViewListener carouselListener;
+
+	private View lineChartMonths;
+
+	private TextView lineChartMonthsTitle;
+
+	private View lineChartWinter;
+
+	private View lineChartSummer;
+
+	private CarouselView carouselView;
+
+	public CarouselView getCarouselView() {
+		return carouselView;
 	}
 
-	public void setFishIcon(ImageView fishIcon) {
-		this.fishIcon = fishIcon;
+	public void setCarouselView(CarouselView carouselView) {
+		this.carouselView = carouselView;
 	}
 
-	public TextView getCommonName() {
-		return commonName;
+	public View getLineChartMonths() {
+		return lineChartMonths;
 	}
 
-	public void setCommonName(TextView commonName) {
-		this.commonName = commonName;
-	}
-	
-	public TextView getFishFamily() {
-		return fishFamily;
+	public void setLineChartMonths(View lineChartMonths) {
+		this.lineChartMonths = lineChartMonths;
 	}
 
-	public void setFishFamily(TextView fishFamily) {
-		this.fishFamily = fishFamily;
+	public View getLineChartWinter() {
+		return lineChartWinter;
 	}
 
-	public TextView getRecordWeight() {
-		return recordWeight;
+	public void setLineChartWinter(View lineChartWinter) {
+		this.lineChartWinter = lineChartWinter;
 	}
 
-	public void setRecordWeight(TextView recordWeight) {
-		this.recordWeight = recordWeight;
+	public View getLineChartSummer() {
+		return lineChartSummer;
 	}
 
-	public TextView getAvgWeight() {
-		return avgWeight;
+	public void setLineChartSummer(View lineChartSummer) {
+		this.lineChartSummer = lineChartSummer;
 	}
 
-	public void setAvgWeight(TextView avgWeight) {
-		this.avgWeight = avgWeight;
+	public TextView getLineChartMonthsTitle() {
+		return lineChartMonthsTitle;
 	}
 
-	public TextView getAvgDepth() {
-		return avgDepth;
+	public void setLineChartMonthsTitle(TextView lineChartMonthsTitle) {
+		this.lineChartMonthsTitle = lineChartMonthsTitle;
 	}
 
-	public void setAvgDepth(TextView avgDepth) {
-		this.avgDepth = avgDepth;
+	public ViewListener getCarouselListener() {
+		return carouselListener;
 	}
 
-	public TextView getTotalCatches() {
-		return totalCatches;
+	public void setCarouselListener(ViewListener carouselListener) {
+		this.carouselListener = carouselListener;
 	}
-
-	public void setTotalCatches(TextView totalCatches) {
-		this.totalCatches = totalCatches;
-	}
-
-	public TextView getMostCommonSummerHour() {
-		return mostCommonSummerHour;
-	}
-
-	public void setMostCommonSummerHour(TextView mostCommonSummerHour) {
-		this.mostCommonSummerHour = mostCommonSummerHour;
-	}
-	
-	public TextView getMostCommonWinterHour() {
-		return mostCommonWinterHour;
-	}
-
-	public void setMostCommonWinterHour(TextView mostCommonWinterHour) {
-		this.mostCommonWinterHour = mostCommonWinterHour;
-	}
-
-	public TextView getWorldRecordWeight() {
-		return worldRecordWeight;
-	}
-
-	public void setWorldRecordWeight(TextView worldRecordWeight) {
-		this.worldRecordWeight = worldRecordWeight;
-	}
-	
 }

@@ -8,16 +8,15 @@ import gr.liakos.spearo.def.AsyncListener;
 import gr.liakos.spearo.model.adapter.FishStatGlobalAdapter;
 import gr.liakos.spearo.model.object.FishAverageStatistic;
 import gr.liakos.spearo.util.Constants;
-import gr.liakos.spearo.util.SpearoUtils;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
+import android.os.Build;
 import android.os.Bundle;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
@@ -27,27 +26,23 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 public class FrgFishingStatsGlobal
 extends Fragment
 implements AsyncListener{
-	
-	Button buttonGoPremium;
-	ProgressBar premiumProgressBarLarge;
-	TextView textGoPremium;
+
+	TextView textViewAndroidVersion;
 	NestedScrollingListView fishStatsListView;
     FishStatGlobalAdapter fishStatAdapter;
     List<FishAverageStatistic> fishAverageStats = new ArrayList<FishAverageStatistic>();
     boolean isPremiumUser = false;
-    
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
     	super.onCreate(savedInstanceState);
     	List<FishAverageStatistic> dbCommunityData = ((SpearoApplication)getActivity().getApplication()).getDbCommunityData();
-		fishAverageStats.addAll(dbCommunityData);
+    	fishAverageStats.addAll(dbCommunityData);
     }
     
     @Override
@@ -64,7 +59,7 @@ implements AsyncListener{
 			asyncLoadStats();
 			Editor edit = app_preferences.edit();
 			edit.putLong(Constants.LAST_MONGO_UPDATE_MILLIS, new Date().getTime());
-			edit.commit();
+			edit.apply();
 		}
     }
     
@@ -72,27 +67,19 @@ implements AsyncListener{
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
         View v = inflater.inflate(R.layout.frg_fish_stats_global, container, false);
-        
-        premiumProgressBarLarge = v.findViewById(R.id.premiumLayoutProgressBar);
-        textGoPremium = v.findViewById(R.id.premiumText);
-        textGoPremium.setText(getActivity().getResources().getString(R.string.premium_info, ((SpearoApplication) getActivity().getApplication()).getFishies().size()));
-        buttonGoPremium = v.findViewById(R.id.button_go_premium);
+
         fishStatsListView = v.findViewById(R.id.listview_fishing_stats_global);
         
         SharedPreferences app_preferences = getActivity().getSharedPreferences(Constants.PREFERENCES, Context.MODE_PRIVATE);
         boolean isMetric = !app_preferences.getBoolean(Constants.IMPERIAL, false);
         
-        fishStatAdapter = new FishStatGlobalAdapter(getActivity(), R.layout.fish_stat_global_row, fishAverageStats, isMetric);
-        fishStatAdapter.setCommunityStats(true);
+        fishStatAdapter = new FishStatGlobalAdapter(getActivity(), R.layout.fish_stat_global_row_with_diagrams, fishAverageStats, isMetric, isPremiumUser);
         fishStatsListView.setAdapter(fishStatAdapter);
 
-        if (fishAverageStats.isEmpty()){
-        	showLargeProgressBar();
-        }else{
-        	showListView();
-        }
+		textViewAndroidVersion = v.findViewById(R.id.textViewVersionAndroid);
 
-		((ActSpearoStatsMain)getActivity()).queryInventoryForPremium(this);
+
+		((ActSpearoStatsMain)getActivity()).queryInventoryForStats(this);
 
 
 		return v;
@@ -100,56 +87,14 @@ implements AsyncListener{
     
 	void loadAverageStats(boolean isPremium) {
 		isPremiumUser = isPremium;
-		if (!isPremium){
-			setupPremiumButtonListener();
-			showTextAndButton();
-			return;
+
+		if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.N){
+			textViewAndroidVersion.setVisibility(View.VISIBLE);
+		}else{
+			asyncLoadStats();
+			textViewAndroidVersion.setVisibility(View.GONE);
 		}
-		asyncLoadStats();
-	}
-	
-	void showListView() {
-		buttonGoPremium.setVisibility(View.GONE);
-		premiumProgressBarLarge.setVisibility(View.GONE);
-		textGoPremium.setVisibility(View.GONE);
-		fishStatsListView.setVisibility(View.VISIBLE);
-	}
-	
-	void showTextAndButton() {
-		buttonGoPremium.setVisibility(View.VISIBLE);
-		textGoPremium.setVisibility(View.VISIBLE);
-		premiumProgressBarLarge.setVisibility(View.GONE);
-		fishStatsListView.setVisibility(View.GONE);
-	}
 
-	@SuppressLint("NewApi")
-	void setupPremiumButtonListener() {
-		final AsyncListener listener = this;
-
-		buttonGoPremium.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				
-				if (!SpearoUtils.isOnline(getContext())){
-					snack(R.string.network_error);
-					return;
-				}
-
-				showLargeProgressBar();
-				((ActSpearoStatsMain) getActivity()).purchase(v);
-
-				
-			}
-		});
-		
-	}
-
-	void showLargeProgressBar() {
-		buttonGoPremium.setVisibility(View.GONE);
-		textGoPremium.setVisibility(View.GONE);
-		fishStatsListView.setVisibility(View.GONE);
-		premiumProgressBarLarge.setVisibility(View.VISIBLE);
-		
 	}
 
 	public static FrgFishingStatsGlobal init(int val) {
@@ -178,6 +123,7 @@ implements AsyncListener{
 		if (spearoApplication == null){
 			return;
 		}
+
 		spearoApplication.loadCommunityData(this);
 	}
 	
@@ -187,7 +133,6 @@ implements AsyncListener{
 	 */
 	@Override
 	public void onAsyncCommunityStatsFinished(List<FishAverageStatistic> stats) {
-		showListView();
 		if (stats.isEmpty()){
 			return;
 		}
@@ -195,12 +140,25 @@ implements AsyncListener{
 		for (FishAverageStatistic fishAverageStatistic : stats) {
 			fishAverageStats.add(fishAverageStatistic);
 		}
+
+		SharedPreferences app_preferences = getActivity().getSharedPreferences(Constants.PREFERENCES, Context.MODE_PRIVATE);
+		boolean isMetric = !app_preferences.getBoolean(Constants.IMPERIAL, false);
+
+		fishStatAdapter = new FishStatGlobalAdapter(getActivity(), R.layout.fish_stat_global_row_with_diagrams, fishAverageStats, isMetric, isPremiumUser);
+		fishStatsListView.setAdapter(fishStatAdapter);
+
 		fishStatAdapter.notifyDataSetChanged();
+
 	}
 	
 	@Override
-	public void onPurchaseAttemptFinished(boolean success){
+	public void onPurchaseStatsAttemptFinished(boolean success){
 		loadAverageStats(success);
+	}
+
+	@Override
+	public void onPurchaseDiagramsAttemptFinished(boolean success) {
+		//nothing to do here
 	}
 
 }

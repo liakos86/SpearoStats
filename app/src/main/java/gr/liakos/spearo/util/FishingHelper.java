@@ -10,6 +10,7 @@ import gr.liakos.spearo.model.object.FishCatch;
 import gr.liakos.spearo.model.object.FishingSession;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -66,7 +67,9 @@ public class FishingHelper {
 			
 			Integer mostCommonWinterHourFromStat = getMostCommonHourFromStat(stat, Season.WINTER);
 			avgStat.setMostCommonWinterHour(mostCommonWinterHourFromStat);
-        	
+
+			avgStat.setCatchesPerHourPerSeason(stat.getSeasonCatchesPerHourDay());
+
         	if (mode.equals(StatMode.PERSONAL)){
         		avgStat.setRecordWeight(stat.getRecordWeight());
         	}else{
@@ -85,6 +88,45 @@ public class FishingHelper {
         }
 		
 		return averageStats;
+	}
+
+	public static Map<Fish, Map<Integer, Integer>> convertUserSessionsToMonthlyCatches(List<FishingSession> sessions){
+
+		Map<Fish, Map<Integer, Integer>>  toBeReturned = new HashMap<>();
+
+		for (FishingSession fishingSession : sessions) {
+			Calendar calendarWithTime = DateUtils.getCalendarWithTime(fishingSession.getFishingDate());
+			Integer month = calendarWithTime.get(Calendar.MONTH);
+			for (FishCatch fishCatch : fishingSession.getFishCatches()){
+				Map<Integer, Integer> fishCatchesPerMonth = toBeReturned.get(fishCatch.getFish());
+				if (fishCatchesPerMonth == null){
+					fishCatchesPerMonth = initializeMonthsMap();
+					toBeReturned.put(fishCatch.getFish(), fishCatchesPerMonth);
+				}
+
+				Integer increasedCatches = fishCatchesPerMonth.get(month) + 1;
+				fishCatchesPerMonth.put(month, increasedCatches);
+			}
+
+		}
+		return toBeReturned;
+	}
+
+	static Map<Integer, Integer> initializeMonthsMap(){
+		Map<Integer, Integer> catchesPerMonthMap = new HashMap<>();
+		catchesPerMonthMap.put(Calendar.JANUARY, 0);
+		catchesPerMonthMap.put(Calendar.FEBRUARY, 0);
+		catchesPerMonthMap.put(Calendar.MARCH, 0);
+		catchesPerMonthMap.put(Calendar.APRIL, 0);
+		catchesPerMonthMap.put(Calendar.MAY, 0);
+		catchesPerMonthMap.put(Calendar.JUNE, 0);
+		catchesPerMonthMap.put(Calendar.JULY, 0);
+		catchesPerMonthMap.put(Calendar.AUGUST, 0);
+		catchesPerMonthMap.put(Calendar.SEPTEMBER, 0);
+		catchesPerMonthMap.put(Calendar.OCTOBER, 0);
+		catchesPerMonthMap.put(Calendar.NOVEMBER, 0);
+		catchesPerMonthMap.put(Calendar.DECEMBER, 0);
+		return catchesPerMonthMap;
 	}
 	
 	/**
@@ -279,27 +321,97 @@ public class FishingHelper {
 		return max;
 	}
 
-//	public static List<FishNumericStatistic> getWeeklyStats(List<FishingSession> sessions){
-//		Map<Integer, FishNumericStatistic> statsMap = new HashMap<>();
-//		for (FishingSession session : sessions){
-//			for (FishCatch katch : session.getFishCatches()){
-//				FishNumericStatistic fishNumericStatistic = statsMap.get(katch.getFishId());
-//				if (fishNumericStatistic == null){
-//					fishNumericStatistic = new FishNumericStatistic();
-//					fishNumericStatistic.setFish(katch.getFish());
-//					fishNumericStatistic.setFishId(katch.getFishId());
-//					fishNumericStatistic.setTotalCatches(0);
-//					statsMap.put(katch.getFishId(), fishNumericStatistic);
+//	public static void assignHoursPerSeason(List<FishAverageStatistic> communityAvgStats, List<FishStatistic> communityStats) {
+//		for (FishAverageStatistic avgStat: communityAvgStats) {
+//			Fish fish = avgStat.getFish();
+//			for (FishStatistic stat : communityStats){
+//				if (Integer.valueOf(stat.getFishId() ).equals(fish.getFishId())){
+//					Map<Season, Map<Integer, Integer>> catchesPerHourPerSeason = avgStat.getCatchesPerHourPerSeason();
+//					fixSeasonHours(catchesPerHourPerSeason.get(Season.SUMMER), stat.summerHours());
+//					fixSeasonHours(catchesPerHourPerSeason.get(Season.WINTER), stat.winterHours());
 //				}
-//
-//				int newCatches = fishNumericStatistic.getTotalCatches() + 1;
-//				fishNumericStatistic.setTotalCatches(newCatches);
-//
 //			}
+//
 //		}
-//		List<FishNumericStatistic> stats = new ArrayList<>();
-//		stats.addAll(statsMap.values());
-//		return stats;
 //	}
+
+	public static void assignHoursPerSeasonGlobal(List<FishAverageStatistic> communityAvgStats, List<FishStatistic> communityStats) {
+		for (FishAverageStatistic avgStat: communityAvgStats) {
+			Fish fish = avgStat.getFish();
+			for (FishStatistic stat : communityStats){
+				if (Integer.valueOf(stat.getFishId() ).equals(fish.getFishId())){
+					Map<Season, Map<Integer, Integer>> catchesPerHourPerSeason = new HashMap<>();
+					catchesPerHourPerSeason.put(Season.SUMMER, getSummerHoursGlobal(stat));
+					catchesPerHourPerSeason.put(Season.WINTER, getWinterHoursGlobal(stat));
+					avgStat.setCatchesPerHourPerSeason(catchesPerHourPerSeason);
+				}
+			}
+		}
+	}
+
+	private static Map<Integer, Integer> getWinterHoursGlobal(FishStatistic stat) {
+		Map<Integer, Integer> winterHoursGlobal = new HashMap<>();
+		winterHoursGlobal.put(0, stat.getHourWinter0());
+		winterHoursGlobal.put(1, stat.getHourWinter1());
+		winterHoursGlobal.put(2, stat.getHourWinter2());
+		winterHoursGlobal.put(3, stat.getHourWinter3());
+		winterHoursGlobal.put(4, stat.getHourWinter4());
+		winterHoursGlobal.put(5, stat.getHourWinter5());
+		winterHoursGlobal.put(6, stat.getHourWinter6());
+		winterHoursGlobal.put(7, stat.getHourWinter7());
+		winterHoursGlobal.put(8, stat.getHourWinter8());
+		winterHoursGlobal.put(9, stat.getHourWinter9());
+		winterHoursGlobal.put(10, stat.getHourWinter10());
+		winterHoursGlobal.put(11, stat.getHourWinter11());
+		winterHoursGlobal.put(12, stat.getHourWinter12());
+		winterHoursGlobal.put(13, stat.getHourWinter13());
+		winterHoursGlobal.put(14, stat.getHourWinter14());
+		winterHoursGlobal.put(15, stat.getHourWinter15());
+		winterHoursGlobal.put(16, stat.getHourWinter16());
+		winterHoursGlobal.put(17, stat.getHourWinter17());
+		winterHoursGlobal.put(18, stat.getHourWinter18());
+		winterHoursGlobal.put(19, stat.getHourWinter19());
+		winterHoursGlobal.put(20, stat.getHourWinter20());
+		winterHoursGlobal.put(21, stat.getHourWinter21());
+		winterHoursGlobal.put(22, stat.getHourWinter22());
+		winterHoursGlobal.put(23, stat.getHourWinter23());
+		return winterHoursGlobal;
+	}
+
+	private static Map<Integer, Integer> getSummerHoursGlobal(FishStatistic stat) {
+		Map<Integer, Integer> summerHoursGlobal = new HashMap<>();
+		summerHoursGlobal.put(0, stat.getHourSummer0());
+		summerHoursGlobal.put(1, stat.getHourSummer1());
+		summerHoursGlobal.put(2, stat.getHourSummer2());
+		summerHoursGlobal.put(3, stat.getHourSummer3());
+		summerHoursGlobal.put(4, stat.getHourSummer4());
+		summerHoursGlobal.put(5, stat.getHourSummer5());
+		summerHoursGlobal.put(6, stat.getHourSummer6());
+		summerHoursGlobal.put(7, stat.getHourSummer7());
+		summerHoursGlobal.put(8, stat.getHourSummer8());
+		summerHoursGlobal.put(9, stat.getHourSummer9());
+		summerHoursGlobal.put(10, stat.getHourSummer10());
+		summerHoursGlobal.put(11, stat.getHourSummer11());
+		summerHoursGlobal.put(12, stat.getHourSummer12());
+		summerHoursGlobal.put(13, stat.getHourSummer13());
+		summerHoursGlobal.put(14, stat.getHourSummer14());
+		summerHoursGlobal.put(15, stat.getHourSummer15());
+		summerHoursGlobal.put(16, stat.getHourSummer16());
+		summerHoursGlobal.put(17, stat.getHourSummer17());
+		summerHoursGlobal.put(18, stat.getHourSummer18());
+		summerHoursGlobal.put(19, stat.getHourSummer19());
+		summerHoursGlobal.put(20, stat.getHourSummer20());
+		summerHoursGlobal.put(21, stat.getHourSummer21());
+		summerHoursGlobal.put(22, stat.getHourSummer22());
+		summerHoursGlobal.put(23, stat.getHourSummer23());
+		return summerHoursGlobal;
+	}
+
+	private static void fixSeasonHours(Map<Integer, Integer> catchesPerHourPerSeason, Map<Integer, Integer> seasonHours) {
+		for (Map.Entry<Integer, Integer> seasonEntry : seasonHours.entrySet()){
+			catchesPerHourPerSeason.put(seasonEntry.getKey(), seasonEntry.getValue());
+		}
+	}
+
 
 }

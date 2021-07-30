@@ -55,7 +55,7 @@
 	<string name="press_for_more">press for more info&#8230;</string>
 
 	<string name="prey">Prey: </string>
-	<string name="search_hint">e.g \'Seriola\'</string>
+	<string name="search_hint">type fish here..</string>
 	<string name="click_to_add">Click to add </string>
 
 	<string name="confirm_catches">Please confirm</string>
@@ -227,14 +227,14 @@
 
 	<string name="welcome">Hello spearo</string>
 	<string name="add_catch">Add fish</string>
-	<string name="save_session">Save</string>
+	<string name="save_session">Save </string>
 	<string name="catch_time">Time of catch</string>
 	<string name="new_session">Insert new</string>
 	<string name="confirm">Confirm</string>
 	<string name="skip">Skip</string>
 	<string name="cancel">Cancel</string>
 	<string name="save">Save</string>
-	<string name="go_premium">Go premium</string>
+	<!--<string name="go_premium">Go premium</string>-->
 	<string name="fish">fish</string>
 	<string name="fishes">fish</string>
 	<string name="marker_text">the place</string>
@@ -255,7 +255,7 @@
 
 	<string name="network_error">Please check your internet connectivity</string>
 
-	<string name="cancel_session_entry">Discard</string>
+	<string name="cancel_session_entry">Cancel and exit</string>
 	<string name="cancel_session_entry_alert">Cancel and return to main page?</string>
 	<string name="yes">Yes</string>
 	<string name="no">No</string>
@@ -302,7 +302,9 @@
 	<string name="email_us">email us</string>
 
 	<string name="showcase_sessions">This is the place to store your fishing trip sessions!</string>
-	<string name="showcase_stats">You can see your personal stats per fish species here!</string>
+	<string name="showcase_stats">Your personal stats appear here!
+		Click on any fish for more info.
+		View your details stats in diagrams. SWIPE for more!</string>
 	<string name="showcase_global">The global SpearoStats are available here for a small fee!</string>
 	<string name="showcase_map">You can see the map representation of your fishing trips here!</string>
 
@@ -387,9 +389,18 @@
 	<string name="fb_login_success">Facebook login success! Click again to share!</string>
 
 	<string name="showcase_fb">Click to share your fishing trips on Facebook!</string>
-	<string name="weekly_stats">Your weekly stats are ready</string>
-	<string name="open">open</string>
-	<string name="weekly_stats_analyzed">View detailed analysis</string>
 
+	<string name="textview_what_fish_question">What fish did you catch?</string>
+	<string name="textview_fish_meta_question">Info about the %1$s</string>
+    <string name="fish_per_month">Fish per month</string>
+	<string name="fish_per_hour_winter">Winter catches</string>
+	<string name="fish_per_hour_summer">Summer catches</string>
+	<string name="catches_per_month">Catches/Month</string>
+	<string name="catches_per_season">Catches/Hour</string>
+	<string name="complete_session_or_add_fish">Save or add more fish?</string>
+	<string name="add_one_more_catch" >Add more fish</string>
 
+	<string name="go_premium_diagrams">Access all diagrams!</string>
+	<string name="go_premium_data">Access all community data!</string>
+	<string name="android_version_check">You need android version 8 or higher for the community data</string>
 </resources>

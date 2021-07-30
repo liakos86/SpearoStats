@@ -13,6 +13,9 @@
     <color name="interval_blue">#2980b9</color>
     <color name="interval_blue_pressed">#3498db</color>
 
+    <color name="spearo_green">#38cd89</color>
+    <color name="spearo_green_pressed">#1f8d5b</color>
+
 
     <color name="colorAccent">#ED97A0</color>
     <color name="colorAccent_pressed">#FF4081</color>

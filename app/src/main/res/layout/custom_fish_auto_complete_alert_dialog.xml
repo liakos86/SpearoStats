@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:orientation="vertical">
+        
+     <TextView
+         android:id="@+id/textview_fish_num"
+         android:padding="@dimen/twelve"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/sixty_four"
+        android:gravity="center_vertical"
+        android:background="@color/colorAccent"
+        android:textColor="@color/white_back"
+        android:textSize="@dimen/eighteen_sp"
+        android:textStyle="bold"
+        android:singleLine="true"
+        android:ellipsize="end"
+        />
+        
+    <RelativeLayout
+        android:layout_gravity="center"
+        android:layout_height="@dimen/one_hundred"
+        android:layout_width="match_parent"
+        android:orientation="vertical">
+
+        <gr.liakos.spearo.application.ClearableAutoCompleteTextView
+            android:id="@+id/alert_auto_complete"
+            android:layout_marginBottom="@dimen/eight"
+            android:layout_centerInParent="true"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/standard_view_height"
+            android:layout_margin="@dimen/eight"
+            android:hint="@string/search_hint"
+            android:textColorHint="@color/white_back"
+            android:textSize="@dimen/fifteen_sp"
+            android:textColor="@color/white_back"
+            android:textStyle="bold"
+            android:lineSpacingExtra="3dp"
+            android:background="@drawable/edit_text_back_coloured"
+            android:dropDownWidth="match_parent"
+            android:singleLine="true"
+            android:ellipsize="end"
+            android:padding="@dimen/four"/>
+    
+    
+    </RelativeLayout>
+   
+</LinearLayout>

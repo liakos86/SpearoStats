@@ -61,7 +61,7 @@
 	<string name="click_to_add">Πατήστε για προσθήκη</string>
 
 
-	<string name="search_hint">π.χ \'Μαγιάτικο\'</string>
+	<string name="search_hint">γράψτε το ψάρι εδώ..</string>
 	<string name="username_hint">επιθυμητό όνομα (έως 16 χαρακτήρες)</string>
 
 	<!-- FISH -->
@@ -126,14 +126,13 @@
 	<!-- END FISH -->
 
 	<string name="add_catch">Στην ψαροβελόνα</string>
-	<string name="save_session">Σώσε</string>
+	<string name="save_session">Τέλος με </string>
 	<string name="catch_time">Ώρα σύλληψης</string>
 	<string name="confirm">Επιβεβαίωση</string>
 	<string name="skip">Παράβλεψη</string>
 	<string name="cancel">Ακύρωση</string>
 	<string name="new_session">Νέο ψάρεμα</string>
 	<string name="save">Αποθήκευση</string>
-	<string name="go_premium">Αγορά</string>
 	<string name="fish">ψάρι</string>
 	<string name="fishes">ψάρια</string>
 	<string name="marker_text">Ψάρεψα εδώ</string>
@@ -202,7 +201,9 @@
 	<string name="no_date">Χωρίς ημερομηνία</string>
 
 	<string name="showcase_sessions">Σε αυτή την οθόνη μπορείτε να αποθηκεύσετε τις ψαρευτικές σας εκδρομές!</string>
-	<string name="showcase_stats">Εδώ βλέπετε τα προσωπικά σας στατιστικά ανά είδος!</string>
+	<string name="showcase_stats">Τα προσωπικά σας στατιστικά ανά είδος!
+		Πατήστε σε ένα ψάρι για περισσότερες πληροφορίες.
+		Δείτε τα στατιστικά σας σε διαγράμματα. ΣΥΡΕΤΕ για περισσότερα διαγράμματα!</string>
 	<string name="showcase_global">Τα συνολικά στατιστικά της κοινότητας SpearoStats είναι διαθέσιμα εδώ με ένα μικρό αντίτιμο!</string>
 	<string name="showcase_map">Εδώ βλέπετε όλες τις ψαρευτικές σας εκδρομές ζωγραφισμένες στο χάρτη!</string>
 
@@ -236,7 +237,7 @@
 
 	<string name="session_image">Θέλετε να προσθέσετε μια φωτογραφία για το ψάρεμά σας;</string>
 
-	<string name="select_wind">Άνεμος</string>
+	<string name="select_wind">Τι άνεμο είχε;</string>
 	<string name="wind_direction">Κατεύθυνση ανέμου</string>
 	<string name="wind_volume">ένταση</string>
 	<string name="not_known">άγνωστο</string>
@@ -284,8 +285,20 @@
 	<string name="post_success">Το post έγινε με επιτυχία!</string>
 	<string name="post_in_progress">Το post σας ετοιμάζεται…</string>
 	<string name="showcase_fb">Πατήστε για να μοιραστείτε την ψαριά σας στο Facebook!</string>
-	<string name="weekly_stats">Δείτε τα εβδομαδιαία σας στατιστικά</string>
-	<string name="open">άνοιγμα</string>
-	<string name="weekly_stats_analyzed">Δείτε αναλυτικά</string>
+
+	<string name="textview_what_fish_question">Τι ψάρι πιάσατε?</string>
+	<string name="textview_fish_meta_question">Πληροφορίες για %1$s</string>
+	<string name="fish_per_month">Ψάρια ανά μήνα</string>
+	<string name="fish_per_hour_winter">Χειμερινές συλλήψεις</string>
+	<string name="fish_per_hour_summer">Καλοκαιρινές συλλήψεις</string>
+
+	<string name="catches_per_month">Αριθμός/Μήνα</string>
+	<string name="catches_per_season">Αριθμός/Ώρα</string>
+	<string name="complete_session_or_add_fish">Ολοκληρώστε ή προσθέστε κι άλλα ψάρια</string>
+	<string name="add_one_more_catch">Βάλε κι άλλα ψάρια</string>
+
+	<string name="go_premium_diagrams">Αποκτήστε όλα τα διαγράμματα!</string>
+	<string name="go_premium_data">Αποκτήστε όλα τα δεδομένα!</string>
+	<string name="android_version_check">Απαιτείται έκδοση android 8 και άνω για να έχετε πρόσβαση στα δεδομένα της κοινότητας!</string>
 
 </resources>

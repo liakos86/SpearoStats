@@ -38,5 +38,6 @@
     <dimen name="ten_sp">10sp</dimen>
     <dimen name="fifteen_sp">15sp</dimen>
     <dimen name="eight_sp">8sp</dimen>
+    <dimen name="one_hundred_twenty">120dp</dimen>
 
 </resources>

@@ -41,7 +41,7 @@ public class BillingSecurity {
 
     /**
      * Verifies that the data was signed with the given signature, and returns the verified
-     * purchase.
+     * purchasePremiumStats.
      * @param base64PublicKey the base64-encoded public key to use for verifying.
      * @param signedData the signed JSON string (signed, not encrypted)
      * @param signature the signature for the data, signed with the private key

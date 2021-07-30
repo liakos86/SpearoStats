@@ -97,10 +97,10 @@
 //   // IInAppBillingService mService;
 //    ServiceConnection mServiceConn;
 //
-//    // The request code used to launch purchase flow
+//    // The request code used to launch purchasePremiumStats flow
 //    int mRequestCode;
 //
-//    // The item type of the current purchase flow
+//    // The item type of the current purchasePremiumStats flow
 //    String mPurchasingItemType;
 //
 //    // Public key for verifying signature, in base64 encoding
@@ -155,7 +155,7 @@
 //     *
 //     * @param ctx             Your application or Activity context. Needed to bind to the in-app billing service.
 //     * @param base64PublicKey Your application's public key, encoded in base64.
-//     *                        This is used for verification of purchase signatures. You can find your app's base64-encoded
+//     *                        This is used for verification of purchasePremiumStats signatures. You can find your app's base64-encoded
 //     *                        public key in your application's page on Google Play Developer Console. Note that this
 //     *                        is NOT your "developer public key".
 //     */
@@ -309,23 +309,23 @@
 //
 //
 //    /**
-//     * Callback that notifies when a purchase is finished.
+//     * Callback that notifies when a purchasePremiumStats is finished.
 //     */
 //    public interface OnIabPurchaseFinishedListener {
 //        /**
-//         * Called to notify that an in-app purchase finished. If the purchase was successful,
-//         * then the sku parameter specifies which item was purchased. If the purchase failed,
-//         * the sku and extraData parameters may or may not be null, depending on how far the purchase
+//         * Called to notify that an in-app purchasePremiumStats finished. If the purchasePremiumStats was successful,
+//         * then the sku parameter specifies which item was purchased. If the purchasePremiumStats failed,
+//         * the sku and extraData parameters may or may not be null, depending on how far the purchasePremiumStats
 //         * process went.
 //         *
-//         * @param result The result of the purchase.
-//         * @param info   The purchase information (null if purchase failed)
+//         * @param result The result of the purchasePremiumStats.
+//         * @param info   The purchasePremiumStats information (null if purchasePremiumStats failed)
 //         */
 //        public void onIabPurchaseFinished(IabResult result, Purchase info);
 //    }
 //
 //    // The listener registered on launchPurchaseFlow, which we have to call back when
-//    // the purchase finishes
+//    // the purchasePremiumStats finishes
 //    OnIabPurchaseFinishedListener mPurchaseListener;
 //
 //    public void launchPurchaseFlow(Activity act, String sku, int requestCode, OnIabPurchaseFinishedListener listener) {
@@ -348,22 +348,22 @@
 //    }
 //
 //    /**
-//     * Initiate the UI flow for an in-app purchase. Call this method to initiate an in-app purchase,
+//     * Initiate the UI flow for an in-app purchasePremiumStats. Call this method to initiate an in-app purchasePremiumStats,
 //     * which will involve bringing up the Google Play screen. The calling activity will be paused while
 //     * the user interacts with Google Play, and the result will be delivered via the activity's
 //     *  method, at which point you must call
-//     * this object's {@link #handleActivityResult} method to continue the purchase flow. This method
+//     * this object's {@link #handleActivityResult} method to continue the purchasePremiumStats flow. This method
 //     * MUST be called from the UI thread of the Activity.
 //     *
 //     * @param act         The calling activity.
-//     * @param sku         The sku of the item to purchase.
+//     * @param sku         The sku of the item to purchasePremiumStats.
 //     * @param itemType    indicates if it's a product or a subscription (ITEM_TYPE_INAPP or ITEM_TYPE_SUBS)
 //     * @param requestCode A request code (to differentiate from other responses --
 //     *                    as in {@link android.app.Activity#startActivityForResult}).
-//     * @param listener    The listener to notify when the purchase process finishes
-//     * @param extraData   Extra data (developer payload), which will be returned with the purchase data
-//     *                    when the purchase completes. This extra data will be permanently bound to that purchase
-//     *                    and will always be returned when the purchase is queried.
+//     * @param listener    The listener to notify when the purchasePremiumStats process finishes
+//     * @param extraData   Extra data (developer payload), which will be returned with the purchasePremiumStats data
+//     *                    when the purchasePremiumStats completes. This extra data will be permanently bound to that purchasePremiumStats
+//     *                    and will always be returned when the purchasePremiumStats is queried.
 //     */
 //    public void launchPurchaseFlow(Activity act, String sku, String itemType, int requestCode,
 //                                   OnIabPurchaseFinishedListener listener, String extraData) {
@@ -404,7 +404,7 @@
 //        } catch (SendIntentException e)
 //
 //    {
-//        logError("SendIntentException while launching purchase flow for sku " + sku);
+//        logError("SendIntentException while launching purchasePremiumStats flow for sku " + sku);
 //        e.printStackTrace();
 //        flagEndAsync();
 //
@@ -412,17 +412,17 @@
 //        if (listener != null) listener.onIabPurchaseFinished(result, null);
 //    }
 ////        } catch (RemoteException e) {
-////            logError("RemoteException while launching purchase flow for sku " + sku);
+////            logError("RemoteException while launching purchasePremiumStats flow for sku " + sku);
 ////            e.printStackTrace();
 ////            flagEndAsync();
 ////
-////            result = new IabResult(IABHELPER_REMOTE_EXCEPTION, "Remote exception while starting purchase flow");
+////            result = new IabResult(IABHELPER_REMOTE_EXCEPTION, "Remote exception while starting purchasePremiumStats flow");
 ////            if (listener != null) listener.onIabPurchaseFinished(result, null);
 ////        }
 //    }
 //
 //    /**
-//     * Handles an activity result that's part of the purchase flow in in-app billing. If you
+//     * Handles an activity result that's part of the purchasePremiumStats flow in in-app billing. If you
 //     * are calling {@link #launchPurchaseFlow}, then you must call this method from your
 //     * Activity's {@link android.app.Activity@onActivityResult} method. This method
 //     * MUST be called from the UI thread of the Activity.
@@ -430,8 +430,8 @@
 //     * @param requestCode The requestCode as you received it.
 //     * @param resultCode  The resultCode as you received it.
 //     * @param data        The data (Intent) as you received it.
-//     * @return Returns true if the result was related to a purchase flow and was handled;
-//     * false if the result was not related to a purchase, in which case you should
+//     * @return Returns true if the result was related to a purchasePremiumStats flow and was handled;
+//     * false if the result was not related to a purchasePremiumStats, in which case you should
 //     * handle it normally.
 //     */
 //    public boolean handleActivityResult(int requestCode, int resultCode, Intent data) {
@@ -441,7 +441,7 @@
 //        checkNotDisposed();
 //        checkSetupDone("handleActivityResult");
 //
-//        // end of async purchase operation that started on launchPurchaseFlow
+//        // end of async purchasePremiumStats operation that started on launchPurchaseFlow
 //        flagEndAsync();
 //
 //        if (data == null) {
@@ -456,7 +456,7 @@
 //        String dataSignature = data.getStringExtra(RESPONSE_INAPP_SIGNATURE);
 //
 //        if (resultCode == Activity.RESULT_OK && responseCode == BILLING_RESPONSE_RESULT_OK) {
-//            logDebug("Successful resultcode from purchase activity.");
+//            logDebug("Successful resultcode from purchasePremiumStats activity.");
 //            logDebug("Purchase data: " + purchaseData);
 //            logDebug("Data signature: " + dataSignature);
 //            logDebug("Extras: " + data.getExtras());
@@ -470,29 +470,29 @@
 //                return true;
 //            }
 //
-//            Purchase purchase = null;
+//            Purchase purchasePremiumStats = null;
 //            try {
-//                purchase = new Purchase(mPurchasingItemType, purchaseData, dataSignature);
-//                String sku = purchase.getSku();
+//                purchasePremiumStats = new Purchase(mPurchasingItemType, purchaseData, dataSignature);
+//                String sku = purchasePremiumStats.getSku();
 //
 //                // Verify signature
 //                if (!Security.verifyPurchase(mSignatureBase64, purchaseData, dataSignature)) {
 //                    logError("Purchase signature verification FAILED for sku " + sku);
 //                    result = new IabResult(IABHELPER_VERIFICATION_FAILED, "Signature verification failed for sku " + sku);
-//                    if (mPurchaseListener != null) mPurchaseListener.onIabPurchaseFinished(result, purchase);
+//                    if (mPurchaseListener != null) mPurchaseListener.onIabPurchaseFinished(result, purchasePremiumStats);
 //                    return true;
 //                }
 //                logDebug("Purchase signature successfully verified.");
 //            } catch (JSONException e) {
-//                logError("Failed to parse purchase data.");
+//                logError("Failed to parse purchasePremiumStats data.");
 //                e.printStackTrace();
-//                result = new IabResult(IABHELPER_BAD_RESPONSE, "Failed to parse purchase data.");
+//                result = new IabResult(IABHELPER_BAD_RESPONSE, "Failed to parse purchasePremiumStats data.");
 //                if (mPurchaseListener != null) mPurchaseListener.onIabPurchaseFinished(result, null);
 //                return true;
 //            }
 //
 //            if (mPurchaseListener != null) {
-//                mPurchaseListener.onIabPurchaseFinished(new IabResult(BILLING_RESPONSE_RESULT_OK, "Success"), purchase);
+//                mPurchaseListener.onIabPurchaseFinished(new IabResult(BILLING_RESPONSE_RESULT_OK, "Success"), purchasePremiumStats);
 //            }
 //        } else if (resultCode == Activity.RESULT_OK) {
 //            // result code was OK, but in-app billing response was not OK.
@@ -508,7 +508,7 @@
 //        } else {
 //            logError("Purchase failed. Result code: " + Integer.toString(resultCode)
 //                    + ". Response: " + getResponseDesc(responseCode));
-//            result = new IabResult(IABHELPER_UNKNOWN_PURCHASE_RESPONSE, "Unknown purchase response.");
+//            result = new IabResult(IABHELPER_UNKNOWN_PURCHASE_RESPONSE, "Unknown purchasePremiumStats response.");
 //            if (mPurchaseListener != null) mPurchaseListener.onIabPurchaseFinished(result, null);
 //        }
 //        return true;
@@ -524,7 +524,7 @@
 //     * Do not call from a UI thread. For that, use the non-blocking version .
 //     *
 //     * @param querySkuDetails if true, SKU details (price, description, etc) will be queried as well
-//     *                        as purchase information.
+//     *                        as purchasePremiumStats information.
 //     * @param moreItemSkus    additional PRODUCT skus to query information on, regardless of ownership.
 //     *                        Ignored if null or if querySkuDetails is false.
 //     * @param moreSubsSkus    additional SUBSCRIPTIONS skus to query information on, regardless of ownership.
@@ -684,10 +684,10 @@
 //        /**
 //         * Called to notify that a consumption has finished.
 //         *
-//         * @param purchase The purchase that was (or was to be) consumed.
+//         * @param purchasePremiumStats The purchasePremiumStats that was (or was to be) consumed.
 //         * @param result   The result of the consumption operation.
 //         */
-//        public void onConsumeFinished(Purchase purchase, IabResult result);
+//        public void onConsumeFinished(Purchase purchasePremiumStats, IabResult result);
 //    }
 //
 //    /**
@@ -709,14 +709,14 @@
 //     * performs the consumption in the background and notifies completion through
 //     * the provided listener. This method is safe to call from a UI thread.
 //     *
-//     * @param purchase The purchase to be consumed.
+//     * @param purchasePremiumStats The purchasePremiumStats to be consumed.
 //     * @param listener The listener to notify when the consumption operation finishes.
 //     */
-//    public void consumeAsync(Purchase purchase, OnConsumeFinishedListener listener) {
+//    public void consumeAsync(Purchase purchasePremiumStats, OnConsumeFinishedListener listener) {
 //        checkNotDisposed();
 //        checkSetupDone("consume");
 //        List<Purchase> purchases = new ArrayList<Purchase>();
-//        purchases.add(purchase);
+//        purchases.add(purchasePremiumStats);
 //        consumeAsyncInternal(purchases, listener, null);
 //    }
 //
@@ -749,7 +749,7 @@
 //                "-1003:Purchase signature verification failed/" +
 //                "-1004:Send intent failed/" +
 //                "-1005:User cancelled/" +
-//                "-1006:Unknown purchase response/" +
+//                "-1006:Unknown purchasePremiumStats response/" +
 //                "-1007:Missing token/" +
 //                "-1008:Unknown error/" +
 //                "-1009:Subscriptions not available/" +
@@ -857,15 +857,15 @@
 //                String sku = ownedSkus.get(i);
 //                if (Security.verifyPurchase(mSignatureBase64, purchaseData, signature)) {
 //                    logDebug("Sku is owned: " + sku);
-//                    Purchase purchase = new Purchase(itemType, purchaseData, signature);
+//                    Purchase purchasePremiumStats = new Purchase(itemType, purchaseData, signature);
 //
-//                    if (TextUtils.isEmpty(purchase.getToken())) {
+//                    if (TextUtils.isEmpty(purchasePremiumStats.getToken())) {
 //                        logWarn("BUG: empty/null token!");
 //                        logDebug("Purchase data: " + purchaseData);
 //                    }
 //
 //                    // Record ownership and token
-//                    inv.addPurchase(purchase);
+//                    inv.addPurchase(purchasePremiumStats);
 //                } else {
 //                    logWarn("Purchase signature verification **FAILED**. Not adding item.");
 //                    logDebug("   Purchase data: " + purchaseData);
@@ -935,10 +935,10 @@
 //        (new Thread(new Runnable() {
 //            public void run() {
 //                final List<IabResult> results = new ArrayList<IabResult>();
-//                for (Purchase purchase : purchases) {
+//                for (Purchase purchasePremiumStats : purchases) {
 //                    try {
-//                        consume(purchase);
-//                        results.add(new IabResult(BILLING_RESPONSE_RESULT_OK, "Successful consume of sku " + purchase.getSku()));
+//                        consume(purchasePremiumStats);
+//                        results.add(new IabResult(BILLING_RESPONSE_RESULT_OK, "Successful consume of sku " + purchasePremiumStats.getSku()));
 //                    } catch (IabException ex) {
 //                        results.add(ex.getResult());
 //                    }

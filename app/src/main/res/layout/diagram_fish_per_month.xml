@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/lineChartPerMonth">
+
+    <com.github.mikephil.charting.charts.LineChart
+        android:id="@+id/stats_diagram_per_month"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        />
+
+    <TextView
+        app:layout_constraintBottom_toBottomOf="@+id/stats_diagram_per_month"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="end"
+        android:textStyle="bold"
+        android:layout_marginTop="@dimen/four"
+        android:layout_marginEnd="@dimen/four"
+        android:textSize="@dimen/eighteen_sp"
+        android:id="@+id/lineChartMonthsTitle"/>
+
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

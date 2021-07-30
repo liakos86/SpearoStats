@@ -120,7 +120,7 @@
         android:paddingEnd="@dimen/twenty"
         android:drawablePadding="@dimen/ten"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/eighty"
+        android:layout_height="@dimen/sixty_four"
         android:background="@drawable/checkbox_selector"
         android:button="@drawable/checkbox_sound_design"
         android:gravity="center"
@@ -128,29 +128,7 @@
         android:textSize="@dimen/eighteen_sp"
         android:textColor="@color/white_back"
         android:layout_marginBottom="@dimen/eight" />
-    
-    <!-- <TextView 
-          android:id="@+id/metricExpl"
-          android:layout_below="@+id/checkbox_metric_imperial"
-          android:textColor="@color/white_back"
-        android:layout_marginTop="@dimen/eight"
-        android:layout_width="match_parent" 
-        android:layout_height="wrap_content"
-        android:textSize="@dimen/twelve_sp" 
-        android:text="@string/metric_explained"/> -->  
-      
-      
 
-      
-    <!--     <Spinner  
-        android:id="@+id/spinnerLanguage"
-        
-        android:layout_below="@+id/checkbox_metric_imperial"  
-        android:layout_width="match_parent"  
-        android:layout_height="wrap_content"  
-        android:layout_marginBottom="@dimen/eight"  
-        android:background="@android:color/transparent"
-        />-->    
     
       
       <TextView android:layout_above="@+id/icons8text"
@@ -164,25 +142,38 @@
               android:clickable="true"
               android:layout_height="wrap_content"
               android:layout_marginBottom="@dimen/twelve"/>
-      
-      
-       <TextView android:layout_above="@+id/button_return_to_main"
-              android:layout_centerHorizontal="true"
-              android:textColor="@color/white_back"
-              android:textSize="@dimen/eight_sp"
-              android:id="@+id/icons8text"
-              android:layout_width="wrap_content"
-              android:clickable="true"
-              android:layout_height="wrap_content"
-              android:layout_marginBottom="@dimen/eight"/>
-      
-      
-      
+
+    <TextView android:layout_above="@+id/button_fb_like"
+        android:layout_centerHorizontal="true"
+        android:textColor="@color/white_back"
+        android:textSize="@dimen/eight_sp"
+        android:id="@+id/icons8text"
+        android:layout_width="wrap_content"
+        android:clickable="true"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/twelve"/>
+
+    <Button
+        android:id="@+id/button_fb_like"
+        android:layout_above="@id/button_return_to_main"
+        android:layout_width="@dimen/one_hundred_fifty"
+        style="@style/buttonStyle"
+        android:layout_height="@dimen/thirty_six"
+        android:background="@drawable/com_facebook_button_background"
+        android:paddingStart="@dimen/four"
+        android:paddingEnd="@dimen/four"
+        android:layout_centerHorizontal="true"
+        android:drawableStart="@drawable/fb_button"
+        android:text="Like"
+
+        />
+
           <Button  style="@style/buttonStyle"
               android:layout_alignParentBottom="true"
                 android:layout_width="match_parent"
                 android:text="@android:string/ok"
                 android:id="@+id/button_return_to_main"
+              android:layout_marginTop="@dimen/four"
                 />
    
 
