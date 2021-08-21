@@ -133,6 +133,11 @@ implements AsyncListener{
 	 */
 	@Override
 	public void onAsyncCommunityStatsFinished(List<FishAverageStatistic> stats) {
+
+		if (getActivity() == null){
+			return;
+		}
+
 		if (stats.isEmpty()){
 			return;
 		}

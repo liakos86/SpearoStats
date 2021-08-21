@@ -178,6 +178,11 @@ implements AsyncListener {
 
 	@Override
 	public void onPurchaseDiagramsAttemptFinished(boolean success) {
+
+    	if (getActivity() == null){
+    		return;
+		}
+
 		isPremiumDiagramsUser = success;
 		SharedPreferences app_preferences = getActivity().getSharedPreferences(Constants.PREFERENCES, Context.MODE_PRIVATE);
 		SharedPreferences.Editor editor = app_preferences.edit();
