@@ -4,11 +4,8 @@ import gr.liakos.spearo.R;
 import gr.liakos.spearo.fragment.FrgFishingSessions;
 import gr.liakos.spearo.model.object.Fish;
 import gr.liakos.spearo.model.viewholder.FishViewHolder;
-import gr.liakos.spearo.util.Constants;
 import gr.liakos.spearo.util.SpearoUtils;
 
-import java.text.Normalizer;
-import java.text.Normalizer.Form;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -18,8 +15,9 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Filter;
-import android.widget.ImageView;
-import android.widget.TextView;
+
+import static gr.liakos.spearo.util.StringUtils.removeDiacriticalMarks;
+import static gr.liakos.spearo.util.StringUtils.stringContainedInFishNames;
 
 public class AutoCompleteSearchAdapter
 extends ArrayAdapter<Fish>{
@@ -35,8 +33,8 @@ extends ArrayAdapter<Fish>{
     	super(fragment.getActivity().getApplicationContext(), R.layout.fish_row, allFish);
     	this.fragment = fragment;
     	this.allFish = allFish;
-    	this.tempFishList= new ArrayList<Fish>(allFish);
-    	this.filteredList = new ArrayList<Fish>();
+    	this.tempFishList= new ArrayList<>(allFish);
+    	this.filteredList = new ArrayList<>();
     }
     
         @Override
@@ -44,11 +42,11 @@ extends ArrayAdapter<Fish>{
 
         	FishViewHolder holder = null;
             if (convertView == null || !(convertView.getTag() instanceof FishViewHolder)) {
-                convertView = fragment.getActivity().getLayoutInflater().inflate(R.layout.fish_row, parent, false);
+                convertView = fragment.requireActivity().getLayoutInflater().inflate(R.layout.fish_row, parent, false);
                 holder = new FishViewHolder();
-                holder.setCommonName((TextView) convertView.findViewById(R.id.textCommonName));
-                holder.setFishFamily((TextView) convertView.findViewById(R.id.textFishFamily));
-                holder.setFishIcon((ImageView) convertView.findViewById(R.id.imageViewFish));
+                holder.setCommonName( convertView.findViewById(R.id.textCommonName));
+                holder.setFishFamily( convertView.findViewById(R.id.textFishFamily));
+                holder.setFishIcon( convertView.findViewById(R.id.imageViewFish));
             } else {
                 holder = (FishViewHolder) convertView.getTag();
             }
@@ -56,8 +54,8 @@ extends ArrayAdapter<Fish>{
             final Fish fish = getItem(position);
             
             holder.getCommonName().setText( fish.getCommonName());
-            holder.getFishFamily().setText(fish.getLatinName() + Constants.COMMA_SEP + fish.getFishFamily().getName());
-            holder.getFishIcon().setImageDrawable(new SpearoUtils(fragment.getActivity()).getDrawableFromFish(fish));
+            holder.getFishFamily().setText(fragment.requireActivity().getResources().getString( R.string.concat_fish_family, fish.getLatinName(), fish.getFishFamily().getName()));
+            holder.getFishIcon().setImageDrawable(new SpearoUtils(fragment.requireActivity()).getDrawableFromFish(fish));
             
             	convertView.setOnClickListener(new OnClickListener() {
 					@Override
@@ -70,8 +68,8 @@ extends ArrayAdapter<Fish>{
         }
         
         void setSelectedFish(Fish fish) {
-        	((FrgFishingSessions)fragment).setSelectedFish(fish);
-			SpearoUtils.hideSoftKeyboard(fragment.getActivity());
+        	fragment.setSelectedFish(fish);
+			SpearoUtils.hideSoftKeyboard(fragment.requireActivity());
 		}
 
         @Override
@@ -83,7 +81,6 @@ extends ArrayAdapter<Fish>{
         }
 
 
-// filtering the auto complete string and searching store name, address, phone and postal code
         Filter fishFilter = new Filter() {
 	
 
@@ -117,8 +114,7 @@ extends ArrayAdapter<Fish>{
         	 List<Fish> filterList = (ArrayList<Fish>) results.values;
              if (results != null && results.count > 0) {
                  clear();
-//                 for (Fish fish: filterList) {
-                for (Fish fish: new ArrayList<Fish>(filterList)) {
+                for (Fish fish: new ArrayList<>(filterList)) {
                      add(fish);
                      notifyDataSetChanged();
                  }
@@ -128,20 +124,12 @@ extends ArrayAdapter<Fish>{
     };
     
     boolean match(String latinname, String commonname, String secondary, String searched){
-    	latinname = latinname.toLowerCase(Locale.ENGLISH);
-    	commonname = removeDiacriticalMarks(commonname.toLowerCase(Locale.getDefault()));
-    	secondary = removeDiacriticalMarks(secondary.toLowerCase(new Locale("el")));
-    	searched = removeDiacriticalMarks(searched.toLowerCase(Locale.getDefault()));
-    	
-    	return latinname.contains(searched) ||
-  		commonname.contains(searched) ||
-  			secondary.contains(searched);
+        List<String> accepted = new ArrayList<>();
+        accepted.add(latinname.toLowerCase(Locale.ENGLISH));
+        accepted.add(removeDiacriticalMarks(commonname.toLowerCase(Locale.getDefault())));
+        accepted.add(removeDiacriticalMarks(secondary.toLowerCase(new Locale("el"))));
+    	String searchedFiltered = removeDiacriticalMarks(searched.toLowerCase(Locale.getDefault()));
+    	return stringContainedInFishNames(accepted, searchedFiltered);
     }
-    
-    public static String removeDiacriticalMarks(String string) {
-        return Normalizer.normalize(string, Form.NFD)
-            .replaceAll("\\p{InCombiningDiacriticalMarks}+", "");
-    }
-    
 
 };

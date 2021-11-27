@@ -174,8 +174,6 @@
         <string name="no">No</string>
         <string name="on">Acceso</string>
 
-        <string name="premium_info">Con un piccolo compenso, puoi avere accesso a SpearoStats globale! Oltre a poter vedere le tue statistiche personali, potrai recuperare le statistiche medie tra la spearo community. Profondità media, peso medio, catture totali in tutto il mondo e l\'ora migliore per cacciare ogni specie. Iscriviti e beneficia di queste informazioni del %1$d pesci</string>
-
         <string name="defaultUsername">Spearo</string>
 
         <string name="record_entry_attempt_alert">Il peso che stai cercando di entrare è un nuovo tentativo di record! Ben fatto, ma devi richiedere un nuovo record, verifica e ritorna quando abbiamo aggiornato le nostre voci con il nuovo record:</string>

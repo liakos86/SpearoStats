@@ -2,7 +2,6 @@ package gr.liakos.spearo.util;
 
 import gr.liakos.spearo.enums.Season;
 import gr.liakos.spearo.enums.StatMode;
-import gr.liakos.spearo.model.bean.FishNumericStatistic;
 import gr.liakos.spearo.model.bean.FishStatistic;
 import gr.liakos.spearo.model.object.Fish;
 import gr.liakos.spearo.model.object.FishAverageStatistic;
@@ -22,78 +21,102 @@ public class FishingHelper {
 	/**
 	 * A session has many fish.
 	 * A user has many sessions.
-	 * We need to produce a map of a {@link FishStatistic} per fish.
+	 * We need to produce a map of a {@link FishStatistic} per fish that the user
+	 * has caught among ALL his {@link FishingSession}s.
 	 * 
-	 * @param sessionsToPrepareForUpload
-	 * @param isForMongoUpload
-	 * @return
+	 * @param sessionsToPrepareForUpload all the user's {@link FishingSession}s
+	 * @param isForMongoUpload flag for mongo upload of the stats.
+	 *
+	 * @return stats per fish
 	 */
 	public static Map<Fish, FishStatistic> convertUserSessionsToStats(List<FishingSession> sessionsToPrepareForUpload, boolean isForMongoUpload){
-		Map<Fish, FishStatistic>  toBeReturned = new HashMap<Fish, FishStatistic>();
+		Map<Fish, FishStatistic>  toBeReturned = new HashMap<>();
 		for (FishingSession fishingSession : sessionsToPrepareForUpload) {
 			if (isForMongoUpload){
 				if (fishingSession.isUploadedToMongo()){
 					continue;
 				}
 			}
-			Map<Fish, FishStatistic> converted = session2stat(fishingSession);
+			Map<Fish, FishStatistic> converted = fishingSessionToFishStatistics(fishingSession);
 			updateEntries(toBeReturned, converted);
 		}
 		return toBeReturned;
 	}
 	
 	/**
-	 * We have statistics for species. We need to convert them to average stats.
+	 * We have {@link FishStatistic}s for species. Those stats contain sums of catches, or kilograms for every fish.
+	 * We need to convert them to {@link FishAverageStatistic}s, by utilising the input stats.
+	 * When we are in {@link StatMode#PERSONAL} the record weight is the user's record weight.
+	 * Else in {@link StatMode#GLOBAL} we prefer the community record from mongo.
 	 * 
-	 * @param ctx
-	 * @param stats
-	 * @param mode
-	 * @return
+	 * @param ctx context
+	 * @param stats statistics
+	 * @param mode the mode
+	 * @return average stats per fish
 	 */
 	public static List<FishAverageStatistic> getAverageStatsFrom(Context ctx, List<FishStatistic> stats, StatMode mode){
-		List<FishAverageStatistic> averageStats = new ArrayList<FishAverageStatistic>();
+		List<FishAverageStatistic> averageStats = new ArrayList<>();
 		for (FishStatistic stat : stats){
-			Fish fish = Fish.getFromId(ctx,  stat.getFishId());//TODO null pointer if fish in mongo but not here
-			if (fish == null){//fish in mongo but not in db
+			Fish fish = Fish.getFromId(ctx,  stat.getFishId());
+			if (fish == null){/* fish in mongo but not in db */
 				continue;
 			}
-			
-        	FishAverageStatistic avgStat = new  FishAverageStatistic();
-			avgStat.setFish(fish);
-        	avgStat.setFishId(stat.getFishId());
-        	avgStat.setTotalCatches(stat.getTotalCatches());
-        	Integer mostCommonSummerHourFromStat = getMostCommonHourFromStat(stat, Season.SUMMER);
-			avgStat.setMostCommonSummerHour(mostCommonSummerHourFromStat);
-			
-			Integer mostCommonWinterHourFromStat = getMostCommonHourFromStat(stat, Season.WINTER);
-			avgStat.setMostCommonWinterHour(mostCommonWinterHourFromStat);
 
-			avgStat.setCatchesPerHourPerSeason(stat.getSeasonCatchesPerHourDay());
-
-        	if (mode.equals(StatMode.PERSONAL)){
-        		avgStat.setRecordWeight(stat.getRecordWeight());
-        	}else{
-        		double recWeight = (stat.getRecordWeight() > avgStat.getFish().getRecordCatchWeight()) ? stat.getRecordWeight() : avgStat.getFish().getRecordCatchWeight(); 
-        		avgStat.setRecordWeight(recWeight);
-        	}
-        	
-        	if (stat.getDepthedCatches() > 0 ){
-        		avgStat.setAverageDepth(stat.getTotalDepth() / stat.getDepthedCatches());
-        	}
-        	
-        	if (stat.getWeightedCatches() > 0){
-        		avgStat.setAverageWeight(stat.getTotalWeight() / stat.getWeightedCatches());
-        	}
+			FishAverageStatistic avgStat = convertStatToAverageStat(stat, mode, ctx);
         	averageStats.add(avgStat);
         }
 		
 		return averageStats;
 	}
 
+	/**
+	 * Converts a {@link FishStatistic to a FishAverageStatistic}.
+	 *
+	 * @param stat statistic
+	 * @param mode mode
+	 * @param ctx context
+	 *
+	 * @return average stat from simple stat
+	 */
+	static FishAverageStatistic convertStatToAverageStat(FishStatistic stat, StatMode mode, Context ctx) {
+		Fish fish = Fish.getFromId(ctx,  stat.getFishId());
+		FishAverageStatistic avgStat = new  FishAverageStatistic();
+		avgStat.setFish(fish);
+		avgStat.setFishId(stat.getFishId());
+		avgStat.setTotalCatches(stat.getTotalCatches());
+		Integer mostCommonSummerHourFromStat = getMostCommonHourFromStat(stat, Season.SUMMER);
+		avgStat.setMostCommonSummerHour(mostCommonSummerHourFromStat);
+
+		Integer mostCommonWinterHourFromStat = getMostCommonHourFromStat(stat, Season.WINTER);
+		avgStat.setMostCommonWinterHour(mostCommonWinterHourFromStat);
+		avgStat.setCatchesPerHourPerSeason(stat.getSeasonCatchesPerHourDay());
+
+		if (mode.equals(StatMode.PERSONAL)){
+			avgStat.setRecordWeight(stat.getRecordWeight());
+		}else{
+			double recWeight = (stat.getRecordWeight() > avgStat.getFish().getRecordCatchWeight()) ? stat.getRecordWeight() : avgStat.getFish().getRecordCatchWeight();
+			avgStat.setRecordWeight(recWeight);
+		}
+
+		if (stat.getDepthedCatches() > 0 ){
+			avgStat.setAverageDepth(stat.getTotalDepth() / stat.getDepthedCatches());
+		}
+
+		if (stat.getWeightedCatches() > 0){
+			avgStat.setAverageWeight(stat.getTotalWeight() / stat.getWeightedCatches());
+		}
+		return avgStat;
+	}
+
+	/**
+	 * We divide the fish catches to catches per month, for every fish.
+	 * Used for statistics diagrams.
+	 *
+	 * @param sessions all user's {@link FishingSession}s
+	 * @return fish per month
+	 */
 	public static Map<Fish, Map<Integer, Integer>> convertUserSessionsToMonthlyCatches(List<FishingSession> sessions){
-
 		Map<Fish, Map<Integer, Integer>>  toBeReturned = new HashMap<>();
-
 		for (FishingSession fishingSession : sessions) {
 			Calendar calendarWithTime = DateUtils.getCalendarWithTime(fishingSession.getFishingDate());
 			Integer month = calendarWithTime.get(Calendar.MONTH);
@@ -107,11 +130,15 @@ public class FishingHelper {
 				Integer increasedCatches = fishCatchesPerMonth.get(month) + 1;
 				fishCatchesPerMonth.put(month, increasedCatches);
 			}
-
 		}
 		return toBeReturned;
 	}
 
+	/**
+	 * The map is initialized with zero fish per month for all species.
+	 *
+	 * @return map of catches per month
+	 */
 	static Map<Integer, Integer> initializeMonthsMap(){
 		Map<Integer, Integer> catchesPerMonthMap = new HashMap<>();
 		catchesPerMonthMap.put(Calendar.JANUARY, 0);
@@ -131,13 +158,12 @@ public class FishingHelper {
 	
 	/**
 	 * The first map holds the sum stats of the process until now.
-	 * The second map is the new incoming converted session.
-	 * 
+	 * The second map is the new incoming converted session's {@link FishStatistic}s.
 	 * We increase the values of the first with the values in the second,
 	 * or insert any missing ones.
 	 * 
-	 * @param existingStats
-	 * @param newStats
+	 * @param existingStats the existing stats of all the {@link FishingSession}s so far.
+	 * @param newStats the stats of a {@link FishingSession}
 	 */
 	static void updateEntries(Map<Fish, FishStatistic> existingStats,
 			Map<Fish, FishStatistic> newStats) {
@@ -160,7 +186,7 @@ public class FishingHelper {
 			existingStat.setTotalDepth(existingStat.getTotalDepth() + incomingStat.getTotalDepth());
 			existingStat.setTotalWeight(existingStat.getTotalWeight() + incomingStat.getTotalWeight());
 			increaseCatchHours(incomingStat, existingStat);
-			existingStats.put(fish, existingStat);
+			existingStats.put(fish, existingStat);//this is unnecessary
 		}
 		
 	}
@@ -168,14 +194,16 @@ public class FishingHelper {
 	/**
 	 * A session has many catches. Some are of the same species.
 	 * We separate same species in a map.
-	 * 
+	 * i.e if user has caught 2 seriola and 2 sargo, the map will have two entries,
+	 * one for every {@link Fish} with the relevant data.
+ 	 *
 	 * 1. Used when converting FOR mongo upload.
 	 * 
-	 * @param fishingSession
-	 * @return
+	 * @param fishingSession user session
+	 * @return statistics of a single session.
 	 */
-	static Map<Fish, FishStatistic> session2stat(FishingSession fishingSession) {
-		Map<Fish, FishStatistic> session2stat = new HashMap<Fish, FishStatistic>();
+	static Map<Fish, FishStatistic> fishingSessionToFishStatistics(FishingSession fishingSession) {
+		Map<Fish, FishStatistic> session2stat = new HashMap<>();
 		Season sessionSeason = DateUtils.seasonFromSession(fishingSession);
 		for (FishCatch fishCatch : fishingSession.getFishCatches()) {
 			FishStatistic fishStatistic = session2stat.get(fishCatch.getFish());
@@ -194,11 +222,8 @@ public class FishingHelper {
 	}
 	
 	static Integer getMostCommonHourFromStat(FishStatistic stat, Season season){
+		Integer max = -1;
 		if (Season.SUMMER.equals(season)){
-		
-			Integer max = -1;
-			
-			
 			max = max(stat.getHourSummer0(), max, 0);
 			max = max(stat.getHourSummer1(), max, 1);
 			max = max(stat.getHourSummer2(), max, 2);
@@ -223,12 +248,7 @@ public class FishingHelper {
 			max = max(stat.getHourSummer21(), max, 21);
 			max = max(stat.getHourSummer22(), max, 22);
 			max = max(stat.getHourSummer23(), max, 23);
-			return max;
-		
 		}else{
-			Integer max = -1;
-			
-			
 			max = max(stat.getHourWinter0(), max, 0);
 			max = max(stat.getHourWinter1(), max, 1);
 			max = max(stat.getHourWinter2(), max, 2);
@@ -253,8 +273,9 @@ public class FishingHelper {
 			max = max(stat.getHourWinter21(), max, 21);
 			max = max(stat.getHourWinter22(), max, 22);
 			max = max(stat.getHourWinter23(), max, 23);
-			return max;
 		}
+
+		return max;
 	}
 	
 	/**
@@ -321,21 +342,15 @@ public class FishingHelper {
 		return max;
 	}
 
-//	public static void assignHoursPerSeason(List<FishAverageStatistic> communityAvgStats, List<FishStatistic> communityStats) {
-//		for (FishAverageStatistic avgStat: communityAvgStats) {
-//			Fish fish = avgStat.getFish();
-//			for (FishStatistic stat : communityStats){
-//				if (Integer.valueOf(stat.getFishId() ).equals(fish.getFishId())){
-//					Map<Season, Map<Integer, Integer>> catchesPerHourPerSeason = avgStat.getCatchesPerHourPerSeason();
-//					fixSeasonHours(catchesPerHourPerSeason.get(Season.SUMMER), stat.summerHours());
-//					fixSeasonHours(catchesPerHourPerSeason.get(Season.WINTER), stat.winterHours());
-//				}
-//			}
-//
-//		}
-//	}
-
-	public static void assignHoursPerSeasonGlobal(List<FishAverageStatistic> communityAvgStats, List<FishStatistic> communityStats) {
+	/**
+	 * {@link FishAverageStatistic#getCatchesPerHourPerSeason()} hold the number of catches
+	 * per hour of day, per {@link Season}. The {@link FishStatistic#getHourSummer0()} etc. hold
+	 * the catches of every hour. We collect those in a map per fish.
+	 *
+	 * @param communityAvgStats avg stats from community stats
+	 * @param communityStats stats from mongo
+	 */
+	public static void assignCatchesPerHourPerSeasonGlobal(List<FishAverageStatistic> communityAvgStats, List<FishStatistic> communityStats) {
 		for (FishAverageStatistic avgStat: communityAvgStats) {
 			Fish fish = avgStat.getFish();
 			for (FishStatistic stat : communityStats){
@@ -349,7 +364,7 @@ public class FishingHelper {
 		}
 	}
 
-	private static Map<Integer, Integer> getWinterHoursGlobal(FishStatistic stat) {
+	static Map<Integer, Integer> getWinterHoursGlobal(FishStatistic stat) {
 		Map<Integer, Integer> winterHoursGlobal = new HashMap<>();
 		winterHoursGlobal.put(0, stat.getHourWinter0());
 		winterHoursGlobal.put(1, stat.getHourWinter1());
@@ -378,7 +393,7 @@ public class FishingHelper {
 		return winterHoursGlobal;
 	}
 
-	private static Map<Integer, Integer> getSummerHoursGlobal(FishStatistic stat) {
+	static Map<Integer, Integer> getSummerHoursGlobal(FishStatistic stat) {
 		Map<Integer, Integer> summerHoursGlobal = new HashMap<>();
 		summerHoursGlobal.put(0, stat.getHourSummer0());
 		summerHoursGlobal.put(1, stat.getHourSummer1());
@@ -406,12 +421,5 @@ public class FishingHelper {
 		summerHoursGlobal.put(23, stat.getHourSummer23());
 		return summerHoursGlobal;
 	}
-
-	private static void fixSeasonHours(Map<Integer, Integer> catchesPerHourPerSeason, Map<Integer, Integer> seasonHours) {
-		for (Map.Entry<Integer, Integer> seasonEntry : seasonHours.entrySet()){
-			catchesPerHourPerSeason.put(seasonEntry.getKey(), seasonEntry.getValue());
-		}
-	}
-
 
 }

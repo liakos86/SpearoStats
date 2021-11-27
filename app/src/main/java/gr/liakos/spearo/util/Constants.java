@@ -86,4 +86,7 @@ public interface Constants {
 	String FACEBOOK_URL = "https://www.facebook.com/spearoStats";
 
     String DOT = ".";
+
+    String PREFS_NEW_SPECIES = "new_species";
+
 }

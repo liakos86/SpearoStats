@@ -8,6 +8,7 @@ import android.content.ContentResolver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -26,6 +27,7 @@ import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
@@ -123,6 +125,8 @@ implements LocationListener {
 
 		startShowcaseView();
 
+		alertForNewSpecies();
+
 		locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
 			checkMapPermissions();
@@ -151,6 +155,25 @@ implements LocationListener {
 
 		facebookShareDialog.registerCallback(callbackManager, fbCallBack);
 
+	}
+
+	void alertForNewSpecies() {
+		SharedPreferences app_preferences = getSharedPreferences(Constants.PREFERENCES, Context.MODE_PRIVATE);
+		String newSpeciesText = app_preferences.getString(Constants.PREFS_NEW_SPECIES, null);
+		if (null != newSpeciesText){
+			app_preferences.edit().remove(Constants.PREFS_NEW_SPECIES).apply();
+
+			AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
+			dialogBuilder.setNegativeButton(getResources().getString(R.string.close), new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface dialog, int id) {
+					dialog.cancel();
+				}
+
+			}).setMessage(newSpeciesText).setTitle(getApplicationContext().getResources().getString(R.string.new_species));
+
+			AlertDialog alertDialog = dialogBuilder.create();
+			alertDialog.show();
+		}
 	}
 
 	private void startShowcaseView() {
@@ -420,7 +443,7 @@ implements LocationListener {
                     ((FrgFishingSessions) fragment).reloadFishiesOnNewRecord();
                 }else if (fragment instanceof FrgFishingStatsGlobal) {
                 }else if (fragment instanceof FrgFishingStats) {
-                   ((FrgFishingStats) fragment).fixAverageStatsIfNeeded();
+                   ((FrgFishingStats) fragment).recalculateAverageStatsIfNeeded();
 					((FrgFishingStats) fragment).statsShowCase();
                 }else if (fragment instanceof FrgMyPlaces){
                 	collapseAppbar();
@@ -676,14 +699,5 @@ implements LocationListener {
 		return mapPermissionGiven;
 	}
 
-	//TODO: delete
-//	public void consumePremium(View v) {
-//		billingStatsHelper.consume(v);
-//	}
-//
-//	//TODO: delete
-//	public void consumeDiagrams(View v) {
-//		billingDiagramsHelper.consume(v);
-//	}
 }
 	

@@ -16,6 +16,13 @@ import java.util.List;
 
 import android.os.AsyncTask;
 
+/**
+ * @see gr.liakos.spearo.fragment.FrgFishingStatsGlobal
+ *
+ * This class loads the mongo db data of all the application users.
+ * In order to do this, a user must be {@link gr.liakos.spearo.util.Constants#SKU_PREMIUM_STATS}.
+ *
+ */
 public class AsyncLoadCommunityDataFromMongo extends AsyncTask<Void, Void, List<FishAverageStatistic>> {
     SpearoApplication application;
     AsyncListener asyncListener;
@@ -27,15 +34,25 @@ public class AsyncLoadCommunityDataFromMongo extends AsyncTask<Void, Void, List<
     }
 
     protected void onPreExecute() {
+    	//empty
+	}
 
-    }
-
-    @Override
+	/**
+	 * If app is online we retrieve the mongo data.
+	 * Then if the data is not empty we replace the database data with the new ones.
+	 * If the data is empty use the database data.
+	 * If app is not online use the database data.
+	 * Then collect the catches per hour 0-24 for every {@link gr.liakos.spearo.enums.Season}.
+	 *
+	 * @param unused -
+	 * @return avg stats
+	 */
+	@Override
     protected List<FishAverageStatistic> doInBackground(Void... unused) {
     	Database database = new Database(application);
     	
-    	List<FishStatistic> communityStats = new ArrayList<FishStatistic>();
-    	List<FishAverageStatistic> communityAvgStats = new ArrayList<FishAverageStatistic>();
+    	List<FishStatistic> communityStats = new ArrayList<>();
+    	List<FishAverageStatistic> communityAvgStats;
 		if (SpearoUtils.isOnline(application)){
         	communityStats = new SyncHelper(application).getAtlasCommunityStats();
         	if (!communityStats.isEmpty()){
@@ -46,13 +63,9 @@ public class AsyncLoadCommunityDataFromMongo extends AsyncTask<Void, Void, List<
         	}
         }else{
         	communityAvgStats = database.fetchCommunityData();
-        	
         }
 
-
-		FishingHelper.assignHoursPerSeasonGlobal(communityAvgStats, communityStats);
-
-    	
+		FishingHelper.assignCatchesPerHourPerSeasonGlobal(communityAvgStats, communityStats);
 		newRecord = database.updateRecordsFromCommunityData(communityStats);
 		application.setNewCommunityDataRecord(newRecord);
 		if (newRecord){
@@ -66,8 +79,8 @@ public class AsyncLoadCommunityDataFromMongo extends AsyncTask<Void, Void, List<
 
     @Override
     protected void onPostExecute(List<FishAverageStatistic> stats) {
-
 		application.refreshCommunityData(stats);
         asyncListener.onAsyncCommunityStatsFinished(stats);
     }
+
 }

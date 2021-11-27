@@ -39,17 +39,13 @@ import com.mongodb.client.MongoDatabase;
 
 public class SyncHelper {
 
-//    private static final String TAG = Thread.currentThread().getStackTrace()[2].getClassName()
-//            .substring(0, 23);
- //   Database database;
     String conn;
     MongoClient mongoClient;
 
     public SyncHelper(SpearoApplication application) {
         conn = application.getResources().getString(R.string.m_url_1);
     }
-    
-    
+
 	public User createAtlasMongoUser(User user){
          MongoCollection<Document> users = getMongoCollection(MongoConstants.COLLECTION_USERS);
          Document userDoc = new Document(FieldsForMongo.username, user.getUsername());
@@ -68,6 +64,7 @@ public class SyncHelper {
    }
  
 	public List<FishStatistic> getAtlasCommunityStats(){
+
          MongoCollection<Document> species = getMongoCollection(MongoConstants.COLLECTION_FISH);
          FindIterable<Document> find = species.find();
  		List<FishStatistic> atlasStats = new ArrayList<FishStatistic>();
@@ -86,7 +83,6 @@ public class SyncHelper {
 		}finally {
 			mongoClient.close();
 		}
- 		
 
  		return atlasStats;
     }
@@ -96,7 +92,6 @@ public class SyncHelper {
     	if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.N){
 			return;
 		}
-
 
          MongoCollection<Document> species = getMongoCollection(MongoConstants.COLLECTION_FISH);
 
@@ -136,8 +131,7 @@ public class SyncHelper {
         	 addIfNotZero(documentsToIncrease, FieldsForMongo.hourSummer21, fishStatistic.getHourSummer21());
         	 addIfNotZero(documentsToIncrease, FieldsForMongo.hourSummer22, fishStatistic.getHourSummer22());
         	 addIfNotZero(documentsToIncrease, FieldsForMongo.hourSummer23, fishStatistic.getHourSummer23());
-        	 
-        	 
+
         	 
         	 addIfNotZero(documentsToIncrease, FieldsForMongo.hourWinter0, fishStatistic.getHourWinter0());
         	 addIfNotZero(documentsToIncrease, FieldsForMongo.hourWinter1, fishStatistic.getHourWinter1());
@@ -163,9 +157,7 @@ public class SyncHelper {
         	 addIfNotZero(documentsToIncrease, FieldsForMongo.hourWinter21, fishStatistic.getHourWinter21());
         	 addIfNotZero(documentsToIncrease, FieldsForMongo.hourWinter22, fishStatistic.getHourWinter22());
         	 addIfNotZero(documentsToIncrease, FieldsForMongo.hourWinter23, fishStatistic.getHourWinter23());
-        	 
-        	 
-        	 
+
         	 if (documentsToIncrease.isEmpty()){
         		 return;
         	 }
@@ -211,11 +203,9 @@ public class SyncHelper {
    // @SuppressWarnings("resource")
 	MongoCollection<Document> getMongoCollection(String collectionName){
     	MongoClientURI uri = new MongoClientURI(conn + "<dbname>?ssl=true&replicaSet=spearo-shard-0&authSource=admin&retryWrites=true&w=majority");
-       //  		"mongodb://liakos86:art78tha3m@spearo-shard-00-00.tgnig.gcp.mongodb.net:27017,spearo-shard-00-01.tgnig.gcp.mongodb.net:27017,spearo-shard-00-02.tgnig.gcp.mongodb.net:27017/<dbname>?ssl=true&replicaSet=spearo-shard-0&authSource=admin&retryWrites=true&w=majority");
 		mongoClient = new MongoClient(uri);
     	MongoDatabase database = mongoClient.getDatabase(MongoConstants.SPEARO_DB);
         return database.getCollection(collectionName);
     }
-
 
 }

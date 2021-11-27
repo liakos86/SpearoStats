@@ -74,8 +74,12 @@ public enum FishFamily {
 
 	Lutjanidae(35, "lutjanidae"),
 
-	Octopodidae(36, "octopodidae");
-	
+	Octopodidae(36, "octopodidae"),
+
+	Latridae(37, "latridae"),
+
+	Sepiidae(38, "sepiidae");
+
 	int position;
 	
 	String name;

@@ -8,6 +8,7 @@ import gr.liakos.spearo.def.AsyncListener;
 import gr.liakos.spearo.model.adapter.FishStatGlobalAdapter;
 import gr.liakos.spearo.model.object.FishAverageStatistic;
 import gr.liakos.spearo.util.Constants;
+import gr.liakos.spearo.util.DateUtils;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -23,10 +24,9 @@ import androidx.fragment.app.FragmentActivity;
 
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.TextView;
+
 
 public class FrgFishingStatsGlobal
 extends Fragment
@@ -55,7 +55,7 @@ implements AsyncListener{
     	
     	SharedPreferences app_preferences = getActivity().getSharedPreferences(Constants.PREFERENCES, Context.MODE_PRIVATE);
 		long lastUpdateMillis = app_preferences.getLong(Constants.LAST_MONGO_UPDATE_MILLIS, -1);
-		if ((new Date().getTime() - lastUpdateMillis) > (8*60*60*1000)){
+		if (DateUtils.eightHoursPassedFrom(lastUpdateMillis)){
 			asyncLoadStats();
 			Editor edit = app_preferences.edit();
 			edit.putLong(Constants.LAST_MONGO_UPDATE_MILLIS, new Date().getTime());
@@ -67,21 +67,13 @@ implements AsyncListener{
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
         View v = inflater.inflate(R.layout.frg_fish_stats_global, container, false);
-
         fishStatsListView = v.findViewById(R.id.listview_fishing_stats_global);
-        
         SharedPreferences app_preferences = getActivity().getSharedPreferences(Constants.PREFERENCES, Context.MODE_PRIVATE);
         boolean isMetric = !app_preferences.getBoolean(Constants.IMPERIAL, false);
-        
         fishStatAdapter = new FishStatGlobalAdapter(getActivity(), R.layout.fish_stat_global_row_with_diagrams, fishAverageStats, isMetric, isPremiumUser);
         fishStatsListView.setAdapter(fishStatAdapter);
-
 		textViewAndroidVersion = v.findViewById(R.id.textViewVersionAndroid);
-
-
 		((ActSpearoStatsMain)getActivity()).queryInventoryForStats(this);
-
-
 		return v;
     }
     
@@ -106,10 +98,6 @@ implements AsyncListener{
         return truitonList;
     }
 	
-	void snack(int message){
-		((ActSpearoStatsMain)getActivity()).snack(message);
-	}
-	
 	/**
 	 * Fires an async call in the application class.
 	 * onAsyncFinished will be called when it is completed.
@@ -126,8 +114,7 @@ implements AsyncListener{
 
 		spearoApplication.loadCommunityData(this);
 	}
-	
-	
+
 	/**
 	 * Will be called when the async mongo load of comm data finishes.
 	 */
@@ -148,12 +135,9 @@ implements AsyncListener{
 
 		SharedPreferences app_preferences = getActivity().getSharedPreferences(Constants.PREFERENCES, Context.MODE_PRIVATE);
 		boolean isMetric = !app_preferences.getBoolean(Constants.IMPERIAL, false);
-
 		fishStatAdapter = new FishStatGlobalAdapter(getActivity(), R.layout.fish_stat_global_row_with_diagrams, fishAverageStats, isMetric, isPremiumUser);
 		fishStatsListView.setAdapter(fishStatAdapter);
-
 		fishStatAdapter.notifyDataSetChanged();
-
 	}
 	
 	@Override

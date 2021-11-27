@@ -7,12 +7,17 @@ import gr.liakos.spearo.model.object.FishingSession;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.Locale;
 
 import android.content.Context;
 import android.content.res.Resources;
 
 public class DateUtils {
+
+	public static boolean eightHoursPassedFrom(Long lastUpdateMillis){
+		return (new Date().getTime() - lastUpdateMillis) > (8*60*60*1000);
+	}
 	
 	public static String dateFromMillis(Long millis){
 		DateFormat formatter = new SimpleDateFormat(Constants.DATE_FORMAT, Locale.US);

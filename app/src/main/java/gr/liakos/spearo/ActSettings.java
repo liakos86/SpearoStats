@@ -3,13 +3,16 @@ package gr.liakos.spearo;
 import gr.liakos.spearo.async.AsyncLoadProfilePic;
 import gr.liakos.spearo.async.AsyncSaveFishRequestMongo;
 import gr.liakos.spearo.def.AsyncSaveUserListener;
+import gr.liakos.spearo.model.object.Fish;
 import gr.liakos.spearo.model.object.User;
 import gr.liakos.spearo.util.Constants;
 import gr.liakos.spearo.util.SpearoUtils;
+import gr.liakos.spearo.util.StringUtils;
 
 import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
+import java.util.List;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
@@ -46,8 +49,6 @@ import com.facebook.GraphRequest;
 import com.facebook.GraphResponse;
 import com.facebook.HttpMethod;
 import com.google.android.material.snackbar.Snackbar;
-
-import org.json.JSONException;
 
 public class ActSettings
 extends Activity implements AsyncSaveUserListener {
@@ -136,7 +137,6 @@ extends Activity implements AsyncSaveUserListener {
 		likeButton.setText("(" + fans + ") Like");
 	}
 
-
 	void setupEmailTextView() {
 		TextView email = findViewById(R.id.text_email_us);
 		email.setOnClickListener(new OnClickListener() {
@@ -158,24 +158,36 @@ extends Activity implements AsyncSaveUserListener {
 	}
 
 	void setupFishRequestButton() {
-        Button buttonRequest = (Button) findViewById(R.id.button_request_fish);
+        Button buttonRequest = findViewById(R.id.button_request_fish);
         buttonRequest.setOnClickListener(new OnClickListener() {
 			
 			@Override
 			public void onClick(View arg0) {
 				closeKeyboard();
 				EditText requestEt = (EditText) findViewById(R.id.editTextRequestFish);
-		        String fishName = requestEt.getText().toString();
-		        if (fishName.length() < 5 || fishName.length() > 20){
+		        String searchString = requestEt.getText().toString();
+		        if (searchString.length() < 5 || searchString.length() > 20){
 		        	snack(getResources().getString(R.string.request_length));
 		        	return;
 		        }
-		        uploadRequest(fishName);
+
+		        String matchingFishName = fishNameContaining(searchString);
+		        if (matchingFishName != null){
+		        	snack(getResources().getString(R.string.fish_already_exists, matchingFishName));
+		        	return;
+				}
+		        
+		        uploadRequest(searchString);
 		        snack(getResources().getString(R.string.request_sent));
 		        hideRequestLayout();
 			}
 		});
 		
+	}
+
+	String fishNameContaining(String fishName) {
+		List<Fish> allFish = ((SpearoApplication) getApplication()).getFishies();
+		return StringUtils.fishNameContaining(allFish, fishName);
 	}
 
 	void closeKeyboard() {
@@ -220,13 +232,12 @@ extends Activity implements AsyncSaveUserListener {
 				saveNewUsername();
 			}
 		});
-		
 	}
 
 	void saveNewUsername() {
 		closeKeyboard();
 		
-		EditText username = (EditText) findViewById(R.id.editTextUsername);
+		EditText username = findViewById(R.id.editTextUsername);
 		SharedPreferences app_preferences = this.getSharedPreferences(Constants.PREFERENCES, Context.MODE_PRIVATE);
 		User userFromSp = SpearoUtils.getUserFromSp(getApplicationContext(), app_preferences);
 		if (!userFromSp.getUsername().equals(username.getText().toString().trim())){
@@ -261,7 +272,7 @@ extends Activity implements AsyncSaveUserListener {
 	}
 
 	boolean validateUsername(){
-		EditText username = (EditText) findViewById(R.id.editTextUsername);
+		EditText username = findViewById(R.id.editTextUsername);
 		String usr = username.getText().toString().trim();
 		
 		if (usr.length() > 14 || usr.length() < 3 ){

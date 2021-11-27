@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources >
+<resources>
 
 	<string name="map_search_hint">Search place here</string>
 
@@ -221,7 +221,25 @@
 	<string name="Lutjanus_argentiventris" translatable="false">Snapper, Yellow</string><!-- done -->
 
 
-	<string name="Octopus_vulgaris">Octopus, common</string><!-- done -->
+	<string name="Octopus_vulgaris">Octopus, common</string>
+
+
+	<string name="Caranx_ignobilis">Giant trevally</string>
+	<string name="Caranx_sexfasciatus">Bigeye trevally</string>
+	<string name="Caranx_melampygus">Bluefin trevally</string>
+	<string name="Gnathanodeon_speciosus">Golden trevally</string>
+	<string name="Caranx_ignobilis_melampygus">Hybrid trevally</string>
+	<string name="Carangoides_orthogrammus">Island trevally</string>
+	<string name="Pseudocaranx_dentex">White trevally</string>
+	<string name="Carangoides_fulvoguttatus">Yellowspotted trevally</string>
+
+	<string name="Acanthocybium_solandri">Wahoo</string>
+
+	<string name="Latridopsis_ciliaris">Blue moki</string>
+
+	<string name="Sepia">Cuttlefish</string>
+
+	<!-- done -->
 
 	<!-- END FISH-->
 
@@ -260,11 +278,6 @@
 	<string name="yes">Yes</string>
 	<string name="no">No</string>
 	<string name="on">on</string>
-
-	<string name="premium_info">With just a small fee, you can have access to the global SpearoStats!
-        Apart from having your personal stats available, you can retrieve average statistics among the spearo community.
-        Average depth, average weight, total catches worldwide and the best time window for hunting every species.
-        Subscribe and enjoy our info on %1$d fish species!</string>
 
 	<string name="defaultUsername">Spearo</string>
 
@@ -403,4 +416,11 @@
 	<string name="go_premium_diagrams">Access all diagrams!</string>
 	<string name="go_premium_data">Access all community data!</string>
 	<string name="android_version_check">You need android version 8 or higher for the community data</string>
+    <string name="fish_already_exists">Species \'%1$s\' exists already in the app!</string>
+
+
+	<string name="concat_fish_family">%1$s, %2$s</string>
+    <string name="new_species">New species added:</string>
+
+
 </resources>

@@ -115,19 +115,6 @@ public interface FieldsForMongo {
 	String hourWinter22 = "hourWinter22";
 	
 	String hourWinter23 = "hourWinter23";
-	
-	
-	String [] hours = new String[]{hourSummer0,hourSummer1,hourSummer2,hourSummer3,hourSummer4,hourSummer5,hourSummer6,
-			hourSummer7,hourSummer8,hourSummer9,hourSummer10,hourSummer11,hourSummer12,hourSummer13,
-			hourSummer14,hourSummer15,hourSummer16,hourSummer17,hourSummer18,hourSummer19,hourSummer20,
-			hourSummer21,hourSummer22,hourSummer23,
-			
-			hourWinter0,hourWinter1,hourWinter2,hourWinter3,hourWinter4,hourWinter5,hourWinter6,
-			hourWinter7,hourWinter8,hourWinter9,hourWinter10,hourWinter11,hourWinter12,hourWinter13,
-			hourWinter14,hourWinter15,hourWinter16,hourWinter17,hourWinter18,hourWinter19,hourWinter20,
-			hourWinter21,hourWinter22,hourWinter23
-	
-	};
 
 	String phone_model = "phone_model";
 

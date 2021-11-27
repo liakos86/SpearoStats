@@ -1,15 +1,23 @@
 package gr.liakos.spearo.model.bean;
 
 import gr.liakos.spearo.enums.Season;
-
-import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Represents statistics about a {@link gr.liakos.spearo.model.object.Fish}.
+ * The statistics can represent user personal data or mongo db commounity data.
+ */
 public class FishStatistic {
-	
+
+	/**
+	 * The id of the related fish.
+	 */
 	int fishId;
-	
+
+	/**
+	 * All the recorded catches of the related fish.
+	 */
 	int totalCatches;
 
 	/**
@@ -17,15 +25,31 @@ public class FishStatistic {
 	 * Weight is not mandatory.
 	 */
 	int weightedCatches;
-	
+
+	/**
+	 * Sum of weight of all {@link #weightedCatches}
+	 */
 	double totalWeight;
-	
+
+	/**
+	 * I do not want to count the non depthed in averages.
+	 * Depth is not mandatory.
+	 */
 	int depthedCatches;
-	
+
+	/**
+	 * Sum of depth of all {@link #depthedCatches}
+	 */
 	double totalDepth;
-	
+
+	/**
+	 * The world record of the fish. Can be updated from mongo.
+	 */
 	double recordWeight;
 
+	/**
+	 * A season is 6 months. Every season has 24 entries of <hour, numOfCatches>.
+	 */
 	Map<Season, Map<Integer, Integer>> seasonCatchesPerHourDay;
 
 
@@ -96,9 +120,9 @@ public class FishStatistic {
 			return;
 		}
 
-		seasonCatchesPerHourDay = new HashMap<Season, Map<Integer,Integer>>();
-		HashMap<Integer, Integer> summerHours = new HashMap<Integer, Integer>();
-		HashMap<Integer, Integer> winterHours = new HashMap<Integer, Integer>();
+		seasonCatchesPerHourDay = new HashMap<>();
+		HashMap<Integer, Integer> summerHours = new HashMap<>();
+		HashMap<Integer, Integer> winterHours = new HashMap<>();
 		for (int i=0; i<24; i++) {
 			summerHours.put(i, 0);
 			winterHours.put(i, 0);
@@ -107,9 +131,7 @@ public class FishStatistic {
 		seasonCatchesPerHourDay.put(Season.WINTER, winterHours);
 		
 	}
-	
-	
-	
+
 	int hourSummer0;
     int hourSummer1;
     int hourSummer2;
@@ -168,219 +190,219 @@ public class FishStatistic {
 		
 		return hourSummer0;
 	}
-	public void setHourSummer0(int hourSummer0) {
-		this.hourSummer0 = hourSummer0;
-	}
+//	public void setHourSummer0(int hourSummer0) {
+//		this.hourSummer0 = hourSummer0;
+//	}
+
 	public int getHourSummer1() {
 		if (hourSummer1 == 0){
 			return getSeasonCatchesPerHourDay().get(Season.SUMMER).get(1);
 		}
 		return hourSummer1;
 	}
-	public void setHourSummer1(int hourSummer1) {
-		this.hourSummer1 = hourSummer1;
-	}
+//	public void setHourSummer1(int hourSummer1) {
+//		this.hourSummer1 = hourSummer1;
+//	}
+
 	public int getHourSummer2() {
 		if (hourSummer2 == 0){
 			return getSeasonCatchesPerHourDay().get(Season.SUMMER).get(2);
 		}
 		return hourSummer2;
 	}
-	public void setHourSummer2(int hourSummer2) {
-		this.hourSummer2 = hourSummer2;
-	}
+//	public void setHourSummer2(int hourSummer2) {
+//		this.hourSummer2 = hourSummer2;
+//	}
 	public int getHourSummer3() {
 		if (hourSummer3 == 0){
 			return getSeasonCatchesPerHourDay().get(Season.SUMMER).get(3);
 		}
 		return hourSummer3;
 	}
-	public void setHourSummer3(int hourSummer3) {
-		this.hourSummer3 = hourSummer3;
-	}
+//	public void setHourSummer3(int hourSummer3) {
+//		this.hourSummer3 = hourSummer3;
+//	}
 	public int getHourSummer4() {
 		if (hourSummer4 == 0){
 			return getSeasonCatchesPerHourDay().get(Season.SUMMER).get(4);
 		}
 		return hourSummer4;
 	}
-	public void setHourSummer4(int hourSummer4) {
-		this.hourSummer4 = hourSummer4;
-	}
+//	public void setHourSummer4(int hourSummer4) {
+//		this.hourSummer4 = hourSummer4;
+//	}
 	public int getHourSummer5() {
 		if (hourSummer5 == 0){
 			return getSeasonCatchesPerHourDay().get(Season.SUMMER).get(5);
 		}
 		return hourSummer5;
 	}
-	public void setHourSummer5(int hourSummer5) {
-		this.hourSummer5 = hourSummer5;
-	}
+//	public void setHourSummer5(int hourSummer5) {
+//		this.hourSummer5 = hourSummer5;
+//	}
 	public int getHourSummer6() {
 		if (hourSummer6 == 0){
 			return getSeasonCatchesPerHourDay().get(Season.SUMMER).get(6);
 		}
 		return hourSummer6;
 	}
-	public void setHourSummer6(int hourSummer6) {
-		this.hourSummer6 = hourSummer6;
-	}
+//	public void setHourSummer6(int hourSummer6) {
+//		this.hourSummer6 = hourSummer6;
+//	}
 	public int getHourSummer7() {
 		if (hourSummer7 == 0){
 			return getSeasonCatchesPerHourDay().get(Season.SUMMER).get(7);
 		}
 		return hourSummer7;
 	}
-	public void setHourSummer7(int hourSummer7) {
-		this.hourSummer7 = hourSummer7;
-	}
+//	public void setHourSummer7(int hourSummer7) {
+//		this.hourSummer7 = hourSummer7;
+//	}
 	public int getHourSummer8() {
 		if (hourSummer8 == 0){
 			return getSeasonCatchesPerHourDay().get(Season.SUMMER).get(8);
 		}
 		return hourSummer8;
 	}
-	public void setHourSummer8(int hourSummer8) {
-		this.hourSummer8 = hourSummer8;
-	}
+//	public void setHourSummer8(int hourSummer8) {
+//		this.hourSummer8 = hourSummer8;
+//	}
 	public int getHourSummer9() {
 		if (hourSummer9 == 0){
 			return getSeasonCatchesPerHourDay().get(Season.SUMMER).get(9);
 		}
 		return hourSummer9;
 	}
-	public void setHourSummer9(int hourSummer9) {
-		this.hourSummer9 = hourSummer9;
-	}
+//	public void setHourSummer9(int hourSummer9) {
+//		this.hourSummer9 = hourSummer9;
+//	}
 	public int getHourSummer10() {
 		if (hourSummer10 == 0){
 			return getSeasonCatchesPerHourDay().get(Season.SUMMER).get(10);
 		}
 		return hourSummer10;
 	}
-	public void setHourSummer10(int hourSummer10) {
-		this.hourSummer10 = hourSummer10;
-	}
+//	public void setHourSummer10(int hourSummer10) {
+//		this.hourSummer10 = hourSummer10;
+//	}
 	public int getHourSummer11() {
 		if (hourSummer11 == 0){
 			return getSeasonCatchesPerHourDay().get(Season.SUMMER).get(11);
 		}
 		return hourSummer11;
 	}
-	public void setHourSummer11(int hourSummer11) {
-		this.hourSummer11 = hourSummer11;
-	}
+//	public void setHourSummer11(int hourSummer11) {
+//		this.hourSummer11 = hourSummer11;
+//	}
 	public int getHourSummer12() {
 		if (hourSummer0 == 12){
 			return getSeasonCatchesPerHourDay().get(Season.SUMMER).get(12);
 		}
 		return hourSummer12;
 	}
-	public void setHourSummer12(int hourSummer12) {
-		this.hourSummer12 = hourSummer12;
-	}
+//	public void setHourSummer12(int hourSummer12) {
+//		this.hourSummer12 = hourSummer12;
+//	}
 	public int getHourSummer13() {
 		if (hourSummer0 == 13){
 			return getSeasonCatchesPerHourDay().get(Season.SUMMER).get(13);
 		}
 		return hourSummer13;
 	}
-	public void setHourSummer13(int hourSummer13) {
-		this.hourSummer13 = hourSummer13;
-	}
+//	public void setHourSummer13(int hourSummer13) {
+//		this.hourSummer13 = hourSummer13;
+//	}
 	public int getHourSummer14() {
 		if (hourSummer14 == 0){
 			return getSeasonCatchesPerHourDay().get(Season.SUMMER).get(14);
 		}
 		return hourSummer14;
 	}
-	public void setHourSummer14(int hourSummer14) {
-		this.hourSummer14 = hourSummer14;
-	}
+//	public void setHourSummer14(int hourSummer14) {
+//		this.hourSummer14 = hourSummer14;
+//	}
 	public int getHourSummer15() {
 		if (hourSummer15 == 0){
 			return getSeasonCatchesPerHourDay().get(Season.SUMMER).get(15);
 		}
 		return hourSummer15;
 	}
-	public void setHourSummer15(int hourSummer15) {
-		this.hourSummer15 = hourSummer15;
-	}
+//	public void setHourSummer15(int hourSummer15) {
+//		this.hourSummer15 = hourSummer15;
+//	}
 	public int getHourSummer16() {
 		if (hourSummer16 == 0){
 			return getSeasonCatchesPerHourDay().get(Season.SUMMER).get(16);
 		}
 		return hourSummer16;
 	}
-	public void setHourSummer16(int hourSummer16) {
-		this.hourSummer16 = hourSummer16;
-	}
+//	public void setHourSummer16(int hourSummer16) {
+//		this.hourSummer16 = hourSummer16;
+//	}
 	public int getHourSummer17() {
 		if (hourSummer17 == 0){
 			return getSeasonCatchesPerHourDay().get(Season.SUMMER).get(17);
 		}
 		return hourSummer17;
 	}
-	public void setHourSummer17(int hourSummer17) {
-		this.hourSummer17 = hourSummer17;
-	}
+//	public void setHourSummer17(int hourSummer17) {
+//		this.hourSummer17 = hourSummer17;
+//	}
 	public int getHourSummer18() {
 		if (hourSummer18 == 0){
 			return getSeasonCatchesPerHourDay().get(Season.SUMMER).get(18);
 		}
 		return hourSummer18;
 	}
-	public void setHourSummer18(int hourSummer18) {
-		this.hourSummer18 = hourSummer18;
-	}
+//	public void setHourSummer18(int hourSummer18) {
+//		this.hourSummer18 = hourSummer18;
+//	}
 	public int getHourSummer19() {
 		if (hourSummer19 == 0){
 			return getSeasonCatchesPerHourDay().get(Season.SUMMER).get(19);
 		}
 		return hourSummer19;
 	}
-	public void setHourSummer19(int hourSummer19) {
-		this.hourSummer19 = hourSummer19;
-	}
+//	public void setHourSummer19(int hourSummer19) {
+//		this.hourSummer19 = hourSummer19;
+//	}
 	public int getHourSummer20() {
 		if (hourSummer20 == 0){
 			return getSeasonCatchesPerHourDay().get(Season.SUMMER).get(20);
 		}
 		return hourSummer20;
 	}
-	public void setHourSummer20(int hourSummer20) {
-		this.hourSummer20 = hourSummer20;
-	}
+//	public void setHourSummer20(int hourSummer20) {
+//		this.hourSummer20 = hourSummer20;
+//	}
 	public int getHourSummer21() {
 		if (hourSummer21 == 0){
 			return getSeasonCatchesPerHourDay().get(Season.SUMMER).get(21);
 		}
 		return hourSummer21;
 	}
-	public void setHourSummer21(int hourSummer21) {
-		this.hourSummer21 = hourSummer21;
-	}
+//	public void setHourSummer21(int hourSummer21) {
+//		this.hourSummer21 = hourSummer21;
+//	}
 	public int getHourSummer22() {
 		if (hourSummer22 == 0){
 			return getSeasonCatchesPerHourDay().get(Season.SUMMER).get(22);
 		}
 		return hourSummer22;
 	}
-	public void setHourSummer22(int hourSummer22) {
-		this.hourSummer22 = hourSummer22;
-	}
+//	public void setHourSummer22(int hourSummer22) {
+//		this.hourSummer22 = hourSummer22;
+//	}
 	public int getHourSummer23() {
 		if (hourSummer0 == 23){
 			return getSeasonCatchesPerHourDay().get(Season.SUMMER).get(23);
 		}
 		return hourSummer23;
 	}
-	public void setHourSummer23(int hourSummer23) {
-		this.hourSummer23 = hourSummer23;
-	}
-	
-	
-	
+//	public void setHourSummer23(int hourSummer23) {
+//		this.hourSummer23 = hourSummer23;
+//	}
+
 	/////////////////////////////////\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 	
 	

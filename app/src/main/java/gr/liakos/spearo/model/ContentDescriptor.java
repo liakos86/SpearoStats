@@ -9,7 +9,7 @@ import android.provider.BaseColumns;
 /**
  * based on http://www.nofluffjuststuff.com/blog/vladimir_vivien/2011/11/
  * a_pattern_for_creating_custom_android_content_providers <br/>
- * workaround (wa1): We don't use {@link #applyBatch(java.util.ArrayList)}for
+ * workaround (wa1): We don't use applybatch for
  * number matching (see
  * http://code.google.com/p/android/issues/detail?mId=27031). We use * and take
  * care of it in code.<br/>
@@ -17,6 +17,7 @@ import android.provider.BaseColumns;
  * @author kliakopoulos
  */
 public class ContentDescriptor {
+
 
     public static final String AUTHORITY = "gr.liakos.spearo.contentprovider";
     private static final Uri BASE_URI = Uri.parse("content://" + AUTHORITY);
@@ -222,6 +223,11 @@ public class ContentDescriptor {
         }
 
 
+        /**
+         * This will run upon new installations.
+         *
+         * @return
+         */
         public static String insertSpecies() {
             String insert = "INSERT OR IGNORE INTO " + Fish.TABLE_NAME
                     + "( " + ContentDescriptor.Fish.Cols.FISHID + Constants.COMMA_SEP + ContentDescriptor.Fish.Cols.LATINNAME + Constants.COMMA_SEP + ContentDescriptor.Fish.Cols.RECORDWEIGHT
@@ -397,40 +403,76 @@ public class ContentDescriptor {
                     + "(142, 'Lutjanus argentimaculatus', 10, 35, 0, 1),"
                     + "(143, 'Lutjanus rivulatus', 17.3, 35, 0, 1),"
                     + "(144, 'Lutjanus argentiventris', 6.6, 35, 0, 1),"
-                    + "(145, 'Octopus vulgaris', 10, 36, 0, 1)";
+                    + "(145, 'Octopus vulgaris', 10, 36, 0, 1),"
+
+                    //addition 27 nov 2021
+                    + "(146, 'Caranx ignobilis', 65.4, 2, 0, 1),"
+                    + "(147, 'Caranx sexfasciatus', 7.7, 2, 0, 1),"
+                    + "(148, 'Caranx melampygus', 11.7, 2, 0, 1),"
+                    + "(149, 'Gnathanodeon speciosus', 18.2, 2, 0, 1),"
+                    + "(150, 'Caranx ignobilis melampygus', 11.9, 2, 0, 1),"
+                    + "(151, 'Carangoides orthogrammus', 7.4, 2,  0, 1),"
+                    + "(152, 'Pseudocaranx dentex', 11, 2, 0, 1),"
+                    + "(153, 'Carangoides fulvoguttatus', 15.5, 2, 0, 1),"
+
+                    + "(154, 'Acanthocybium solandri', 62.6, 13, 0, 1),"
+
+                    + "(155, 'Latridopsis ciliaris', -1, 37, 0, 1),"
+                    + "(156, 'Sepia', -1, 38, 0, 1);";
 
             return insert;
         }
 
-        public static String insertAdditionalSpecies0() {
+//        public static String insertAdditionalSpecies0() {
+//            String insert = "INSERT OR IGNORE INTO " + Fish.TABLE_NAME
+//                    + "( " + ContentDescriptor.Fish.Cols.FISHID + Constants.COMMA_SEP + ContentDescriptor.Fish.Cols.LATINNAME + Constants.COMMA_SEP + ContentDescriptor.Fish.Cols.RECORDWEIGHT
+//                    + Constants.COMMA_SEP + ContentDescriptor.Fish.Cols.FISHFAMILY + Constants.COMMA_SEP + ContentDescriptor.Fish.Cols.MAXALLOWEDCATCHWEIGHT + Constants.COMMA_SEP
+//                    + ContentDescriptor.Fish.Cols.CONCERN + ") values "
+//                    + "(122, 'Lutjanus Dentatus', 24.7, 35, 0, 4),"
+//                    + "(123, 'Lutjanus agennes', 13.9, 35, 0, 1),"
+//                    + "(124, 'Lutjanus cyanopterus', 55.5, 35, 0, 4),"
+//                    + "(125, 'Macolor niger', 4.8, 35, 0, 1),"
+//                    + "(126, 'Lutjanus colorado', 15.7, 35, 0, 1),"
+//                    + "(127, 'Lutjanus jocu', 14.6, 35, 0, 1),"
+//                    + "(128, 'Lutjanus sebae', 18.6, 35, 0, 1),"
+//                    + "(129, 'Lutjanus goreensis', 8, 35, 0, 1),"
+//                    + "(130, 'Lutjanus griseus', 8.2, 35, 0, 1),"
+//                    + "(131, 'Lutjanus griseus cyanopterus hybird', 13.4, 35, 0, 1),"
+//                    + "(132, 'Lutjanus sanguineus', 13.4, 35, 0, 1),"
+//                    + "(133, 'Hoplopagrus guentheri', 17.5, 35, 0, 1),"
+//                    + "(134, 'Macolor macularis', 5.1, 35, 0, 1),"
+//                    + "(135, 'Lutjanus aratus', 19.5, 35, 0, 1),"
+//                    + "(136, 'Lutjanus analis', 12.3, 35, 0, 3),"
+//                    + "(137, 'Lutjanus campechanus', 14.1, 35, 0, 4),"
+//                    + "(138, 'Lutjanus novemfasciatus', 36.7, 35, 0, 1),"
+//                    + "(139, 'Lutjanus peru', 12.2, 35, 0, 1),"
+//                    + "(140, 'Lutjanus goldiei', 6.5, 35, 0, 1),"
+//                    + "(141, 'Lutjanus bohar', 12.7, 35, 0, 1),"
+//                    + "(142, 'Lutjanus argentimaculatus', 10, 35, 0, 1),"
+//                    + "(143, 'Lutjanus rivulatus', 17.3, 35, 0, 1),"
+//                    + "(144, 'Lutjanus argentiventris', 6.6, 35, 0, 1),"
+//                    + "(145, 'Octopus vulgaris', 6.6, 35, 0, 1)";
+//            return insert;
+//        }
+
+        public static String insertAdditionalSpecies_27_11_2021() {
             String insert = "INSERT OR IGNORE INTO " + Fish.TABLE_NAME
                     + "( " + ContentDescriptor.Fish.Cols.FISHID + Constants.COMMA_SEP + ContentDescriptor.Fish.Cols.LATINNAME + Constants.COMMA_SEP + ContentDescriptor.Fish.Cols.RECORDWEIGHT
                     + Constants.COMMA_SEP + ContentDescriptor.Fish.Cols.FISHFAMILY + Constants.COMMA_SEP + ContentDescriptor.Fish.Cols.MAXALLOWEDCATCHWEIGHT + Constants.COMMA_SEP
                     + ContentDescriptor.Fish.Cols.CONCERN + ") values "
-                    + "(122, 'Lutjanus Dentatus', 24.7, 35, 0, 4),"
-                    + "(123, 'Lutjanus agennes', 13.9, 35, 0, 1),"
-                    + "(124, 'Lutjanus cyanopterus', 55.5, 35, 0, 4),"
-                    + "(125, 'Macolor niger', 4.8, 35, 0, 1),"
-                    + "(126, 'Lutjanus colorado', 15.7, 35, 0, 1),"
-                    + "(127, 'Lutjanus jocu', 14.6, 35, 0, 1),"
-                    + "(128, 'Lutjanus sebae', 18.6, 35, 0, 1),"
-                    + "(129, 'Lutjanus goreensis', 8, 35, 0, 1),"
-                    + "(130, 'Lutjanus griseus', 8.2, 35, 0, 1),"
-                    + "(131, 'Lutjanus griseus cyanopterus hybird', 13.4, 35, 0, 1),"
-                    + "(132, 'Lutjanus sanguineus', 13.4, 35, 0, 1),"
-                    + "(133, 'Hoplopagrus guentheri', 17.5, 35, 0, 1),"
-                    + "(134, 'Macolor macularis', 5.1, 35, 0, 1),"
-                    + "(135, 'Lutjanus aratus', 19.5, 35, 0, 1),"
-                    + "(136, 'Lutjanus analis', 12.3, 35, 0, 3),"
-                    + "(137, 'Lutjanus campechanus', 14.1, 35, 0, 4),"
-                    + "(138, 'Lutjanus novemfasciatus', 36.7, 35, 0, 1),"
-                    + "(139, 'Lutjanus peru', 12.2, 35, 0, 1),"
-                    + "(140, 'Lutjanus goldiei', 6.5, 35, 0, 1),"
-                    + "(141, 'Lutjanus bohar', 12.7, 35, 0, 1),"
-                    + "(142, 'Lutjanus argentimaculatus', 10, 35, 0, 1),"
-                    + "(143, 'Lutjanus rivulatus', 17.3, 35, 0, 1),"
-                    + "(144, 'Lutjanus argentiventris', 6.6, 35, 0, 1),"
-                    + "(145, 'Octopus vulgaris', 6.6, 35, 0, 1)";
+
+                    + "(146, 'Caranx ignobilis', 65.4, 2, 0, 1),"
+                    + "(147, 'Caranx sexfasciatus', 7.7, 2, 0, 1),"
+                    + "(148, 'Caranx melampygus', 11.7, 2, 0, 1),"
+                    + "(149, 'Gnathanodeon speciosus', 18.2, 2, 0, 1),"
+                    + "(150, 'Caranx ignobilis melampygus', 11.9, 2, 0, 1),"
+                    + "(151, 'Carangoides orthogrammus', 7.4, 2,  0, 1),"
+                    + "(152, 'Pseudocaranx dentex', 11, 2, 0, 1),"
+                    + "(153, 'Carangoides fulvoguttatus', 15.5, 2, 0, 1),"
+                    + "(154, 'Acanthocybium solandri', 62.6, 13, 0, 1),"
+                    + "(155, 'Latridopsis ciliaris', -1, 37, 0, 1),"
+                    + "(156, 'Sepia', -1, 38, 0, 1);";
+
             return insert;
         }
 

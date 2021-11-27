@@ -65,14 +65,13 @@ public class SpearoApplication extends Application {
 	User user;
 	
 	  @Override
-	    protected void attachBaseContext(Context base) {
-	        super.attachBaseContext(base);
-	        
-	        ACRA.init(this);
-	        MyAcraSender mySender = new MyAcraSender(this);
-	      ACRA.getErrorReporter().addReportSender(mySender);
-	      
-	    }
+		protected void attachBaseContext(Context base) {
+			super.attachBaseContext(base);
+
+			ACRA.init(this);
+			MyAcraSender mySender = new MyAcraSender(this);
+			ACRA.getErrorReporter().addReportSender(mySender);
+		}
 	  
 	  /**
 	   * 1. Initialize ADS sdk.
@@ -89,10 +88,6 @@ public class SpearoApplication extends Application {
         MobileAds.initialize(this);
         new AsyncLoadFishDataFromDb(this).execute();
         initializeUser();
-
-
-        //new NotificationHelper(getApplicationContext()).scheduleNotification();
-
 
 	}
 
@@ -157,9 +152,9 @@ public class SpearoApplication extends Application {
 		return dbCommunityData;
 	}
 
-	public void setDbCommunityData(List<FishAverageStatistic> dbCommunityData) {
-		this.dbCommunityData = dbCommunityData;
-	}
+//	public void setDbCommunityData(List<FishAverageStatistic> dbCommunityData) {
+//		this.dbCommunityData = dbCommunityData;
+//	}
 	
 	public boolean isNewCommunityDataRecord() {
 		return newCommunityDataRecord;
@@ -192,10 +187,18 @@ public class SpearoApplication extends Application {
         }
 
         protected void onPreExecute() {
-
         }
 
-        @Override
+		/**
+		 * We retrieve {@link FishingSession}s from db.
+		 * We retrieve {@link Fish} from db.
+		 * We retrieve the community {@link FishAverageStatistic}s that might exist in db.
+		 * If user is online we upload any data that have not been sent to mongo.
+		 *
+		 * @param unused -
+		 * @return -
+		 */
+		@Override
         protected Void doInBackground(Void... unused) {
             Database db = new Database(getApplicationContext());
             fishingSessions = getDbFishingSessions();
@@ -211,12 +214,10 @@ public class SpearoApplication extends Application {
             if (SpearoUtils.isOnline(getApplicationContext())){
             	toBeUploaded = FishingHelper.convertUserSessionsToStats(fishingSessions, true);
 				if (!toBeUploaded.isEmpty()) {
-					
 					if (ConsistencyChecker.isSuspiciousUser(application, fishingSessions.size())){
 						db.markSessionsAsUploaded(fishingSessions);
 						return null;
 					}
-					
 					SyncHelper syncHelper = new SyncHelper(application);
 					syncHelper.uploadAtlasStats(toBeUploaded);
 					haveBeenUploaded = true;
@@ -256,12 +257,10 @@ public class SpearoApplication extends Application {
             if (SpearoUtils.isOnline(getApplicationContext())){
             	toBeUploaded = FishingHelper.convertUserSessionsToStats(fishingSessions, true);
 				if (!toBeUploaded.isEmpty()) {
-					
 					if (ConsistencyChecker.isSuspiciousUser(application, fishingSessions.size())){
 						haveBeenUploaded = true;
 						return null;
 					}
-					
 					SyncHelper syncHelper = new SyncHelper(application);
 					syncHelper.uploadAtlasStats(toBeUploaded);
 					haveBeenUploaded = true;
@@ -282,7 +281,6 @@ public class SpearoApplication extends Application {
 	public void markAsUploaded(List<FishingSession> fishingSessions2) {
 		Database db = new Database(getApplicationContext());
     	db.markSessionsAsUploaded(fishingSessions2);
-		
 	}
 	
 	public void reloadFishWhenNewRecord() {

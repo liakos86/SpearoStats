@@ -1,6 +1,7 @@
 
 package gr.liakos.spearo.model;
 
+import gr.liakos.spearo.R;
 import gr.liakos.spearo.enums.Wind;
 import gr.liakos.spearo.enums.WindVolume;
 import gr.liakos.spearo.model.bean.FishStatistic;
@@ -8,6 +9,7 @@ import gr.liakos.spearo.model.object.Fish;
 import gr.liakos.spearo.model.object.FishAverageStatistic;
 import gr.liakos.spearo.model.object.FishCatch;
 import gr.liakos.spearo.model.object.FishingSession;
+import gr.liakos.spearo.util.Constants;
 import gr.liakos.spearo.util.DbColumns;
 import gr.liakos.spearo.util.SpearoUtils;
 
@@ -17,6 +19,8 @@ import java.util.List;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.content.res.Resources;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
@@ -25,7 +29,7 @@ import android.net.Uri;
 public class Database extends SQLiteOpenHelper {
 
     private static final String DATABASE_NAME = "spearo_stats.db";
-    private static final int DATABASE_VERSION =  4;
+    private static final int DATABASE_VERSION =  5;
     // this is also considered as invalid id by the server
     public static final Integer INVALID_ID = -1;
     private Context mContext;
@@ -41,52 +45,87 @@ public class Database extends SQLiteOpenHelper {
         db.execSQL(ContentDescriptor.FishCatch.createTable());
         db.execSQL(ContentDescriptor.Fish.createTable());
         db.execSQL(ContentDescriptor.FishAverageStatistic.createTable());
+
+        db.execSQL(ContentDescriptor.Fish.insertSpecies());
     }
 
+    /**
+     * This only runs when an update is installed.
+     * If it is a brand new installation it will not be executed.
+     *
+     * @param db
+     * @param oldVersion
+     * @param newVersion
+     */
 	@Override
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-		if (newVersion == 2 && oldVersion == 1){
-			db.execSQL("ALTER TABLE " + gr.liakos.spearo.model.ContentDescriptor.FishingSession.TABLE_NAME + " ADD COLUMN " + gr.liakos.spearo.model.ContentDescriptor.FishingSession.Cols.SESSION_IMAGE + " TEXT;");
-			db.execSQL("ALTER TABLE " + gr.liakos.spearo.model.ContentDescriptor.FishingSession.TABLE_NAME + " ADD COLUMN " + gr.liakos.spearo.model.ContentDescriptor.FishingSession.Cols.SESSION_MOON + " INTEGER DEFAULT 0;");
-			db.execSQL("ALTER TABLE " + gr.liakos.spearo.model.ContentDescriptor.FishingSession.TABLE_NAME + " ADD COLUMN " + gr.liakos.spearo.model.ContentDescriptor.FishingSession.Cols.SESSION_WIND + " INTEGER DEFAULT 0;");
-		}
+//		if (newVersion == 2 && oldVersion == 1){
+//			db.execSQL("ALTER TABLE " + gr.liakos.spearo.model.ContentDescriptor.FishingSession.TABLE_NAME + " ADD COLUMN " + gr.liakos.spearo.model.ContentDescriptor.FishingSession.Cols.SESSION_IMAGE + " TEXT;");
+//			db.execSQL("ALTER TABLE " + gr.liakos.spearo.model.ContentDescriptor.FishingSession.TABLE_NAME + " ADD COLUMN " + gr.liakos.spearo.model.ContentDescriptor.FishingSession.Cols.SESSION_MOON + " INTEGER DEFAULT 0;");
+//			db.execSQL("ALTER TABLE " + gr.liakos.spearo.model.ContentDescriptor.FishingSession.TABLE_NAME + " ADD COLUMN " + gr.liakos.spearo.model.ContentDescriptor.FishingSession.Cols.SESSION_WIND + " INTEGER DEFAULT 0;");
+//		}
+//
+//		if (newVersion == 3 && oldVersion == 1){
+//            db.execSQL("ALTER TABLE " + gr.liakos.spearo.model.ContentDescriptor.FishingSession.TABLE_NAME + " ADD COLUMN " + gr.liakos.spearo.model.ContentDescriptor.FishingSession.Cols.SESSION_IMAGE + " TEXT;");
+//            db.execSQL("ALTER TABLE " + gr.liakos.spearo.model.ContentDescriptor.FishingSession.TABLE_NAME + " ADD COLUMN " + gr.liakos.spearo.model.ContentDescriptor.FishingSession.Cols.SESSION_MOON + " INTEGER DEFAULT 0;");
+//            db.execSQL("ALTER TABLE " + gr.liakos.spearo.model.ContentDescriptor.FishingSession.TABLE_NAME + " ADD COLUMN " + gr.liakos.spearo.model.ContentDescriptor.FishingSession.Cols.SESSION_WIND + " INTEGER DEFAULT 0;");
+//            db.execSQL("ALTER TABLE " + gr.liakos.spearo.model.ContentDescriptor.FishingSession.TABLE_NAME + " ADD COLUMN " + ContentDescriptor.FishingSession.Cols.SESSION_WIND_VOLUME + " INTEGER DEFAULT 0;");
+//        }
+//
+//        if (newVersion == 3 && oldVersion == 2){
+//            db.execSQL("ALTER TABLE " + gr.liakos.spearo.model.ContentDescriptor.FishingSession.TABLE_NAME + " ADD COLUMN " + ContentDescriptor.FishingSession.Cols.SESSION_WIND_VOLUME + " INTEGER DEFAULT 0;");
+//        }
+//
+//        if (newVersion == 4 &&  oldVersion == 1 ){
+//            db.execSQL("ALTER TABLE " + gr.liakos.spearo.model.ContentDescriptor.FishingSession.TABLE_NAME + " ADD COLUMN " + gr.liakos.spearo.model.ContentDescriptor.FishingSession.Cols.SESSION_IMAGE + " TEXT;");
+//            db.execSQL("ALTER TABLE " + gr.liakos.spearo.model.ContentDescriptor.FishingSession.TABLE_NAME + " ADD COLUMN " + gr.liakos.spearo.model.ContentDescriptor.FishingSession.Cols.SESSION_MOON + " INTEGER DEFAULT 0;");
+//            db.execSQL("ALTER TABLE " + gr.liakos.spearo.model.ContentDescriptor.FishingSession.TABLE_NAME + " ADD COLUMN " + gr.liakos.spearo.model.ContentDescriptor.FishingSession.Cols.SESSION_WIND + " INTEGER DEFAULT 0;");
+//            db.execSQL("ALTER TABLE " + gr.liakos.spearo.model.ContentDescriptor.FishingSession.TABLE_NAME + " ADD COLUMN " + ContentDescriptor.FishingSession.Cols.SESSION_WIND_VOLUME + " INTEGER DEFAULT 0;");
+//            db.execSQL("ALTER TABLE " + gr.liakos.spearo.model.ContentDescriptor.FishingSession.TABLE_NAME + " ADD COLUMN " + ContentDescriptor.FishingSession.Cols.SESSION_IMAGE_URI_PATH + " TEXT;");
+//            db.execSQL(ContentDescriptor.Fish.insertAdditionalSpecies0());
+//        }
 
-		if (newVersion == 3 && oldVersion == 1){
-            db.execSQL("ALTER TABLE " + gr.liakos.spearo.model.ContentDescriptor.FishingSession.TABLE_NAME + " ADD COLUMN " + gr.liakos.spearo.model.ContentDescriptor.FishingSession.Cols.SESSION_IMAGE + " TEXT;");
-            db.execSQL("ALTER TABLE " + gr.liakos.spearo.model.ContentDescriptor.FishingSession.TABLE_NAME + " ADD COLUMN " + gr.liakos.spearo.model.ContentDescriptor.FishingSession.Cols.SESSION_MOON + " INTEGER DEFAULT 0;");
-            db.execSQL("ALTER TABLE " + gr.liakos.spearo.model.ContentDescriptor.FishingSession.TABLE_NAME + " ADD COLUMN " + gr.liakos.spearo.model.ContentDescriptor.FishingSession.Cols.SESSION_WIND + " INTEGER DEFAULT 0;");
-            db.execSQL("ALTER TABLE " + gr.liakos.spearo.model.ContentDescriptor.FishingSession.TABLE_NAME + " ADD COLUMN " + ContentDescriptor.FishingSession.Cols.SESSION_WIND_VOLUME + " INTEGER DEFAULT 0;");
-        }
+//        if (newVersion == 4 &&  oldVersion == 2 ){
+//            db.execSQL("ALTER TABLE " + gr.liakos.spearo.model.ContentDescriptor.FishingSession.TABLE_NAME + " ADD COLUMN " + ContentDescriptor.FishingSession.Cols.SESSION_WIND_VOLUME + " INTEGER DEFAULT 0;");
+//            db.execSQL("ALTER TABLE " + gr.liakos.spearo.model.ContentDescriptor.FishingSession.TABLE_NAME + " ADD COLUMN " + ContentDescriptor.FishingSession.Cols.SESSION_IMAGE_URI_PATH + " TEXT;");
+//            db.execSQL(ContentDescriptor.Fish.insertAdditionalSpecies0());
+//        }
+//
+//        if (newVersion == 4 &&  oldVersion == 3 ){
+//            db.execSQL("ALTER TABLE " + gr.liakos.spearo.model.ContentDescriptor.FishingSession.TABLE_NAME + " ADD COLUMN " + ContentDescriptor.FishingSession.Cols.SESSION_IMAGE_URI_PATH + " TEXT;");
+//            db.execSQL(ContentDescriptor.Fish.insertAdditionalSpecies0());
+//        }
 
-        if (newVersion == 3 && oldVersion == 2){
-            db.execSQL("ALTER TABLE " + gr.liakos.spearo.model.ContentDescriptor.FishingSession.TABLE_NAME + " ADD COLUMN " + ContentDescriptor.FishingSession.Cols.SESSION_WIND_VOLUME + " INTEGER DEFAULT 0;");
-        }
-
-        if (newVersion == 4 &&  oldVersion == 1 ){
-            db.execSQL("ALTER TABLE " + gr.liakos.spearo.model.ContentDescriptor.FishingSession.TABLE_NAME + " ADD COLUMN " + gr.liakos.spearo.model.ContentDescriptor.FishingSession.Cols.SESSION_IMAGE + " TEXT;");
-            db.execSQL("ALTER TABLE " + gr.liakos.spearo.model.ContentDescriptor.FishingSession.TABLE_NAME + " ADD COLUMN " + gr.liakos.spearo.model.ContentDescriptor.FishingSession.Cols.SESSION_MOON + " INTEGER DEFAULT 0;");
-            db.execSQL("ALTER TABLE " + gr.liakos.spearo.model.ContentDescriptor.FishingSession.TABLE_NAME + " ADD COLUMN " + gr.liakos.spearo.model.ContentDescriptor.FishingSession.Cols.SESSION_WIND + " INTEGER DEFAULT 0;");
-            db.execSQL("ALTER TABLE " + gr.liakos.spearo.model.ContentDescriptor.FishingSession.TABLE_NAME + " ADD COLUMN " + ContentDescriptor.FishingSession.Cols.SESSION_WIND_VOLUME + " INTEGER DEFAULT 0;");
-            db.execSQL("ALTER TABLE " + gr.liakos.spearo.model.ContentDescriptor.FishingSession.TABLE_NAME + " ADD COLUMN " + ContentDescriptor.FishingSession.Cols.SESSION_IMAGE_URI_PATH + " TEXT;");
-            db.execSQL(ContentDescriptor.Fish.insertAdditionalSpecies0());
-        }
-
-        if (newVersion == 4 &&  oldVersion == 2 ){
-            db.execSQL("ALTER TABLE " + gr.liakos.spearo.model.ContentDescriptor.FishingSession.TABLE_NAME + " ADD COLUMN " + ContentDescriptor.FishingSession.Cols.SESSION_WIND_VOLUME + " INTEGER DEFAULT 0;");
-            db.execSQL("ALTER TABLE " + gr.liakos.spearo.model.ContentDescriptor.FishingSession.TABLE_NAME + " ADD COLUMN " + ContentDescriptor.FishingSession.Cols.SESSION_IMAGE_URI_PATH + " TEXT;");
-            db.execSQL(ContentDescriptor.Fish.insertAdditionalSpecies0());
-        }
-
-        if (newVersion == 4 &&  oldVersion == 3 ){
-            db.execSQL("ALTER TABLE " + gr.liakos.spearo.model.ContentDescriptor.FishingSession.TABLE_NAME + " ADD COLUMN " + ContentDescriptor.FishingSession.Cols.SESSION_IMAGE_URI_PATH + " TEXT;");
-            db.execSQL(ContentDescriptor.Fish.insertAdditionalSpecies0());
+        if (newVersion == 5){
+            db.execSQL(ContentDescriptor.Fish.insertAdditionalSpecies_27_11_2021());
+            SharedPreferences app_preferences = mContext.getSharedPreferences(Constants.PREFERENCES, Context.MODE_PRIVATE);
+            SharedPreferences.Editor editor = app_preferences.edit();
+            editor.putString(Constants.PREFS_NEW_SPECIES, speciesTextFor_27_11_2021());
+            editor.apply();
         }
 
 	}
-    
-	@Override
+
+    String speciesTextFor_27_11_2021() {
+        Resources resources = mContext.getResources();
+        StringBuilder builder = new StringBuilder(Constants.EMPTY);
+        builder.append(resources.getString(R.string.Caranx_ignobilis) + Constants.COMMA_SEP);
+        builder.append(resources.getString(R.string.Caranx_sexfasciatus) + Constants.COMMA_SEP);
+        builder.append(resources.getString(R.string.Caranx_melampygus) + Constants.COMMA_SEP);
+        builder.append(resources.getString(R.string.Gnathanodeon_speciosus) + Constants.COMMA_SEP);
+        builder.append(resources.getString(R.string.Caranx_ignobilis_melampygus) + Constants.COMMA_SEP);
+        builder.append(resources.getString(R.string.Carangoides_orthogrammus) + Constants.COMMA_SEP);
+        builder.append(resources.getString(R.string.Pseudocaranx_dentex) + Constants.COMMA_SEP);
+        builder.append(resources.getString(R.string.Carangoides_fulvoguttatus) + Constants.COMMA_SEP);
+        builder.append(resources.getString(R.string.Acanthocybium_solandri) + Constants.COMMA_SEP);
+        builder.append(resources.getString(R.string.Latridopsis_ciliaris) + Constants.COMMA_SEP);
+        builder.append(resources.getString(R.string.Sepia));
+        return  builder.toString();
+    }
+
+    @Override
     public void onOpen(SQLiteDatabase db) {
-    	db.execSQL(ContentDescriptor.Fish.insertSpecies());
+//    	db.execSQL(ContentDescriptor.Fish.insertSpecies());
     }
 
     /**
@@ -150,12 +189,7 @@ public class Database extends SQLiteOpenHelper {
         int sSessionWindVolumePosition = 7;
         int sSessionImgUriPosition = 8;
 
-//        long aWeekAgo = 0L;
-//        if (millisFrom > 0) {
-//            aWeekAgo =System.currentTimeMillis() - millisFrom;
-//        }
-
-        String selection = null;//ContentDescriptor.FishingSession.Cols.FISHINGDATE + " > " + aWeekAgo;
+        String selection = null;
         Cursor c = mContext.getContentResolver().query(ContentDescriptor.FishingSession.CONTENT_URI, FROM, selection,
                 null, null);
 
@@ -286,8 +320,9 @@ public class Database extends SQLiteOpenHelper {
 
     /**
      * Premium statistics are always saved/updated in db for offline access.
+     * Null safe list.
      *
-     * @return
+     * @return db mongo data
      */
 	public List<FishAverageStatistic> fetchCommunityData() {
 		String [] columns = DbColumns.fromFishAvg();
@@ -339,7 +374,12 @@ public class Database extends SQLiteOpenHelper {
 		boolean newRecord = false;
 	    ContentResolver resolver = mContext.getContentResolver();
 	    for (FishStatistic stat : communityStats) {
-	    	if (stat.getRecordWeight() <= Fish.getFromId(mContext,  stat.getFishId()).getRecordCatchWeight()){
+            Fish dbFish = Fish.getFromId(mContext,  stat.getFishId());
+            if (dbFish == null){ // fish in mongo but not in db
+                continue;
+            }
+
+	    	if (stat.getRecordWeight() <= dbFish.getRecordCatchWeight()){
 	    		continue;
 	    	}
 	    	

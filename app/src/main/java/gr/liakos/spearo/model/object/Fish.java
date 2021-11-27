@@ -7,6 +7,7 @@ import gr.liakos.spearo.model.Database;
 import gr.liakos.spearo.util.Constants;
 import gr.liakos.spearo.util.SpearoUtils;
 
+import java.util.List;
 import java.util.Locale;
 
 import android.content.ContentResolver;
@@ -15,24 +16,65 @@ import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
 
+/**
+ * Represents a fish species that a user can record in his {@link FishingSession}
+ * as a {@link FishCatch}. A fish is persisted in the database and will be retrieved upon initialization.
+ * {@link #recordCatchWeight} is initially inserted with a script, but is checked every time after mongo updates,
+ * in order to be updated via {{@link Database#updateRecordsFromCommunityData(List)}}
+ */
 public class Fish{
-	
+
+	/**
+	 * Unique identifier.
+	 * Same id exists for fish that are tracked in mongo.
+	 */
+	Integer fishId;
+
+	/**
+	 * The preservation concern of the species.
+	 */
 	Concern concern;
 
-	Integer fishId;
-	
+	/**
+	 * The scientific name of the fish, e.g. 'diplodus sargus'
+	 */
 	String latinName;
-	
+
+	/**
+	 * The common name as loaded via locale strings.
+	 */
 	String commonName;
-	
+
+	/**
+	 * To support greek users with english language, the secondary common name is the greek common name.
+	 */
 	String secondaryCommonNameForSearch = Constants.EMPTY;
-	
+
+	/**
+	 * If the fishId exists in mongo, it will also have a record.
+	 * A user cannot store a fish with larger weight than this.
+	 */
 	Double recordCatchWeight;
-	
+
+	/**
+	 * The general fish family that this fish belongs to.
+	 */
 	FishFamily fishFamily;
 
+	/**
+	 * If there is no official record, we need to set a limit.
+	 */
 	Double maxAllowedCatchWeight;
-	
+
+	/**
+	 * Creates a new fish object.
+	 *
+	 * @param fishId
+	 * @param latinName
+	 * @param recordWeight
+	 * @param fishFamily
+	 * @param concern
+	 */
 	public Fish(Integer fishId, String latinName, Double recordWeight, 
 			int fishFamily, int concern) {
 		this.fishId = fishId;
@@ -56,7 +98,7 @@ public class Fish{
 	public void setFishId(Integer fishId) {
 		this.fishId = fishId;
 	}
-	
+
 	public String getImageName() {
 		return latinName.toLowerCase(Locale.US).replace(Constants.SPACE, Constants.UNDERSCORE);
 	}
@@ -65,16 +107,8 @@ public class Fish{
 		return latinName;
 	}
 
-	public void setLatinName(String latinName) {
-		this.latinName = latinName;
-	}
-
 	public Double getRecordCatchWeight() {
 		return recordCatchWeight;
-	}
-
-	public void setRecordCatchWeight(Double recordCatchWeight) {
-		this.recordCatchWeight = recordCatchWeight;
 	}
 
 	public String getCommonName() {
@@ -88,17 +122,9 @@ public class Fish{
 	public FishFamily getFishFamily() {
 		return fishFamily;
 	}
-
-	public void setFishFamily(FishFamily fishFamily) {
-		this.fishFamily = fishFamily;
-	}
 	
 	public Concern getConcern() {
 		return concern;
-	}
-
-	public void setConcern(Concern concern) {
-		this.concern = concern;
 	}
 
 	@Override
@@ -135,6 +161,10 @@ public class Fish{
                                 String.valueOf(id)), null, null, null, null);
                 cursor.moveToFirst();
                  Fish fromCursor = createFromCursor(cursor);
+                 if (fromCursor == null){//id not in db. maybe came from mongo
+                 	return null;
+				 }
+
                  fromCursor.setCommonName(SpearoUtils.getStringResourceByName(context, Fish.commonNamePattern(fromCursor)));
                  return fromCursor;
             } finally {
@@ -159,8 +189,6 @@ public class Fish{
             toRet.put(ContentDescriptor.Fish.Cols.FISHFAMILY, item.fishFamily.getPosition());
             toRet.put(ContentDescriptor.Fish.Cols.MAXALLOWEDCATCHWEIGHT, item.maxAllowedCatchWeight);
             toRet.put(ContentDescriptor.Fish.Cols.CONCERN, item.concern.getWeight());
-            
-            
             return toRet;
         }
     }
@@ -182,22 +210,22 @@ public class Fish{
         }
     }
 
-    /**
-     * let the id decide if we have an insert or an update
-     *
-     * @param resolver
-     * @param item
-     */
-    public static void save(ContentResolver resolver, Fish item) {
-        if (item.fishId == Database.INVALID_ID)
-            resolver.insert(ContentDescriptor.Fish.CONTENT_URI, Fish.asContentValues(item));
-        else
-            resolver.update(ContentDescriptor.Fish.CONTENT_URI, Fish.asContentValues(item),
-                    String.format("%s=?", ContentDescriptor.Fish.Cols.FISHID),
-                    new String[]{
-                            String.valueOf(item.fishId)
-                    });
-    }
+//    /**
+//     * let the id decide if we have an insert or an update
+//     *
+//     * @param resolver
+//     * @param item
+//     */
+//    public static void save(ContentResolver resolver, Fish item) {
+//        if (item.fishId == Database.INVALID_ID)
+//            resolver.insert(ContentDescriptor.Fish.CONTENT_URI, Fish.asContentValues(item));
+//        else
+//            resolver.update(ContentDescriptor.Fish.CONTENT_URI, Fish.asContentValues(item),
+//                    String.format("%s=?", ContentDescriptor.Fish.Cols.FISHID),
+//                    new String[]{
+//                            String.valueOf(item.fishId)
+//                    });
+//    }
 
 	public boolean isRecordCatch(double weight) {
 		return  this.getRecordCatchWeight() > -1 && weight > this.getRecordCatchWeight();

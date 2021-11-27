@@ -123,6 +123,8 @@
 
 	<string name="Octopus_vulgaris">Χταπόδι, κοινό</string>
 
+	<string name="Sepia">Σουπιά</string>
+
 	<!-- END FISH -->
 
 	<string name="add_catch">Στην ψαροβελόνα</string>
@@ -156,15 +158,8 @@
 	<string name="no">Όχι</string>
 	<string name="on">στις</string>
 
-	<string name="premium_info">Με ένα μικρό αντίτιμο μπορείτε πλέον να αποκτήσετε πρόσβαση στα συνολικά δεδομένα της κοινότητας του SpearoStats!
-        Εκτός από τα προσωπικά σας δεδομένα, έχετε πρόσβαση σε πληροφορίες όπως: Οι συνολικές συλλήψεις, το μέσο βάρος και βάθος ανά σύλληψη, καθώς και τη βέλτιστη ώρα για το κυνήγι κάθε είδους, σύμφωνα με τα συνολικά δεδομένα της κοινότητας. Εγγραφείτε και αποκτήστε πρόσβαση σε δεδομένα %1$d ειδών!
-         </string>
-
 	<string name="defaultUsername">Spearo</string>
-
 	<string name="record_entry_attempt_alert"> Το βάρος που καταχωρήσατε συνιστά νέο ρεκόρ! Συγχαρητήρια, όμως για να γίνει αποδεκτό πρέπει να καταχωρήσετε επίσημα αυτή την επίδοσή σας και να επιστρέψετε για την καταγραφή μόλις τα δεδομένα ενημερωθούν με το νέο ρεκόρ: </string>
-
-
 	<string name="features_missing">Δεν μπορείτε να κάνετε χρήση όλων των δυνατοτήτων!</string>
 
 	<string name="jan">Ιάν</string>
@@ -300,5 +295,7 @@
 	<string name="go_premium_diagrams">Αποκτήστε όλα τα διαγράμματα!</string>
 	<string name="go_premium_data">Αποκτήστε όλα τα δεδομένα!</string>
 	<string name="android_version_check">Απαιτείται έκδοση android 8 και άνω για να έχετε πρόσβαση στα δεδομένα της κοινότητας!</string>
+    <string name="fish_already_exists">Το ψάρι \'%1$s\' υπάρχει ήδη στην εφαρμογή!</string>
+    <string name="new_species">Νέα είδη στην εφαρμογή:</string>
 
 </resources>

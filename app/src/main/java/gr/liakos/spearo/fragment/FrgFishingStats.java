@@ -27,31 +27,55 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ViewFlipper;
 
 import androidx.fragment.app.Fragment;
 
-
+/**
+ * Fragment for displaying user's personal statistics and {@link FishingSession}s.
+ */
 public class FrgFishingStats 
 extends Fragment
 implements AsyncListener {
 	
 	/**
-	 * Flipper positions
+	 * Flipper position when no {@link FishingSession}s exist yet.
 	 */
 	static final Integer POSITION_NO_STATS = 0;
+
+	/**
+	 * Flipper position when {@link FishingSession}s exist.
+	 */
 	static final Integer POSITION_SHOW_STATS = 1;
-	
+
+	/**
+	 * Flipper for changing between views.
+	 */
 	ViewFlipper statsFlipper;
 
+	/**
+	 * The tutorial screens require this view.
+	 */
 	View showcaseView;
-	
+
+	/**
+	 * ListView for the statistics.
+	 */
 	NestedScrollingListView fishStatsListView;
+
+	/**
+	 * Adapter for the statistics ListView.
+	 */
     FishStatAdapterWithCarousel fishStatAdapter;
 
-    List<FishAverageStatistic> fishAverageStats = new ArrayList<>();
+	/**
+	 * ArrayList with the {@link FishAverageStatistic}s of the user.
+	 */
+	List<FishAverageStatistic> fishAverageStats = new ArrayList<>();
 
+	/**
+	 * Will be true when user pays for premium diagrams.
+	 */
 	boolean isPremiumDiagramsUser = false;
 
     @Override
@@ -61,7 +85,7 @@ implements AsyncListener {
         
         fishStatsListView = v.findViewById(R.id.listview_fishing_stats);
 
-        fixStatsListView(false);
+        loadUserStatsAndSetupDiagramsAdapter(false);
 
         initializeFlipper(v);
 
@@ -87,8 +111,15 @@ implements AsyncListener {
 				.show();
 	}
 
-    void fixStatsListView(boolean loadFromDb){
-		fixAverageStats(loadFromDb);
+	/**
+	 * Calculates {@link FishAverageStatistic}s for the user.
+	 * Then creates the adapter for the above list.
+	 * Finally assigns the adapter to the listview of the above list.
+	 *
+	 * @param loadFromDb flag
+	 */
+    void loadUserStatsAndSetupDiagramsAdapter(boolean loadFromDb){
+		calculateAverageStats(loadFromDb);
 		SharedPreferences app_preferences = getActivity().getSharedPreferences(Constants.PREFERENCES, Context.MODE_PRIVATE);
 		boolean isMetric = !app_preferences.getBoolean(Constants.IMPERIAL, false);
 		boolean isPremiumDiagrams = app_preferences.getBoolean(Constants.SKU_PREMIUM_DIAGRAMS, false);
@@ -98,14 +129,18 @@ implements AsyncListener {
 	}
     
 	void initializeFlipper(View v) {
-		statsFlipper = (ViewFlipper) v.findViewById(R.id.fishing_stats_flipper);
+		statsFlipper = v.findViewById(R.id.fishing_stats_flipper);
         setFlipperChild();
 	}
 
-	public void fixAverageStatsIfNeeded() {
+	/**
+	 * If user has inserted or deleted a {@link FishingSession} we need
+	 * to calculate the statistics again.
+	 */
+	public void recalculateAverageStatsIfNeeded() {
     	if (((SpearoApplication)getActivity().getApplication()).isSessionsHaveChanged()){
-    		fixStatsListView(true);
-    		fixAverageStats(true);
+    		loadUserStatsAndSetupDiagramsAdapter(true);
+    		calculateAverageStats(true);
 
 			fishStatAdapter.notifyDataSetChanged();
     		setFlipperChild();
@@ -120,28 +155,30 @@ implements AsyncListener {
         }
 	}
 
-	void fixAverageStats(boolean shouldLoadFromDb) {
+	/**
+	 * Retrieves or loads from db the user's {@link FishingSession}s.
+	 * Converts them to {@link FishStatistic}s.
+	 * Converts again to {@link FishAverageStatistic}s.
+	 * Also computes the total number of catches for the user.
+	 *
+	 * @param shouldLoadFromDb flag
+	 */
+	void calculateAverageStats(boolean shouldLoadFromDb) {
 		fishAverageStats.clear();
-		List<FishingSession> sessionsList = getSessionsList(shouldLoadFromDb);
-        
-		Map<Fish, FishStatistic> fishToStatsMap = FishingHelper.convertUserSessionsToStats(sessionsList, false);
+		List<FishingSession> userSessionsList = getSessionsList(shouldLoadFromDb);
+		Map<Fish, FishStatistic> userStatisticsPerFish = FishingHelper.convertUserSessionsToStats(userSessionsList, false);
+		List<FishAverageStatistic> userAverageStats = FishingHelper.getAverageStatsFrom(getActivity(), new ArrayList<>(userStatisticsPerFish.values()), StatMode.PERSONAL);
+		Collections.sort(userAverageStats);
+		Collections.reverse(userAverageStats);
 
-		List<FishAverageStatistic> averageStats = FishingHelper.getAverageStatsFrom(getActivity(), new ArrayList<>(fishToStatsMap.values()), StatMode.PERSONAL);
-		Collections.sort(averageStats);
-		Collections.reverse(averageStats);
-
-		Map<Fish, Map<Integer, Integer>> fishCatchesPerMonth = FishingHelper.convertUserSessionsToMonthlyCatches(sessionsList);
-		for (FishAverageStatistic avgStat : averageStats){
+		Map<Fish, Map<Integer, Integer>> fishCatchesPerMonth = FishingHelper.convertUserSessionsToMonthlyCatches(userSessionsList);
+		for (FishAverageStatistic avgStat : userAverageStats){
 			Map<Integer, Integer> fishPerMonth = fishCatchesPerMonth.get(avgStat.getFish());
 			avgStat.setCatchesPerMonth(fishPerMonth);
 		}
 
 		int totalCatches = 0;
-
-
-
-
-		for (FishAverageStatistic fishAverageStatistic : averageStats) {
+		for (FishAverageStatistic fishAverageStatistic : userAverageStats) {
 			totalCatches += fishAverageStatistic.getTotalCatches();
 			fishAverageStats.add(fishAverageStatistic);
 		}
@@ -149,6 +186,13 @@ implements AsyncListener {
 		
 	}
 
+	/**
+	 * The {@link SpearoApplication} calculates the {@link FishingSession}s list upon initialization.
+	 * We will use that list unless a fishing session has been inserted or deleted later.
+	 *
+	 * @param shouldLoadFromDb flag
+	 * @return sessions
+	 */
 	List<FishingSession> getSessionsList(boolean shouldLoadFromDb) {
 		if (shouldLoadFromDb) {
 			return new Database(getActivity().getApplicationContext()).fetchFishingSessionsFromDb();
