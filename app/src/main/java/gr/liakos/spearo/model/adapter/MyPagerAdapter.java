@@ -5,6 +5,8 @@ import gr.liakos.spearo.fragment.FrgFishingSessions;
 import gr.liakos.spearo.fragment.FrgFishingStats;
 import gr.liakos.spearo.fragment.FrgFishingStatsGlobal;
 import gr.liakos.spearo.fragment.FrgMyPlaces;
+import gr.liakos.spearo.fragment.FrgSpeargunStats;
+
 import android.app.Activity;
 
 import androidx.fragment.app.Fragment;
@@ -49,14 +51,21 @@ public class MyPagerAdapter extends FragmentPagerAdapter {
 
             case 2: {
                 if (fragments[position] == null) {
-                    fragments[position] = FrgFishingStatsGlobal.init(2);
+                    fragments[position] = FrgSpeargunStats.init(2);
                 }
                 break;
             }
 
             case 3: {
                 if (fragments[position] == null) {
-                    fragments[position] = FrgMyPlaces.init(3);
+                    fragments[position] = FrgFishingStatsGlobal.init(3);
+                }
+                break;
+            }
+
+            case 4: {
+                if (fragments[position] == null) {
+                    fragments[position] = FrgMyPlaces.init(4);
                 }
                 break;
             }

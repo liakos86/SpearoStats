@@ -72,8 +72,18 @@ public class DataProvider extends ContentProvider {
 
 
             case ContentDescriptor.FishAverageStatistic.PATH_FOR_ID_TOKEN:
-                return ContentDescriptor.FishAverageStatistic.CONTENT_ITEM_TYPE;     
+                return ContentDescriptor.FishAverageStatistic.CONTENT_ITEM_TYPE;
 
+
+            //********
+
+            case ContentDescriptor.Speargun.PATH_TOKEN:
+            case ContentDescriptor.Speargun.PATH_START_LETTERS_TOKEN:
+                return ContentDescriptor.Speargun.CONTENT_TYPE_DIR;
+
+
+            case ContentDescriptor.Speargun.PATH_FOR_ID_TOKEN:
+                return ContentDescriptor.Speargun.CONTENT_ITEM_TYPE;
 
             default:
                 throw new UnsupportedOperationException("URI " + uri + " is not supported.");
@@ -237,7 +247,7 @@ public class DataProvider extends ContentProvider {
                 SQLiteDatabase rdb = database.getReadableDatabase();
                 toRet = rdb
                         .rawQuery(
-                                "select distinct substr("+FishAverageStatistic.Cols.FISHAVGID +" , 1, 1) from " +FishAverageStatistic.TABLE_NAME+ " order by 1 asc",
+                                "select distinct substr("+ ContentDescriptor.FishAverageStatistic.Cols.FISHAVGID +" , 1, 1) from " + ContentDescriptor.FishAverageStatistic.TABLE_NAME+ " order by 1 asc",
                                 null);
             }
             break;
@@ -254,6 +264,44 @@ public class DataProvider extends ContentProvider {
             }
             break;
             // END FishAverageStat
+
+            //START SPEARGUN
+            case ContentDescriptor.Speargun.PATH_TOKEN: {
+                String searchFor = uri.getQueryParameter(ContentDescriptor.PARAM_SEARCH);
+                SQLiteQueryBuilder builder = new SQLiteQueryBuilder();
+                builder.setTables(ContentDescriptor.Speargun.TABLE_NAME);
+
+                if (!TextUtils.isEmpty(searchFor)) {
+                    String where = String.format(sWhereLike, ContentDescriptor.Speargun.Cols.GUN_ID, searchFor);
+                    //Log.v(TAG, String.format("where [%s]", where));
+                    builder.appendWhere(where);
+                }
+
+                toRet = builder.query(db, projection, selection, selectionArgs, null, null,
+                        sortOrder);
+            }
+            break;
+            case ContentDescriptor.Speargun.PATH_START_LETTERS_TOKEN: {
+                SQLiteDatabase rdb = database.getReadableDatabase();
+                toRet = rdb
+                        .rawQuery(
+                                "select distinct substr("+ ContentDescriptor.Speargun.Cols.GUN_ID +" , 1, 1) from " + ContentDescriptor.Speargun.TABLE_NAME+ " order by 1 asc",
+                                null);
+            }
+            break;
+            case ContentDescriptor.Speargun.PATH_FOR_ID_TOKEN: {
+                String id = uri.getLastPathSegment();
+                //Log.v(TAG, String.format("querying for [%s]", id));
+                SQLiteQueryBuilder builder = new SQLiteQueryBuilder();
+                builder.setTables(ContentDescriptor.Speargun.TABLE_NAME);
+                toRet = builder.query(db, projection,
+                        String.format(sWhere, ContentDescriptor.Speargun.Cols.GUN_ID), new String[]{
+                                id
+                        },
+                        null, null, null, sortOrder);
+            }
+            break;
+            // END SPEARGUN
             
             
 
@@ -305,6 +353,14 @@ public class DataProvider extends ContentProvider {
             break;
             //End FishAvgStat
 
+            //Speargun
+            case ContentDescriptor.Speargun.PATH_TOKEN: {
+                id = db.insert(ContentDescriptor.Speargun.TABLE_NAME, null,
+                        adjustIdField(values, ContentDescriptor.Speargun.Cols.GUN_ID));
+            }
+            break;
+            //End Speargun
+
 
             default: {
                 throw new UnsupportedOperationException("URI: " + uri + " not supported.");
@@ -355,6 +411,14 @@ public class DataProvider extends ContentProvider {
             break;
             //End FishAvgStat
 
+            //Speargun
+            case ContentDescriptor.Speargun.PATH_TOKEN: {
+                toRet = db.update(ContentDescriptor.Speargun.TABLE_NAME, values, selection,
+                        selectionArgs);
+            }
+            break;
+            //End Speargun
+
 
             default: {
                 throw new UnsupportedOperationException("URI: " + uri + " not supported.");
@@ -399,6 +463,13 @@ public class DataProvider extends ContentProvider {
             }
             break;
             //FishAvgStat
+
+            //Speargun
+            case ContentDescriptor.Speargun.PATH_TOKEN: {
+                toRet = db.delete(ContentDescriptor.Speargun.TABLE_NAME, selection, selectionArgs);
+            }
+            break;
+            //Speargun
 
 
             default: {

@@ -53,6 +53,7 @@
 	<string name="fill_all">Συμπληρώστε όλα τα πεδία</string>
 	<string name="button_sessions">Ημερολόγιο</string>
 	<string name="button_stats">Στατιστικά</string>
+	<string name="button_guns">Όπλα</string>
 	<string name="button_map">Τα μέρη μου</string>
 	<string name="button_stats_global">Συνολικά</string>
 	<string name="press_for_more">πατήστε για λεπτομέρειες&#8230;</string>

@@ -32,6 +32,7 @@ import gr.liakos.spearo.model.object.Fish;
 import gr.liakos.spearo.model.object.FishAverageStatistic;
 import gr.liakos.spearo.model.object.FishCatch;
 import gr.liakos.spearo.model.object.FishingSession;
+import gr.liakos.spearo.model.object.Speargun;
 import gr.liakos.spearo.model.object.User;
 import gr.liakos.spearo.mongo.SyncHelper;
 import gr.liakos.spearo.util.ConsistencyChecker;
@@ -51,6 +52,7 @@ public class SpearoApplication extends Application {
      */
     int position;
 
+    List<Speargun> spearGuns = new ArrayList<>();
     List<Fish> fishies = new ArrayList<Fish>();
     List<FishingSession> fishingSessions = new ArrayList<FishingSession>();
     List<FishCatch> fishCatches = new ArrayList<FishCatch>();
@@ -61,9 +63,13 @@ public class SpearoApplication extends Application {
 	boolean sessionsHaveChanged;
 	
 	boolean newCommunityDataRecord;
+
+	boolean spearGunsUpdated;
 	
 	User user;
-	
+
+	Database database;
+
 	  @Override
 		protected void attachBaseContext(Context base) {
 			super.attachBaseContext(base);
@@ -84,6 +90,8 @@ public class SpearoApplication extends Application {
 	@Override
     public void onCreate() {
         super.onCreate();
+
+        database = new Database(getApplicationContext());
 
         MobileAds.initialize(this);
         new AsyncLoadFishDataFromDb(this).execute();
@@ -110,7 +118,11 @@ public class SpearoApplication extends Application {
     	List<FishingSession> dbFishingSessions = db.fetchFishingSessionsFromDb();
         return dbFishingSessions;
     }
-    
+
+	public List<Speargun> getSpearGuns() {
+		return spearGuns;
+	}
+
 	public boolean isLoaded() {
 		return loaded;
 	}
@@ -151,10 +163,6 @@ public class SpearoApplication extends Application {
 	public List<FishAverageStatistic> getDbCommunityData() {
 		return dbCommunityData;
 	}
-
-//	public void setDbCommunityData(List<FishAverageStatistic> dbCommunityData) {
-//		this.dbCommunityData = dbCommunityData;
-//	}
 	
 	public boolean isNewCommunityDataRecord() {
 		return newCommunityDataRecord;
@@ -164,11 +172,40 @@ public class SpearoApplication extends Application {
 		this.newCommunityDataRecord = newCommunityDataRecord;
 	}
 
+	public boolean isSpearGunsUpdated() {
+		return spearGunsUpdated;
+	}
+
+	public void setSpearGunsUpdated(boolean spearGunsUpdated) {
+		this.spearGunsUpdated = spearGunsUpdated;
+	}
+
 	public void saveUser(User newUser, AsyncSaveUserListener list) {
 		new AsyncSaveUserMongo(this, list, newUser).execute();
 	}
 
-	/**
+	public void addSpeargun(Speargun newSpeargun) {
+		Speargun speargun = database.addSpeargun(newSpeargun);
+		spearGuns.add(speargun);
+		spearGunsUpdated = true;
+	}
+
+	void refreshSpearGuns(){
+		spearGuns.clear();
+		spearGuns.addAll(database.fetchSpeargunsFromDb());
+		spearGunsUpdated = true;
+	}
+
+    public void checkForSpearGunUpdate(List<FishCatch> fishCatches) {
+		for (FishCatch fishCatch: fishCatches ) {
+			if (fishCatch.getCaughtWith() != null){
+				refreshSpearGuns();
+				return;
+			}
+		}
+    }
+
+    /**
      * 1. Fetches all data from db.
      * 2. Uploads the ones that have not been uploaded to mongo.
      * 
@@ -200,22 +237,24 @@ public class SpearoApplication extends Application {
 		 */
 		@Override
         protected Void doInBackground(Void... unused) {
-            Database db = new Database(getApplicationContext());
+
+            spearGuns = database.fetchSpeargunsFromDb();
             fishingSessions = getDbFishingSessions();
             for (FishingSession fishingSession : fishingSessions) {
 				fishCatches.addAll(fishingSession.getFishCatches());
 			}
-            fishies = db.fetchFishFromDb();
 
-            dbCommunityData = db.fetchCommunityData();
+
+            fishies = database.fetchFishFromDb();
+
+            dbCommunityData = database.fetchCommunityData();
             Collections.sort(dbCommunityData);
-            Collections.reverse(dbCommunityData);
             
             if (SpearoUtils.isOnline(getApplicationContext())){
             	toBeUploaded = FishingHelper.convertUserSessionsToStats(fishingSessions, true);
 				if (!toBeUploaded.isEmpty()) {
 					if (ConsistencyChecker.isSuspiciousUser(application, fishingSessions.size())){
-						db.markSessionsAsUploaded(fishingSessions);
+						database.markSessionsAsUploaded(fishingSessions);
 						return null;
 					}
 					SyncHelper syncHelper = new SyncHelper(application);

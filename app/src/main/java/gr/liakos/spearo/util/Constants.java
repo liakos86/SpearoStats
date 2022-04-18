@@ -87,6 +87,9 @@ public interface Constants {
 
     String DOT = ".";
 
+	/**
+	 * Used to alert the new species that are added in a new version.
+	 */
     String PREFS_NEW_SPECIES = "new_species";
 
 }

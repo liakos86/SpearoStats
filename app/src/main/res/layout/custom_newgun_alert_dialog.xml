@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:orientation="vertical">
+        
+     <TextView 
+         android:padding="@dimen/twelve"
+         android:text="@string/alert_title_new_gun"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/sixty_four"
+        android:gravity="center_vertical"
+        android:background="@color/colorAccent"
+        
+        android:textColor="@color/white_back"
+        android:textSize="@dimen/fifteen_sp"
+        android:textStyle="bold"
+        android:singleLine="true"
+        android:ellipsize="end"
+        />
+
+     <TextView
+          android:id="@+id/alert_new_gun_error_msg"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+          android:textSize="@dimen/eight_sp"
+         />
+
+
+     <LinearLayout
+         android:layout_width="match_parent"
+         android:layout_height="wrap_content"
+         android:layout_marginBottom="@dimen/twenty">
+
+     <Spinner
+         android:layout_weight="1"
+        android:id="@+id/spinner_gun_brands"
+        android:layout_width="@dimen/zero"
+        android:layout_height="wrap_content"
+        android:drawSelectorOnTop="true" />
+
+          <EditText
+              android:layout_weight="1"
+              android:gravity="center_vertical"
+              android:padding="@dimen/four"
+              android:id="@+id/editTextGunModel"
+              android:background="@drawable/edit_text_back"
+              android:layout_width="0dp"
+              android:layout_height="@dimen/standard_view_height"
+              android:hint="@string/gun_model"
+              android:layout_marginEnd="@dimen/four"
+              android:singleLine="true" />
+
+     </LinearLayout>
+
+     <LinearLayout
+         android:layout_width="match_parent"
+         android:layout_height="wrap_content"
+         android:layout_marginBottom="@dimen/twenty">
+
+          <Spinner
+              android:layout_weight="1"
+              android:id="@+id/spinner_gun_types"
+              android:layout_width="@dimen/zero"
+              android:layout_height="wrap_content"
+              android:drawSelectorOnTop="true" />
+
+          <Spinner
+              android:layout_weight="1"
+              android:id="@+id/spinner_gun_length"
+              android:layout_width="@dimen/zero"
+              android:layout_height="wrap_content"
+              android:drawSelectorOnTop="true" />
+
+     </LinearLayout>
+
+     <EditText
+         android:padding="@dimen/four"
+         android:layout_marginBottom="@dimen/twenty"
+         android:id="@+id/editTextGunNickname"
+         android:background="@drawable/edit_text_back"
+         android:layout_width="match_parent"
+         android:layout_height="@dimen/standard_view_height"
+         android:hint="@string/gun_nickname"
+         android:layout_margin="@dimen/twelve"
+         android:singleLine="true" />
+
+     <include layout="@layout/alert_buttons_layout"/>
+   
+</LinearLayout>

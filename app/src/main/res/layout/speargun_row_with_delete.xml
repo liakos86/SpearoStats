@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android" 
+    			android:layout_width="match_parent"
+                android:layout_height="wrap_content" 
+                android:background="@color/white_back">
+        
+    <ImageView android:contentDescription="brand"
+        		android:scaleType="fitXY"
+        	   android:layout_width="@dimen/standard_view_height" 
+        	   android:layout_height="@dimen/standard_view_height"
+               android:layout_centerVertical="true" 
+               android:layout_alignParentStart="true"
+               android:layout_marginEnd="@dimen/eight"
+               android:id="@+id/speargun_brand_img"
+               />
+
+    <TextView android:layout_toEndOf="@+id/speargun_brand_img"
+        android:layout_toStartOf="@+id/deleteSpeargun"
+        android:layout_marginTop="@dimen/four"
+        	android:id="@+id/speargun_model_txt"
+        	android:layout_alignParentTop="true"
+              android:textSize="@dimen/fifteen_sp" 
+              android:textColor="@color/primary_grey"
+              android:layout_width="wrap_content" 
+              android:layout_height="wrap_content" 
+              android:singleLine="true" 
+              android:ellipsize="end"/>
+    
+     <TextView android:layout_below="@+id/speargun_model_txt"
+         android:layout_toEndOf="@+id/speargun_brand_img"
+        	android:id="@+id/speargun_nickname_txt"
+              android:textSize="@dimen/twelve_sp" 
+              android:textColor="@color/primary_grey"
+              android:layout_width="wrap_content" 
+              android:layout_height="wrap_content" 
+              android:singleLine="true" 
+              android:ellipsize="end"
+              android:layout_marginBottom="@dimen/four"/>
+   
+
+   <ImageView android:layout_width="wrap_content" 
+       android:layout_height="wrap_content" 
+       android:id="@+id/deleteSpeargun"
+       android:src="@drawable/trash"
+       android:layout_alignParentEnd="true"
+       android:layout_centerVertical="true"
+       android:layout_marginEnd="@dimen/four"
+       />
+
+</RelativeLayout>

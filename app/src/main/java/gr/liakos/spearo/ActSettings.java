@@ -87,7 +87,6 @@ extends Activity implements AsyncSaveUserListener {
 		});
 	}
 
-
 	void getPageToken(){
 //		/* make the API call */
 //		new GraphRequest(

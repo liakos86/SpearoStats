@@ -10,8 +10,8 @@ android {
         applicationId "gr.liakos.spearo"
         minSdkVersion 23
         targetSdkVersion 30
-        versionCode 51
-        versionName "2.0.3"
+        versionCode 52
+        versionName "2.0.4"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }

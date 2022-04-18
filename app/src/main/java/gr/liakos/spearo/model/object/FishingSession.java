@@ -209,14 +209,14 @@ public class FishingSession implements Comparable<FishingSession>{
 	public int compareTo(FishingSession arg0) {
 		
 		if (this.fishingDate == null || this.fishingDate == 0){
-			return -1;
-		}
-		
-		if (arg0.getFishingDate() == null || arg0.getFishingDate() == 0){
 			return 1;
 		}
 		
-		return  this.fishingDate > arg0.getFishingDate() ? 1 : -1;
+		if (arg0.getFishingDate() == null || arg0.getFishingDate() == 0){
+			return -1;
+		}
+		
+		return  this.fishingDate > arg0.getFishingDate() ? -1 : 1;
 	}
 	
 }

@@ -169,7 +169,6 @@ implements AsyncListener {
 		Map<Fish, FishStatistic> userStatisticsPerFish = FishingHelper.convertUserSessionsToStats(userSessionsList, false);
 		List<FishAverageStatistic> userAverageStats = FishingHelper.getAverageStatsFrom(getActivity(), new ArrayList<>(userStatisticsPerFish.values()), StatMode.PERSONAL);
 		Collections.sort(userAverageStats);
-		Collections.reverse(userAverageStats);
 
 		Map<Fish, Map<Integer, Integer>> fishCatchesPerMonth = FishingHelper.convertUserSessionsToMonthlyCatches(userSessionsList);
 		for (FishAverageStatistic avgStat : userAverageStats){

@@ -73,7 +73,7 @@ public class AsyncLoadCommunityDataFromMongo extends AsyncTask<Void, Void, List<
 		}
 		
 		Collections.sort(communityAvgStats);
-		Collections.reverse(communityAvgStats);
+
         return communityAvgStats;
     }
 

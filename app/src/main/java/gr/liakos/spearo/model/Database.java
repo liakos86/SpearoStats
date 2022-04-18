@@ -2,6 +2,8 @@
 package gr.liakos.spearo.model;
 
 import gr.liakos.spearo.R;
+import gr.liakos.spearo.enums.SpearGunBrand;
+import gr.liakos.spearo.enums.SpeargunType;
 import gr.liakos.spearo.enums.Wind;
 import gr.liakos.spearo.enums.WindVolume;
 import gr.liakos.spearo.model.bean.FishStatistic;
@@ -9,11 +11,13 @@ import gr.liakos.spearo.model.object.Fish;
 import gr.liakos.spearo.model.object.FishAverageStatistic;
 import gr.liakos.spearo.model.object.FishCatch;
 import gr.liakos.spearo.model.object.FishingSession;
+import gr.liakos.spearo.model.object.Speargun;
 import gr.liakos.spearo.util.Constants;
 import gr.liakos.spearo.util.DbColumns;
 import gr.liakos.spearo.util.SpearoUtils;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import android.content.ContentResolver;
@@ -29,7 +33,7 @@ import android.net.Uri;
 public class Database extends SQLiteOpenHelper {
 
     private static final String DATABASE_NAME = "spearo_stats.db";
-    private static final int DATABASE_VERSION =  5;
+    private static final int DATABASE_VERSION =  6;
     // this is also considered as invalid id by the server
     public static final Integer INVALID_ID = -1;
     private Context mContext;
@@ -45,6 +49,7 @@ public class Database extends SQLiteOpenHelper {
         db.execSQL(ContentDescriptor.FishCatch.createTable());
         db.execSQL(ContentDescriptor.Fish.createTable());
         db.execSQL(ContentDescriptor.FishAverageStatistic.createTable());
+        db.execSQL(ContentDescriptor.Speargun.createTable());
 
         db.execSQL(ContentDescriptor.Fish.insertSpecies());
     }
@@ -102,6 +107,10 @@ public class Database extends SQLiteOpenHelper {
             SharedPreferences.Editor editor = app_preferences.edit();
             editor.putString(Constants.PREFS_NEW_SPECIES, speciesTextFor_27_11_2021());
             editor.apply();
+        }
+
+        if (newVersion == 6){
+            db.execSQL("ALTER TABLE " + ContentDescriptor.FishCatch.TABLE_NAME + " ADD COLUMN " + ContentDescriptor.FishCatch.Cols.CAUGHT_WITH + " INTEGER;");
         }
 
 	}
@@ -176,8 +185,19 @@ public class Database extends SQLiteOpenHelper {
         resolver.insert(ContentDescriptor.FishCatch.CONTENT_URI, FishCatch.asContentValues(fishCatch));
     }
 
+    /**
+     * Adds a speargun.
+     *
+     * @param speargun
+     */
+    public Speargun addSpeargun(Speargun speargun) {
+        ContentResolver resolver = mContext.getContentResolver();
+        Uri inserted = resolver.insert(ContentDescriptor.Speargun.CONTENT_URI, Speargun.asContentValues(speargun));
+        speargun.setGunId(Integer.valueOf(inserted.getLastPathSegment()));
+        return speargun;
+    }
+
     public List<FishingSession> fetchFishingSessionsFromDb() {
-    	
         String[] FROM = DbColumns.fromSession();
         int sIdPosition = 0;
         int sDatePosition = 1;
@@ -203,8 +223,9 @@ public class Database extends SQLiteOpenHelper {
                 fishingSession.setSessionWind(Wind.ofPosition(c.getInt(sSessionWindPosition)));
                 fishingSession.setSessionWindVolume(WindVolume.ofPosition(c.getInt(sSessionWindVolumePosition)));
                 fishingSession.setSessionImageUriPath(c.getString(sSessionImgUriPosition));
-                
-                fishingSession.getFishCatches().addAll(fetchCatchesForSession(fishingSession.getFishingSessionId()));
+
+                String selectionStringForCatches = ContentDescriptor.FishCatch.Cols.FISHINGSESSIONID + " = " + String.valueOf(fishingSession.getFishingSessionId());
+                fishingSession.getFishCatches().addAll(fetchCatchesForSelection(selectionStringForCatches));
                 fishingSessions.add(fishingSession);
             }
         }
@@ -215,13 +236,51 @@ public class Database extends SQLiteOpenHelper {
 
     }
 
+    public List<Speargun> fetchSpeargunsFromDb() {
+
+        String[] FROM = DbColumns.fromSpeargun();
+        int sIdPosition = 0;
+        int sBrandPosition = 1;
+        int sModelPosition = 2;
+        int sTypePosition = 3;
+        int sLengthPosition = 4;
+        int sNicknamePosition = 5;
+
+        String selection = null;
+        Cursor c = mContext.getContentResolver().query(ContentDescriptor.Speargun.CONTENT_URI, FROM, selection,
+                null, null);
+
+
+        List<Speargun> spearguns = new ArrayList<>();
+        if (c.getCount() > 0) {
+            while (c.moveToNext()) {
+                Speargun speargun = new Speargun(c.getInt(sIdPosition),
+                        SpearGunBrand.ofPosition(c.getInt(sBrandPosition)),
+                                c.getString(sModelPosition),
+                                SpeargunType.ofPosition(c.getInt(sTypePosition)),
+                                c.getInt(sLengthPosition),
+                                c.getString(sNicknamePosition));
+
+                String selectionStringForCatches = ContentDescriptor.FishCatch.Cols.CAUGHT_WITH + " = " + speargun.getGunId();
+                speargun.setCaughtFish(fetchCatchesForSelection(selectionStringForCatches));
+               spearguns.add(speargun);
+            }
+        }
+        c.close();
+        c = null;
+
+        Collections.sort(spearguns);
+        return spearguns;
+
+    }
+
     /**
      * The catches for the given session id are fetched.
      *
-     * @param id
+     * @param selectionString
      * @return
      */
-    public List<FishCatch> fetchCatchesForSession(Integer id) {
+    List<FishCatch> fetchCatchesForSelection(String selectionString) {
         String[] FROM = DbColumns.fromFishCatch();
 
         int sIdPosition = 0;
@@ -233,8 +292,8 @@ public class Database extends SQLiteOpenHelper {
         int sDepthPosition = 6;
 
         Cursor c = mContext.getContentResolver().query(ContentDescriptor.FishCatch.CONTENT_URI, FROM,
-                ContentDescriptor.FishCatch.Cols.FISHINGSESSIONID + " = " + String.valueOf(id),
-                null, null);
+                selectionString,
+                null, "weight desc");
 
         List<FishCatch> catches = new ArrayList<FishCatch>();
 

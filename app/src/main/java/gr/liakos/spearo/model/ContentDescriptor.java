@@ -61,6 +61,8 @@ public class ContentDescriptor {
         FishCatch.addToUriMatcher(authority, matcher);
         FishingSession.addToUriMatcher(authority, matcher);
         FishAverageStatistic.addToUriMatcher(authority, matcher);
+        Speargun.addToUriMatcher(authority, matcher);
+
         return matcher;
     }
 
@@ -91,6 +93,7 @@ public class ContentDescriptor {
             public static final String DEPTH = "depth";
             public static final String CATCH_TIME_MINUTES = "catchTimeInMinutes";
             public static final String CATCH_HOUR = "catchHour";
+            public static final String CAUGHT_WITH = "caughtWith";
         }
 
         protected static UriMatcher addToUriMatcher(String authority, UriMatcher matcher) {
@@ -110,6 +113,7 @@ public class ContentDescriptor {
                     + String.format(sFrmInt, Cols.CATCH_HOUR) + " , "
                     + String.format(sFrmDouble, Cols.WEIGHT) + " , "
                     + String.format(sFrmInt, Cols.DEPTH) + " , "
+                    + String.format(sFrmInt, Cols.CAUGHT_WITH) + " , "
 
                     + String.format(sFrmPrimaryKey, Cols.FISHCATCHID) + ")";
         }
@@ -528,6 +532,56 @@ public class ContentDescriptor {
                     + String.format(sFrmDouble, Cols.AVG_WEIGHT) + " , "
 
                     + String.format(sFrmPrimaryKey, Cols.FISHAVGID) + ");";
+        }
+    }
+
+
+    public static class Speargun {
+        public static final String TABLE_NAME = "SPEARGUN";
+        // content://xxxxx/running
+        public static final String PATH = "speargun";
+        public static final int PATH_TOKEN = 50;
+        // content://xxxxx/running/20
+        public static final String PATH_FOR_ID = "speargun/#";
+        // see wa1 content://xxxxx/running/21
+        public static final String PATH_FOR_ID_WA = "speargun/*";
+        public static final int PATH_FOR_ID_TOKEN = 51;
+        // content://xxxxx/simcounterdetailresponses/startletters
+        public static final String PATH_START_LETTERS = "speargun/startletters";
+        public static final int PATH_START_LETTERS_TOKEN = 52;
+
+        public static final Uri CONTENT_URI = BASE_URI.buildUpon().appendPath(PATH).build();
+
+        public static final String CONTENT_TYPE_DIR = "vnd.android.cursor.dir/vnd.gr.liakos.spearo.app";
+        public static final String CONTENT_ITEM_TYPE = "vnd.android.cursor.item/vnd.gr.liakos.spearo.app";
+
+        public static class Cols {
+            public static final String GUN_ID = BaseColumns._ID; // by convention
+            public static final String BRAND = "brand";
+            public static final String MODEL = "model";
+            public static final String NICKNAME = "nickname";
+            public static final String LENGTH = "length";
+            public static final String TYPE = "type";
+        }
+
+        protected static UriMatcher addToUriMatcher(String authority, UriMatcher matcher) {
+            matcher.addURI(authority, Speargun.PATH, Speargun.PATH_TOKEN);
+            matcher.addURI(authority, Speargun.PATH_FOR_ID, Speargun.PATH_FOR_ID_TOKEN);
+            matcher.addURI(authority, Speargun.PATH_FOR_ID_WA, Speargun.PATH_FOR_ID_TOKEN);
+            matcher.addURI(authority, Speargun.PATH_START_LETTERS, Speargun.PATH_START_LETTERS_TOKEN);
+            return matcher;
+        }
+
+        public static String createTable() {
+            return "CREATE TABLE " + Speargun.TABLE_NAME + " ( "
+                    + String.format(sFrmIdAutoinc, Cols.GUN_ID) + " , "
+                    + String.format(sFrmIntNotNull, Cols.BRAND) + " , "
+                    + String.format(sFrmText, Cols.MODEL) + " , "
+                    + String.format(sFrmInt, Cols.TYPE) + " , "
+                    + String.format(sFrmIntNotNull, Cols.LENGTH) + " , "
+                    + String.format(sFrmText, Cols.NICKNAME) + " , "
+
+                    + String.format(sFrmPrimaryKey, Cols.GUN_ID) + ");";
         }
     }
 

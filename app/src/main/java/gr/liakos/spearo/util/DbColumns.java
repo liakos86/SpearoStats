@@ -64,5 +64,18 @@ public class DbColumns {
 	 
 		 return FROM;
 	 }
-	 
+
+    public static String[] fromSpeargun() {
+		String[] FROM = {
+				// ! beware. I mark the position of the fields
+				ContentDescriptor.Speargun.Cols.GUN_ID,
+				ContentDescriptor.Speargun.Cols.BRAND,
+				ContentDescriptor.Speargun.Cols.MODEL,
+				ContentDescriptor.Speargun.Cols.TYPE,
+				ContentDescriptor.Speargun.Cols.LENGTH,
+				ContentDescriptor.Speargun.Cols.NICKNAME
+		};
+
+		return FROM;
+    }
 }

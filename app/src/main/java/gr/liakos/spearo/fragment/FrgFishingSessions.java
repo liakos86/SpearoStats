@@ -10,7 +10,6 @@ import android.content.SharedPreferences.Editor;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -75,11 +74,13 @@ import gr.liakos.spearo.model.adapter.AutoCompleteSearchAdapter;
 import gr.liakos.spearo.model.adapter.CustomSpinnerAdapter;
 import gr.liakos.spearo.model.adapter.FishingSessionCatchesAdapter;
 import gr.liakos.spearo.model.adapter.FishingSessionRecyclerViewAdapter;
+import gr.liakos.spearo.model.adapter.SpeargunsSpinnerAdapterForSessions;
 import gr.liakos.spearo.model.adapter.WindSpinnerAdapter;
 import gr.liakos.spearo.model.adapter.WindVolumeSpinnerAdapter;
 import gr.liakos.spearo.model.object.Fish;
 import gr.liakos.spearo.model.object.FishCatch;
 import gr.liakos.spearo.model.object.FishingSession;
+import gr.liakos.spearo.model.object.Speargun;
 import gr.liakos.spearo.util.ConsistencyChecker;
 import gr.liakos.spearo.util.Constants;
 import gr.liakos.spearo.util.DateUtils;
@@ -87,9 +88,6 @@ import gr.liakos.spearo.util.LocationUtils;
 import gr.liakos.spearo.util.MetricConverter;
 import gr.liakos.spearo.util.SpearoUtils;
 import gr.liakos.spearo.util.helper.AlertDialogHelper;
-import uk.co.deanwild.materialshowcaseview.MaterialShowcaseSequence;
-import uk.co.deanwild.materialshowcaseview.ShowcaseConfig;
-import uk.co.deanwild.materialshowcaseview.shape.RectangleShape;
 
 public class FrgFishingSessions
 		extends Fragment
@@ -118,7 +116,6 @@ public class FrgFishingSessions
 	NumberPicker pickerWeight;
 	FishingSessionCatchesAdapter sessionCatchesAdapter;
 	Button buttonCheckout;
-	Button buttonCancelAndExit;
 	Spinner spinnerCatchTime;
 
 	/**
@@ -150,11 +147,13 @@ public class FrgFishingSessions
 	Fish selectedFish;
 	Integer catchHour = null;
 	int catchDateMillis;
+	Integer caughtByGunId = null;
 	Button addCatchButton;
 	RelativeLayout layoutFishCatchMeta;
 	LinearLayout layoutInsertButtons;
 	LinearLayout layoutFishSelect;
 	TextView textViewFishCatchMeta;
+	Spinner spinnerSpearGuns;
 
 	/**
 	 * session stuff
@@ -185,11 +184,12 @@ public class FrgFishingSessions
 
 		View v = inflater.inflate(R.layout.frg_fishing_sessions, container, false);
 		fishingSessions = getFishingSessions();
+
 		Collections.sort(fishingSessions);
-		Collections.reverse(fishingSessions);
 		createSessionCatchesListView(v);
 		createSessionsList(v);
 		createCatchTimeSpinner(v);
+		setupSpearGunsSpinner(v);
 		createAutoCompleteDropDown(v);
 		setViews(v);
 		setConfirmLocationButton(v);
@@ -596,6 +596,7 @@ public class FrgFishingSessions
 		showAd();
 		sessionsFlipper.setDisplayedChild(POSITION_SHOW_SESSIONS);
 		((SpearoApplication) getActivity().getApplication()).uploadSessions();
+		((SpearoApplication) getActivity().getApplication()).checkForSpearGunUpdate(newSession.getFishCatches());
 
 	}
 
@@ -791,10 +792,49 @@ public class FrgFishingSessions
 		spearoUtils.setupMetricDepthPicker(pickerDepth);
 	}
 
+	void setupSpearGunsSpinner(View v){
+
+		List<Speargun> guns = new ArrayList<>(((SpearoApplication) getActivity().getApplication()).getSpearGuns());
+		guns.add(0, Speargun.dummy(guns.size(), getActivity().getResources()));
+
+		spinnerSpearGuns = v.findViewById(R.id.spinner_gun_fish);
+		SpeargunsSpinnerAdapterForSessions speargunsAdapter = new SpeargunsSpinnerAdapterForSessions(getActivity(), android.R.layout.simple_spinner_item, guns);
+		spinnerSpearGuns.setAdapter(speargunsAdapter);
+
+		spinnerSpearGuns.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+			@Override
+			public void onItemSelected(AdapterView<?> arg0, View arg1, int position, long arg3) {
+				caughtByGunId = guns.get(position).getGunId();
+			}
+
+			@Override
+			public void onNothingSelected(AdapterView<?> arg0) {}
+		});
+
+	}
+
+	/**
+	 * If a new gun is added via the {@link FrgSpeargunStats}, we need to present it to the user.
+	 */
+	public void reloadGunsSpinner(){
+		if (!((SpearoApplication) requireActivity().getApplication()).isSpearGunsUpdated()){
+			return;
+		}
+
+		SpearoApplication application = ((SpearoApplication) requireActivity().getApplication());
+		application.setSpearGunsUpdated(false);
+
+		List<Speargun> guns = new ArrayList<>(application.getSpearGuns());
+		guns.add(0, Speargun.dummy(guns.size(), application.getResources()));
+		SpeargunsSpinnerAdapterForSessions speargunsAdapter = new SpeargunsSpinnerAdapterForSessions(getActivity(), android.R.layout.simple_spinner_item, guns);
+		spinnerSpearGuns.setAdapter(speargunsAdapter);
+	}
+
 	/**
 	 * Clear views and objects concerning the fish catch.
 	 */
 	void clearCatchViews() {
+		caughtByGunId = null;
 		pickerDepth.setValue(0);
 		pickerWeight.setValue(0);
 		selectedFish = null;
@@ -851,6 +891,7 @@ public class FrgFishingSessions
 		fishCatchToAdd.setFish(fish);
 		fishCatchToAdd.setDepthMeters(MetricConverter.convertDepthFromPickers(app_preferences, pickerDepth.getValue()));
 		fishCatchToAdd.setWeight(weightFromPickers);
+		fishCatchToAdd.setCaughtWith(caughtByGunId);
 
 		if (catchHour != null) {
 			fishCatchToAdd.setCatchHour(catchHour);
@@ -876,7 +917,6 @@ public class FrgFishingSessions
 			fish += fishingSession.getFishCatches().size();
 		}
 		Collections.sort(fishingSessions);
-		Collections.reverse(fishingSessions);
 
 		recyclerViewAdapter.notifyDataSetChanged();
 		((ActSpearoStatsMain) getActivity()).fixCatchesNum(fish);
@@ -1127,21 +1167,6 @@ public class FrgFishingSessions
 		AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getActivity());
 		View dialogView = getActivity().getLayoutInflater().inflate(R.layout.custom_fola_alert_dialog, null);
 		dialogBuilder.setView(dialogView);
-//		dialogBuilder.setPositiveButton(
-//				getResources().getString(R.string.confirm_fola),
-//				new DialogInterface.OnClickListener() {
-//					public void onClick(DialogInterface dialog, int id) {
-//						saveSessionActions();
-//					}
-//				})
-//				.setNegativeButton(
-//						getResources().getString(R.string.cancel),
-//						new DialogInterface.OnClickListener() {
-//							public void onClick(DialogInterface dialog, int id) {
-//								dialog.cancel();
-//							}
-//
-//						});
 
 		AlertDialog alertDialog = dialogBuilder.create();
 

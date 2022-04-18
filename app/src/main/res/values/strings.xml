@@ -50,6 +50,7 @@
 
 	<string name="button_sessions">My diary</string>
 	<string name="button_stats">My stats</string>
+	<string name="button_guns">My guns</string>
 	<string name="button_stats_global">Global stats</string>
 	<string name="button_map">My places</string>
 	<string name="press_for_more">press for more info&#8230;</string>
@@ -422,5 +423,67 @@
 	<string name="concat_fish_family">%1$s, %2$s</string>
     <string name="new_species">New species added:</string>
 
+
+	<string name="pathos">Pathos</string>
+	<string name="apnea">Apnea</string>
+	<string name="gun_model">Model of gun</string>
+    <string name="alert_title_new_gun">New speargun info</string>
+	<string name="gun_nickname">Your nickname for the gun</string>
+    <string name="select_gun_length">Gun length</string>
+    <string name="alemanni">Alemanni</string>
+	<string name="wong">Wong</string>
+	<string name="arcus">Arcus</string>
+	<string name="balco">Balco</string>
+	<string name="demka">Demka</string>
+    <string name="no_guns_spinner_text">create a gun in order to select it here</string>
+	<string name="existing_guns_spinner_text">Which gun did you catch it with?</string>
+	<string name="custom_gun">Custom gun</string>
+	<string name="select_gun_spinner_text">Select brand</string>
+	<string name="select_type_spinner_text">Select type</string>
+	<string name="rubber_band_spinner_text">Rubber band</string>
+	<string name="roller_spinner_text">Roller gun</string>
+	<string name="invert_spinner_text">Invert</string>
+	<string name="pneumatic_spinner_text">Pneumatic</string>
+	<string name="no_brand_selected">please select a brand</string>
+	<string name="no_type_selected">please select a gun type</string>
+    <string name="no_length_selected">please define length</string>
+    <string name="roisub">Roi-sub</string>
+	<string name="mythicon">Mythicon</string>
+	<string name="velco">Velco</string>
+	<string name="meandros">Meandros</string>
+	<string name="torelli">Torelli</string>
+	<string name="koah">Koah</string>
+	<string name="seatec">Seatec</string>
+	<string name="spetton">Spetton</string>
+	<string name="jbl">JBL</string>
+	<string name="teaksea">TEAKSEA</string>
+	<string name="lanara">Lanara</string>
+	<string name="dnsub">DN SUB</string>
+	<string name="azure">Azure</string>
+	<string name="bluegreen">Bluegreen</string>
+	<string name="c4">C4 Carbon</string>
+	<string name="seac">Seac-Sub</string>
+	<string name="salvimar">Salvimar</string>
+	<string name="beauchat">Beauchat</string>
+	<string name="cressi">Cressi</string>
+	<string name="riffe">Riffe</string>
+	<string name="roballen">Rob-Allen</string>
+	<string name="xdive">X-Dive</string>
+	<string name="epsealon">Epsealon</string>
+	<string name="picasso">Picasso</string>
+	<string name="omer">Omer</string>
+	<string name="mares">Mares</string>
+	<string name="cetma">Cetma</string>
+	<string name="campus">Campus</string>
+	<string name="bucanero">Bucanero</string>
+	<string name="bleu">Bleutec</string>
+	<string name="tixi">Tixi</string>
+	<string name="xifias">Xifias</string>
+	<string name="tigullio">Tigullio</string>
+	<string name="mvd">MVD</string>
+	<string name="mastro">Mastro</string>
+	<string name="hammerhead">Hammerhead</string>
+	<string name="abbiller">AB Biller</string>
+	<string name="mako">Mako</string>
 
 </resources>

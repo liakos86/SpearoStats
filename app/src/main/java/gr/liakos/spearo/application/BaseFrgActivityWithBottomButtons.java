@@ -44,9 +44,10 @@ public class BaseFrgActivityWithBottomButtons extends AppCompatActivity {// Frag
         bottomButtons = new HashMap<Integer, Integer>();
         bottomButtons.put(0, R.id.btn_fishing_sessions);
         bottomButtons.put(1, R.id.btn_fishing_stats);
-        bottomButtons.put(2, R.id.btn_fishing_stats_global);
+        bottomButtons.put(2, R.id.btn_guns);
+        bottomButtons.put(3, R.id.btn_fishing_stats_global);
        // bottomButtons.put(3, R.id.btn_fish);
-        bottomButtons.put(3, R.id.btn_map);
+        bottomButtons.put(4, R.id.btn_map);
         for (int counter = 0; counter < ActSpearoStatsMain.getPagerSize(); counter++) {
             setBottomButtonListener(mPager, bottomButtons.get(counter), counter);
         }

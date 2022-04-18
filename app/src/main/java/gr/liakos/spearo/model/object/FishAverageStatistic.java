@@ -241,7 +241,7 @@ public class FishAverageStatistic implements Comparable<FishAverageStatistic>{
 
 	@Override
 	public int compareTo(FishAverageStatistic arg0) {
-		return this.totalCatches - arg0.getTotalCatches();
+		return arg0.getTotalCatches() - this.totalCatches;
 	}
 
 }

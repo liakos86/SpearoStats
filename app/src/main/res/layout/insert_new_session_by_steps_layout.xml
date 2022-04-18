@@ -76,9 +76,17 @@
 			android:textStyle="bold"
 			android:textColor="@color/white_back"
 			android:layout_marginBottom="@dimen/four"/>
+
+		<Spinner
+			android:layout_below="@+id/textview_fish_meta_question"
+			android:background="@color/white_back"
+			android:id="@+id/spinner_gun_fish"
+			android:layout_width="match_parent"
+			android:layout_height="@dimen/standard_view_height"
+			android:drawSelectorOnTop="true" />
          
         <include android:id="@+id/pickers"
-            	 android:layout_below="@+id/textview_fish_meta_question"
+            	 android:layout_below="@+id/spinner_gun_fish"
                  android:layout_width="fill_parent"
                  android:layout_height="wrap_content"
                  layout="@layout/number_pickers"/>

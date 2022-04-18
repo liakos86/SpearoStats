@@ -70,6 +70,7 @@ import gr.liakos.spearo.fragment.FrgFishingSessions;
 import gr.liakos.spearo.fragment.FrgFishingStats;
 import gr.liakos.spearo.fragment.FrgFishingStatsGlobal;
 import gr.liakos.spearo.fragment.FrgMyPlaces;
+import gr.liakos.spearo.fragment.FrgSpeargunStats;
 import gr.liakos.spearo.model.adapter.MyPagerAdapter;
 import gr.liakos.spearo.model.object.User;
 import gr.liakos.spearo.util.Constants;
@@ -104,7 +105,7 @@ implements LocationListener {
     /**
      * The total size of the pager objects
      */
-    private static final int PAGER_SIZE = 4;
+    private static final int PAGER_SIZE = 5;
 	private BillingHelper billingStatsHelper;
 
 	private BillingDiagramsHelper billingDiagramsHelper;
@@ -421,7 +422,7 @@ implements LocationListener {
     @SuppressWarnings("deprecation")
 	private void setupPager() {
         mPager = findViewById(R.id.pager);
-        mPager.setOffscreenPageLimit(3);
+        mPager.setOffscreenPageLimit(4);
         mPager.setAdapter(new MyPagerAdapter(getSupportFragmentManager(), getPagerSize()));
         setBottomButtons(mPager);
         setSelectedBottomButton(bottomButtons, 0);
@@ -441,11 +442,15 @@ implements LocationListener {
                 if (fragment instanceof FrgFishingSessions) {
                     ((FrgFishingSessions) fragment).collapseAppbarIfNeeded();
                     ((FrgFishingSessions) fragment).reloadFishiesOnNewRecord();
+					((FrgFishingSessions) fragment).reloadGunsSpinner();
                 }else if (fragment instanceof FrgFishingStatsGlobal) {
                 }else if (fragment instanceof FrgFishingStats) {
                    ((FrgFishingStats) fragment).recalculateAverageStatsIfNeeded();
 					((FrgFishingStats) fragment).statsShowCase();
-                }else if (fragment instanceof FrgMyPlaces){
+                }else if (fragment instanceof FrgSpeargunStats) {
+					((FrgSpeargunStats) fragment).recalculateGunStatsIfNeeded();
+					((FrgSpeargunStats) fragment).gunsShowCase();
+				}else if (fragment instanceof FrgMyPlaces){
                 	collapseAppbar();
                 	FrgMyPlaces frgMyPlaces = (FrgMyPlaces) fragment;
 					frgMyPlaces.redrawMarkersIfNeeded();
