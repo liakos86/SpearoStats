@@ -25,8 +25,9 @@ import gr.liakos.spearo.R;
 import gr.liakos.spearo.SpearoApplication;
 import gr.liakos.spearo.enums.SpearGunBrand;
 import gr.liakos.spearo.enums.SpeargunType;
+import gr.liakos.spearo.model.adapter.SpeargunLengthsAdapter;
 import gr.liakos.spearo.model.adapter.SpeargunListViewAdapter;
-import gr.liakos.spearo.model.adapter.SpeargunsSpinnerAdapter;
+import gr.liakos.spearo.model.adapter.SpeargunBrandsSpinnerAdapter;
 import gr.liakos.spearo.model.object.FishingSession;
 import gr.liakos.spearo.model.object.Speargun;
 
@@ -82,12 +83,9 @@ extends Fragment {
 		dialogBuilder.setView(dialogView);
 		AlertDialog alertDialog = dialogBuilder.create();
 
-		spinnerGunBrands(dialogView, dialogBuilder, alertDialog);
-
-		spinnerGunTypes(dialogView, dialogBuilder, alertDialog);
-
-		spinnerGunLengths(dialogView, dialogBuilder, alertDialog);
-
+		spinnerGunBrands(dialogView);
+		spinnerGunTypes(dialogView);
+		spinnerGunLengths(dialogView);
 		setupPositiveNegativeAlertButton(dialogView, alertDialog);
 
 		dialogBuilder.setCancelable(false);
@@ -96,7 +94,6 @@ extends Fragment {
 
 	void setupPositiveNegativeAlertButton(View dialogView, AlertDialog alertDialog) {
 		EditText modelEditText = dialogView.findViewById(R.id.editTextGunModel);
-		EditText nickEditText = dialogView.findViewById(R.id.editTextGunNickname);
 		TextView validationMsgTextView = dialogView.findViewById(R.id.alert_new_gun_error_msg);
 
 		Button positiveButton = dialogView.findViewById(R.id.alertConfirmButton);
@@ -104,21 +101,21 @@ extends Fragment {
 			@Override
 			public void onClick(View v) {
 
-				newSpeargun.setModel(modelEditText.getText().toString());
-				newSpeargun.setNickName(nickEditText.getText().toString());
-
-				String textValidationMsg = validate(newSpeargun);
+				String model = modelEditText.getText().toString();
+				String textValidationMsg = validate(newSpeargun, model);
 				if (textValidationMsg != null){
 					validationMsgTextView.setText(textValidationMsg);
 					return;
 				}
+
+				newSpeargun.setModel(model);
 				alertDialog.cancel();
 				validationMsgTextView.setText(null);
 				saveNewSpeargunActions();
 
 			}
 
-			private String validate(Speargun newSpeargun) {
+			private String validate(Speargun newSpeargun, String modelText) {
 				if (null == newSpeargun.getBrand() || SpearGunBrand.NO_GUN.equals(newSpeargun.getBrand())){
 					return getResources().getString(R.string.no_brand_selected);
 				}
@@ -129,6 +126,10 @@ extends Fragment {
 
 				if (null == newSpeargun.getLength() || newSpeargun.getLength() == 0){
 					return getResources().getString(R.string.no_length_selected);
+				}
+
+				if (null != modelText && modelText.length() > 30){
+					return getResources().getString(R.string.max_model_length_text);
 				}
 
 				return null;
@@ -147,11 +148,12 @@ extends Fragment {
 	}
 
 	void saveNewSpeargunActions() {
+		newSpeargun.setCaughtFish(new ArrayList<>());
 		((SpearoApplication) getActivity().getApplication()).addSpeargun(newSpeargun);
 		speargunsAdapter.notifyDataSetChanged();
 	}
 
-	void spinnerGunTypes(View dialogView, AlertDialog.Builder dialogBuilder, AlertDialog alertDialog) {
+	void spinnerGunTypes(View dialogView) {
 		Spinner spinnerGunTypes = dialogView.findViewById(R.id.spinner_gun_types);
 
 		SpeargunType[] speargunTypes = SpeargunType.values();
@@ -164,7 +166,6 @@ extends Fragment {
 		spinnerGunTypes.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 			@Override
 			public void onItemSelected(AdapterView<?> arg0, View arg1, int position, long arg3) {
-
 				newSpeargun.setType(SpeargunType.ofPosition(position));
 			}
 
@@ -176,25 +177,25 @@ extends Fragment {
 		spinnerGunTypes.setAdapter(adapter);
 	}
 
-	void spinnerGunLengths(View dialogView, AlertDialog.Builder dialogBuilder, AlertDialog alertDialog) {
+	void spinnerGunLengths(View dialogView) {
 		Spinner spinnerGunLengths = dialogView.findViewById(R.id.spinner_gun_length);
 
-		String[] gunLengths = new String[142];
-		gunLengths[0] = getResources().getString(R.string.select_gun_length);
-		int counter = 0;
+		List<String> gunLengths = new ArrayList<>();
+		gunLengths.add(getResources().getString(R.string.select_gun_length));
+		int counter = 1;
 		for (int i = 20; i <= 150; i=i+5){
-			gunLengths[counter] = String.valueOf(i);
+			gunLengths.add(counter, String.valueOf(i));
 			counter++;
 		}
 
-		ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, gunLengths);
+		SpeargunLengthsAdapter adapter = new SpeargunLengthsAdapter(getActivity(), android.R.layout.simple_spinner_item, gunLengths);
 
 		spinnerGunLengths.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 			@Override
 			public void onItemSelected(AdapterView<?> arg0, View arg1, int position, long arg3) {
 
 				if (position > 0) {
-					Integer length = Integer.parseInt(gunLengths[position]);
+					Integer length = Integer.parseInt(gunLengths.get(position));
 					newSpeargun.setLength(length);
 				}else{
 					newSpeargun.setLength(null);
@@ -208,10 +209,10 @@ extends Fragment {
 		spinnerGunLengths.setAdapter(adapter);
 	}
 
-	void spinnerGunBrands(View dialogView, AlertDialog.Builder dialogBuilder, AlertDialog alertDialog) {
+	void spinnerGunBrands(View dialogView) {
 		Spinner spinnerGunBrands = dialogView.findViewById(R.id.spinner_gun_brands);
 		List<SpearGunBrand> brands = Arrays.asList(SpearGunBrand.values());
-		SpeargunsSpinnerAdapter adapter = new SpeargunsSpinnerAdapter(getActivity(), android.R.layout.simple_spinner_item, brands);
+		SpeargunBrandsSpinnerAdapter adapter = new SpeargunBrandsSpinnerAdapter(getActivity(), android.R.layout.simple_spinner_item, brands);
 		spinnerGunBrands.setAdapter(adapter);
 
 		spinnerGunBrands.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {

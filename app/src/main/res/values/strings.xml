@@ -485,5 +485,7 @@
 	<string name="hammerhead">Hammerhead</string>
 	<string name="abbiller">AB Biller</string>
 	<string name="mako">Mako</string>
+    <string name="max_model_length_text">Gun model too long (30 chars max)</string>
+    <string name="session_image_alert">Session image</string>
 
 </resources>

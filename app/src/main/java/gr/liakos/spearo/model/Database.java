@@ -110,6 +110,7 @@ public class Database extends SQLiteOpenHelper {
         }
 
         if (newVersion == 6){
+            db.execSQL(ContentDescriptor.Speargun.createTable());
             db.execSQL("ALTER TABLE " + ContentDescriptor.FishCatch.TABLE_NAME + " ADD COLUMN " + ContentDescriptor.FishCatch.Cols.CAUGHT_WITH + " INTEGER;");
         }
 

@@ -6,7 +6,6 @@
     android:orientation="horizontal"
     android:layout_height="wrap_content"
     android:background="@drawable/stat_row_selector"
-    android:padding="@dimen/six"
     tools:ignore="ResAuto">
 
     <ImageView
@@ -18,6 +17,7 @@
         android:layout_height="match_parent"  />
 
         <LinearLayout android:layout_width="0dp"
+            android:padding="@dimen/six"
             android:layout_marginStart="@dimen/four"
             android:layout_height="wrap_content"
             android:layout_weight="3"
@@ -27,11 +27,11 @@
         <TextView  
               android:id="@+id/statTextBrandName"
               style="@style/rowTextView"
-              android:drawableStart="@drawable/info_30"
+              android:drawableStart="@drawable/speargun_30"
               android:layout_marginBottom="@dimen/eight"/>
 
         <TextView
-            android:id="@+id/statTextTotalCatches"
+            android:id="@+id/statTextTotalSpeargunCatches"
             android:drawableStart="@drawable/no_fish_30"
             style="@style/rowTextView"
             android:layout_marginBottom="@dimen/eight" />
@@ -41,6 +41,7 @@
     </LinearLayout>
     
     <LinearLayout android:layout_width="0dp"
+        android:padding="@dimen/six"
              android:layout_marginStart="@dimen/four"
         android:layout_height="wrap_content"
         android:layout_weight="3"
@@ -50,7 +51,7 @@
 
         <TextView
             android:id="@+id/statTextGunModelLength"
-            android:drawableStart="@drawable/info_30"
+            android:drawableStart="@drawable/measure_30"
             style="@style/rowTextView"
             android:layout_marginBottom="@dimen/eight" />
 

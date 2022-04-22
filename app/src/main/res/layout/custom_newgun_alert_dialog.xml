@@ -24,7 +24,9 @@
           android:id="@+id/alert_new_gun_error_msg"
          android:layout_width="wrap_content"
          android:layout_height="wrap_content"
-          android:textSize="@dimen/eight_sp"
+          android:textSize="@dimen/ten_sp"
+         android:textColor="@color/interval_red"
+         android:textStyle="bold"
          />
 
 
@@ -34,14 +36,14 @@
          android:layout_marginBottom="@dimen/twenty">
 
      <Spinner
-         android:layout_weight="1"
+         android:layout_weight="3"
         android:id="@+id/spinner_gun_brands"
         android:layout_width="@dimen/zero"
         android:layout_height="wrap_content"
         android:drawSelectorOnTop="true" />
 
           <EditText
-              android:layout_weight="1"
+              android:layout_weight="2"
               android:gravity="center_vertical"
               android:padding="@dimen/four"
               android:id="@+id/editTextGunModel"
@@ -74,17 +76,6 @@
               android:drawSelectorOnTop="true" />
 
      </LinearLayout>
-
-     <EditText
-         android:padding="@dimen/four"
-         android:layout_marginBottom="@dimen/twenty"
-         android:id="@+id/editTextGunNickname"
-         android:background="@drawable/edit_text_back"
-         android:layout_width="match_parent"
-         android:layout_height="@dimen/standard_view_height"
-         android:hint="@string/gun_nickname"
-         android:layout_margin="@dimen/twelve"
-         android:singleLine="true" />
 
      <include layout="@layout/alert_buttons_layout"/>
    

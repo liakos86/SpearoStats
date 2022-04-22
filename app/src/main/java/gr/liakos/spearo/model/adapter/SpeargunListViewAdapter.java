@@ -17,6 +17,7 @@ import java.util.List;
 
 import gr.liakos.spearo.R;
 import gr.liakos.spearo.fragment.FrgFishingSessions;
+import gr.liakos.spearo.model.object.Fish;
 import gr.liakos.spearo.model.object.FishCatch;
 import gr.liakos.spearo.model.object.Speargun;
 import gr.liakos.spearo.model.viewholder.SessionFishCatchHolder;
@@ -60,7 +61,7 @@ public class SpeargunListViewAdapter extends ArrayAdapter<Speargun> {
             holder.recordTxt = convertView
                     .findViewById(R.id.statTextRecordWeight);
             holder.catchesNumTxt = convertView
-                    .findViewById(R.id.statTextTotalCatches);
+                    .findViewById(R.id.statTextTotalSpeargunCatches);
 
             convertView.setTag(holder);
         } else {
@@ -94,15 +95,16 @@ public class SpeargunListViewAdapter extends ArrayAdapter<Speargun> {
        }
 
         holder.modelTxt.setText(brandWithModelWithLength);
-
         holder.catchesNumTxt.setText(String.valueOf(speargun.getCaughtFish().size()));
 
         if (speargun.getCaughtFish().isEmpty()){
            holder.recordTxt.setText(Constants.MINUS);
        }else{
-            Double recordCatch = speargun.getCaughtFish().get(0).getWeight();
+            FishCatch recordCatchFish = speargun.getCaughtFish().get(0);
+            Double recordCatch = recordCatchFish.getWeight();
             if (recordCatch != null && recordCatch > 0) {
-                holder.recordTxt.setText(recordCatch.toString());
+                String recordTxt = recordCatchFish.getFish().getCommonName() + Constants.COMMA_SEP + recordCatch.toString();
+                holder.recordTxt.setText(recordTxt);
             }else{
                 holder.recordTxt.setText(Constants.MINUS);
             }

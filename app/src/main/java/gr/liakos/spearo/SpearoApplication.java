@@ -68,7 +68,7 @@ public class SpearoApplication extends Application {
 	
 	User user;
 
-	Database database;
+	//Database database;
 
 	  @Override
 		protected void attachBaseContext(Context base) {
@@ -84,14 +84,13 @@ public class SpearoApplication extends Application {
 	   * 2. Load data from db.
 	   * 3. Initialize user.
 	   * 4. Start async inventory query for premium.
-	   * 5. Schedule alarm for weekly stats every sunday.
-	   * 
+	   *
 	   */
 	@Override
     public void onCreate() {
         super.onCreate();
 
-        database = new Database(getApplicationContext());
+      //  database = new Database(getApplicationContext());
 
         MobileAds.initialize(this);
         new AsyncLoadFishDataFromDb(this).execute();
@@ -185,14 +184,14 @@ public class SpearoApplication extends Application {
 	}
 
 	public void addSpeargun(Speargun newSpeargun) {
-		Speargun speargun = database.addSpeargun(newSpeargun);
+		Speargun speargun = new Database(getApplicationContext()).addSpeargun(newSpeargun);
 		spearGuns.add(speargun);
 		spearGunsUpdated = true;
 	}
 
 	void refreshSpearGuns(){
 		spearGuns.clear();
-		spearGuns.addAll(database.fetchSpeargunsFromDb());
+		spearGuns.addAll(new Database(getApplicationContext()).fetchSpeargunsFromDb());
 		spearGunsUpdated = true;
 	}
 
@@ -238,23 +237,23 @@ public class SpearoApplication extends Application {
 		@Override
         protected Void doInBackground(Void... unused) {
 
-            spearGuns = database.fetchSpeargunsFromDb();
+            spearGuns = new Database(getApplicationContext()).fetchSpeargunsFromDb();
             fishingSessions = getDbFishingSessions();
             for (FishingSession fishingSession : fishingSessions) {
 				fishCatches.addAll(fishingSession.getFishCatches());
 			}
 
+			Database db = new Database(getApplicationContext());
+            fishies = db.fetchFishFromDb();
 
-            fishies = database.fetchFishFromDb();
-
-            dbCommunityData = database.fetchCommunityData();
+            dbCommunityData = db.fetchCommunityData();
             Collections.sort(dbCommunityData);
             
             if (SpearoUtils.isOnline(getApplicationContext())){
             	toBeUploaded = FishingHelper.convertUserSessionsToStats(fishingSessions, true);
 				if (!toBeUploaded.isEmpty()) {
 					if (ConsistencyChecker.isSuspiciousUser(application, fishingSessions.size())){
-						database.markSessionsAsUploaded(fishingSessions);
+						db.markSessionsAsUploaded(fishingSessions);
 						return null;
 					}
 					SyncHelper syncHelper = new SyncHelper(application);

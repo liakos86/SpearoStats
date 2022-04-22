@@ -16,13 +16,13 @@ import java.util.List;
 import gr.liakos.spearo.R;
 import gr.liakos.spearo.enums.SpearGunBrand;
 
-public class SpeargunsSpinnerAdapter extends ArrayAdapter<SpearGunBrand> {
+public class SpeargunBrandsSpinnerAdapter extends ArrayAdapter<SpearGunBrand> {
 
 	Activity act;
 
 	List<SpearGunBrand> gunBrands;
 
-	public SpeargunsSpinnerAdapter(Activity act, int txtViewResourceId, List<SpearGunBrand> brands) {
+	public SpeargunBrandsSpinnerAdapter(Activity act, int txtViewResourceId, List<SpearGunBrand> brands) {
 		super(act.getApplicationContext(), txtViewResourceId, brands);
 		this.act = act;
 		this.gunBrands = brands;
@@ -45,9 +45,8 @@ public class SpeargunsSpinnerAdapter extends ArrayAdapter<SpearGunBrand> {
 		SpearGunBrand brand = gunBrands.get(position);
 		Resources resources = act.getResources();
 		TextView main_text = mySpinner .findViewById(R.id.text_main_seen);
-		TextView subSpinner = mySpinner .findViewById(R.id.sub_text_seen);
+		mySpinner.findViewById(R.id.sub_text_seen).setVisibility(View.GONE);
 		main_text.setText(resources.getString(brand.getBrandName()));
-		subSpinner.setText(resources.getString(brand.getBrandName()));
 
 		ImageView left_icon = mySpinner .findViewById(R.id.left_pic);
 		left_icon.setImageDrawable(ResourcesCompat.getDrawable(resources, brand.getDrawableId(), null));
