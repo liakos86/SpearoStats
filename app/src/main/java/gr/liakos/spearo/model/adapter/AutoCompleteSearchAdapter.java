@@ -30,7 +30,7 @@ extends ArrayAdapter<Fish>{
 	FrgFishingSessions fragment;
 	
     public AutoCompleteSearchAdapter(FrgFishingSessions fragment, List<Fish> allFish) {
-    	super(fragment.getActivity().getApplicationContext(), R.layout.fish_row, allFish);
+    	super(fragment.getActivity().getApplicationContext(), R.layout.fish_row_auto_complete, allFish);
     	this.fragment = fragment;
     	this.allFish = allFish;
     	this.tempFishList= new ArrayList<>(allFish);
@@ -42,7 +42,7 @@ extends ArrayAdapter<Fish>{
 
         	FishViewHolder holder = null;
             if (convertView == null || !(convertView.getTag() instanceof FishViewHolder)) {
-                convertView = fragment.requireActivity().getLayoutInflater().inflate(R.layout.fish_row, parent, false);
+                convertView = fragment.requireActivity().getLayoutInflater().inflate(R.layout.fish_row_auto_complete, parent, false);
                 holder = new FishViewHolder();
                 holder.setCommonName( convertView.findViewById(R.id.textCommonName));
                 holder.setFishFamily( convertView.findViewById(R.id.textFishFamily));

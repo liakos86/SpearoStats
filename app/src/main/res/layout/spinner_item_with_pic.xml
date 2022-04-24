@@ -17,7 +17,7 @@
         android:id="@+id/text_main_seen"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/four"
+        android:layout_marginBottom="@dimen/four"
         android:layout_toEndOf="@+id/left_pic"
         android:textColor="@color/primary_grey"
         android:textSize="@dimen/fifteen_sp"
@@ -28,7 +28,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/text_main_seen"
-        android:layout_margin="@dimen/four"
+
         android:layout_toEndOf="@+id/left_pic"
         android:textColor="@color/secondary_grey" 
         android:textSize="@dimen/twelve_sp"/>

@@ -44,12 +44,12 @@ public class FishingSession implements Comparable<FishingSession>{
 		this.fishingDate = fishingDate;
 		this.latitude = latitude;
 		this.longitude = longitude;
-		this.fishCatches = new ArrayList<FishCatch>();
+		this.fishCatches = new ArrayList<>();
 		this.uploadedToMongo = uploaded;
 	}
 
 	public FishingSession() {
-		this.fishCatches = new ArrayList<FishCatch>();
+		this.fishCatches = new ArrayList<>();
 		this.fishingSessionId = Database.INVALID_ID;
 	}
 
@@ -59,10 +59,6 @@ public class FishingSession implements Comparable<FishingSession>{
 	
 	public Integer getFishingSessionId() {
 		return fishingSessionId;
-	}
-
-	public void setFishingSessionId(Integer fishingSessionId) {
-		this.fishingSessionId = fishingSessionId;
 	}
 
 	public boolean isUploadedToMongo() {

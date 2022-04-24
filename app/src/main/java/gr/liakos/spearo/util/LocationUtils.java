@@ -25,17 +25,17 @@ public class LocationUtils {
 	 * @return
 	 * @throws IOException
 	 */
-	public AddressWithCountry getAddressFromLocation(LatLng location, Context ctx) {
+	public AddressWithCountry getAddressFromLocation(Double latitude, Double longitude, Context ctx) {
 		AddressWithCountry toReturn = new AddressWithCountry();
 		Resources resources = ctx.getResources();
-		if (location == null){
+		if (latitude == null || longitude == null){
 			toReturn.setAddress(resources.getString(R.string.no_address));
 			return toReturn;
 		}
 		Geocoder myLocation = new Geocoder(ctx, Locale.getDefault());
 		List<Address> myList = new ArrayList<Address>();
 		try {
-			myList = myLocation.getFromLocation(location.latitude, location.longitude, 1);
+			myList = myLocation.getFromLocation(latitude, longitude, 1);
 		} catch (IOException e) {
 			toReturn.setAddress(resources.getString(R.string.no_address));
 			//toReturn.setAddress(location.latitude + Constants.COMMA_SEP + location.longitude);

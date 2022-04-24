@@ -35,8 +35,8 @@ public class WindSpinnerAdapter  extends ArrayAdapter<String> {
 	
 	@Override 
 	public View getView(int pos, View cnvtView, ViewGroup prnt) { 
-		return getCustomView(pos, cnvtView, prnt); 
-		} 
+			return getCustomView(pos, cnvtView, prnt);
+		}
 	
 	public View getCustomView(int position, View convertView, ViewGroup parent) { 
 		LayoutInflater inflater = act.getLayoutInflater(); 

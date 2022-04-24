@@ -349,7 +349,7 @@
 	<string name="critically_endangered">species is critically endangered for survival</string>
 
 	<string name="nighly_attempt_alert">Your input time indicates night activity. Although it is allowed in some places, we do not track those catches. Sorry!</string>
-	<string name="catch_hour_not_known">Don\' know catch time</string>
+	<string name="catch_hour_not_known">What time did you catch it?</string>
 
 	<string name="session_image">Do you want to add an image for your fishing session?</string>
 
@@ -487,5 +487,6 @@
 	<string name="mako">Mako</string>
     <string name="max_model_length_text">Gun model too long (30 chars max)</string>
     <string name="session_image_alert">Session image</string>
+    <string name="session_image_alert_prompt_text">Is there a photo from your fishing trip you want to add?</string>
 
 </resources>

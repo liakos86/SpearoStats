@@ -3,7 +3,8 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_height="wrap_content"
         android:layout_width="wrap_content"
-        android:orientation="vertical">
+        android:orientation="vertical"
+    >
         
      <TextView 
          android:padding="@dimen/twelve"
@@ -20,7 +21,16 @@
         android:ellipsize="end"
         />
 
+     <TextView
+         android:padding="@dimen/twelve"
+         android:text="@string/session_image_alert_prompt_text"
+         android:layout_width="match_parent"
+         android:layout_height="@dimen/one_hundred"
+         android:gravity="center_vertical"
+         android:textColor="@color/primary_grey"
+         android:textSize="@dimen/twelve_sp"
+         android:textStyle="bold" />
 
-     <include layout="@layout/alert_buttons_layout"/>
+     <include layout="@layout/alert_buttons_yes_no_layout" />
    
 </LinearLayout>

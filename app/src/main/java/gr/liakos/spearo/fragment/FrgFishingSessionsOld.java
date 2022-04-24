@@ -175,7 +175,7 @@
 //        Collections.sort(fishingSessions);
 //        Collections.reverse(fishingSessions);
 //        createSessionCatchesListView(v);
-//        createSessionsList(v);
+//        createSessionsGridViewList(v);
 //        createCatchTimeSpinner(v);
 //        createAutoCompleteDropDown(v);
 //        setViews(v);
@@ -796,7 +796,7 @@
 //     *
 //     * @param v
 //     */
-//    public void createSessionsList(View v) {
+//    public void createSessionsGridViewList(View v) {
 //        GridRecyclerView recyclerView = v.findViewById(R.id.recyclerView);
 //        recyclerViewAdapter = new RecyclerViewAdapter(getActivity(), fishingSessions, this);
 //        recyclerView.setAdapter(recyclerViewAdapter);

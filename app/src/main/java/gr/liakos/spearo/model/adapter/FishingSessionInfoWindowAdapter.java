@@ -84,8 +84,7 @@ implements InfoWindowAdapter{
 
 		if (currentSession.getLatitude() !=null && currentSession.getLongitude() != null){
 			sessionInfoTextViewLocation.setVisibility(View.VISIBLE);
-			LatLng loc = new LatLng(currentSession.getLatitude(), currentSession.getLongitude());
-			String addressFromLocation = new LocationUtils().getAddressFromLocation(loc, activity.getApplicationContext()).getAddress();
+			String addressFromLocation = new LocationUtils().getAddressFromLocation(currentSession.getLatitude(), currentSession.getLongitude(), activity.getApplicationContext()).getAddress();
 			sessionInfoTextViewLocation.setText(addressFromLocation);
 			sessionInfoTextViewLocation.setCompoundDrawablesWithIntrinsicBounds(R.drawable.place_marker__30,0,0,0);
 		}else{

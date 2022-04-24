@@ -111,7 +111,6 @@ public class FrgFishingSessions
 	AdView adView;
 
 	ClearableAutoCompleteTextView autoCompleteFish;
-	AutoCompleteSearchAdapter autoCompleteSearchAdapter;
 	NumberPicker pickerDepth;
 	NumberPicker pickerWeight;
 	FishingSessionCatchesAdapter sessionCatchesAdapter;
@@ -124,13 +123,12 @@ public class FrgFishingSessions
 	GoogleMap googleMap;
 	SupportMapFragment mapFragment;
 	AutocompleteSupportFragment autocompleteFragment;
-	ImageView transparentImageViewOverMap;
 
 	/**
 	 * Lists.
 	 */
 	List<FishingSession> fishingSessions = new ArrayList<FishingSession>();
-	List<FishCatch> sessionCatchesList;
+	List<FishCatch> sessionCatchesList;//we want to keep the same reference for the adapter to work properly
 	List<Fish> fishies = new ArrayList<Fish>();
 
 	/**
@@ -138,17 +136,13 @@ public class FrgFishingSessions
 	 */
 	TextView textDateAndLocation;
 	FishingSessionRecyclerViewAdapter recyclerViewAdapter;
-	View.OnTouchListener inScrollTouchListener;
 	SpearoUtils spearoUtils;
 
 	/**
 	 * catch stuff
 	 */
-	Fish selectedFish;
-	Integer catchHour = null;
-	int catchDateMillis;
-	Integer caughtByGunId = null;
-	Button addCatchButton;
+	FishCatch fishCatch;
+
 	RelativeLayout layoutFishCatchMeta;
 	LinearLayout layoutInsertButtons;
 	LinearLayout layoutFishSelect;
@@ -158,20 +152,16 @@ public class FrgFishingSessions
 	/**
 	 * session stuff
 	 */
-	LatLng location;
-	long sessionMillis;
-	String sessionImgBytes;
-	Calendar calendar;//for session date and session moon
-	Wind wind;
-	WindVolume windVolume;
-	String sessionImgUriPath;
-	Integer sessionId = Database.INVALID_ID;
+	FishingSession session;
 	FrameLayout layoutSessionCatches;
 	Button folaButton;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+
+		fishingSessions = getFishingSessions();
+		Collections.sort(fishingSessions);
 
 		initializePlaces();
 		spearoUtils = new SpearoUtils(getActivity());
@@ -183,11 +173,9 @@ public class FrgFishingSessions
 		super.onCreateView(inflater, container, savedInstanceState);
 
 		View v = inflater.inflate(R.layout.frg_fishing_sessions, container, false);
-		fishingSessions = getFishingSessions();
 
-		Collections.sort(fishingSessions);
-		createSessionCatchesListView(v);
-		createSessionsList(v);
+//		createSessionCatchesListView();
+		createSessionsGridViewList(v);
 		createCatchTimeSpinner(v);
 		setupSpearGunsSpinner(v);
 		createAutoCompleteDropDown(v);
@@ -198,12 +186,12 @@ public class FrgFishingSessions
 		setAddOneMoreCatchButton(v);
 		setCancelAndExitButton(v);
 		setAddCatchButton(v);
-		setInScrollViewTouchListener();
+		setInScrollViewTouchListener(v);
 		setFloatingAddButtonListenersForNewSession(v);
-		updateCheckoutButtonText();
+		//updateCheckoutButtonText();
 
-		clearCatchViews();
-		clearSessionViews();
+		//clearCatchViews();
+		//clearSessionViews();
 
 		if (fishingSessions.isEmpty()) {
 			sessionsFlipper.setDisplayedChild(POSITION_NO_SESSIONS);
@@ -214,37 +202,6 @@ public class FrgFishingSessions
 
 		return v;
 	}
-
-//	private void startShowcaseView() {
-//
-//		int[] pointA = new int[2];
-//		autoCompleteFish.getLocationOnScreen(pointA);
-//		Rect rectA = new Rect(pointA[0], pointA[1], pointA[0] + autoCompleteFish.getWidth(), pointA[1] + autoCompleteFish.getHeight());
-//
-//		ShowcaseConfig config = new ShowcaseConfig();
-//		config.setDelay(100);
-//		config.setShape(new RectangleShape(rectA, true));
-//
-//		MaterialShowcaseSequence sequence = new MaterialShowcaseSequence(getActivity(), Constants.SHOWCASE_FRG_SESSIONS);
-//		sequence.setConfig(config);
-//
-//		String gotIt = getResources().getString(android.R.string.ok);
-//
-//		sequence.addSequenceItem(autoCompleteFish,
-//				getResources().getString(R.string.showcase_auto_comp), gotIt);
-//		sequence.addSequenceItem(pickerDepth,
-//				getResources().getString(R.string.showcase_depth), gotIt);
-//		sequence.addSequenceItem(pickerWeight,
-//				getResources().getString(R.string.showcase_weight), gotIt);
-//		sequence.addSequenceItem(spinnerCatchTime,
-//				getResources().getString(R.string.showcase_catch_time), gotIt);
-//		sequence.addSequenceItem(addCatchButton,
-//				getResources().getString(R.string.showcase_add_catch), gotIt);
-//		sequence.addSequenceItem(buttonCheckout,
-//				getResources().getString(R.string.showcase_checkout), gotIt);
-//
-//		sequence.start();
-//	}
 
 	void initializeAds() {
 		mInterstitialAd = new InterstitialAd(getActivity());
@@ -278,9 +235,9 @@ public class FrgFishingSessions
 			@Override
 			public void onClick(View view) {
 				((ActSpearoStatsMain) getActivity()).collapseAppbar();
-				location = null;
+				session.setLatitude(null);
+				session.setLongitude(null);
 				goToNewSessionChild();
-
 			}
 		});
 	}
@@ -291,11 +248,11 @@ public class FrgFishingSessions
 	 * @param v
 	 */
 	void setAddCatchButton(View v) {
-		addCatchButton = (Button) v.findViewById(R.id.button_add_to_basket);
+		Button addCatchButton = (Button) v.findViewById(R.id.button_add_to_basket);
 		addCatchButton.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View view) {
-				if (selectedFish == null) {
+				if (fishCatch.getFish() == null) {
 					spearoUtils.snack(sessionsFlipper, R.string.no_fish_name_selected);
 					return;
 				}
@@ -304,16 +261,11 @@ public class FrgFishingSessions
 					return;
 				}
 
-				spearoUtils.snack(sessionsFlipper, selectedFish.getCommonName() + Constants.SPACE + getResources().getString(R.string.added));
+				spearoUtils.snack(sessionsFlipper, fishCatch.getFish().getCommonName() + Constants.SPACE + getResources().getString(R.string.added));
 				updateCheckoutButtonText();
 				clearCatchViews();
-
 				addSessionCatchesImages();
-
-				//confirmFishCatchesAlertDialog(true);
-
 				layoutFishCatchMeta.setVisibility(View.GONE);
-
 				layoutInsertButtons.setVisibility(View.VISIBLE);
 			}
 		});
@@ -326,18 +278,12 @@ public class FrgFishingSessions
 		int leftMargin = 50;
 		int delay = 0;
 		for (FishCatch fishCatch : sessionCatchesList) {
-
 			ImageView iv = new ImageView(getContext());
-
-			Drawable drawable = new SpearoUtils(getContext()).getDrawableFromFish(fishCatch.getFish());
+			Drawable drawable = spearoUtils.getDrawableFromFish(fishCatch.getFish());
 			iv.setImageDrawable(drawable);
 
 			FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
-
 			lp.setMargins(leftMargin, 50, 0, 0);
-
-
-			//lp.addRule(RelativeLayout.CENTER_IN_PARENT, RelativeLayout.TRUE);
 
 			lp.height = 150;
 			lp.width = 150;
@@ -352,9 +298,7 @@ public class FrgFishingSessions
 			animation.setDuration(1000);
 			animation.setRepeatCount(0);
 			animation.setStartDelay(delay);
-			//animation.set
 			animation.start();
-
 
 		}
 
@@ -390,7 +334,6 @@ public class FrgFishingSessions
 		buttonCancel.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View view) {
-				//confirmReturnAlertDialog();
 				clearCatchViews();
 				layoutFishSelect.setVisibility(View.VISIBLE);
 			}
@@ -435,7 +378,7 @@ public class FrgFishingSessions
 			@Override
 			public void onClick(View view) {
 
-				if (location == null) {
+				if (session.getLatitude() == null && session.getLongitude() == null) {
 					spearoUtils.snack(sessionsFlipper, R.string.select_location);
 					return;
 				}
@@ -466,11 +409,15 @@ public class FrgFishingSessions
 	}
 
 	/**
+	 * Initialize the {@link FishingSession} only here
+	 *
 	 * begin actions.
 	 */
 	public void beginNewSessionEntryDialogs() {
+		session = new FishingSession();
+
 		collapseAppbar();
-		initializeMap();
+
 		beginDateAlertDialog();
 	}
 
@@ -484,7 +431,7 @@ public class FrgFishingSessions
 		autoCompleteFish.setContext(getActivity().getApplicationContext());
 
 		refreshFish();
-		autoCompleteSearchAdapter = new AutoCompleteSearchAdapter(this, fishies);
+		AutoCompleteSearchAdapter autoCompleteSearchAdapter = new AutoCompleteSearchAdapter(this, fishies);
 		autoCompleteFish.setAdapter(autoCompleteSearchAdapter);
 		autoCompleteFish.setDropDownVerticalOffset(4);
 
@@ -494,10 +441,9 @@ public class FrgFishingSessions
 	 * The session catches list. It is being populated by user input catches.
 	 * It is not visible until confirmation upon persistence.
 	 *
-	 * @param v
 	 */
-	void createSessionCatchesListView(View v) {
-		sessionCatchesList = new ArrayList<FishCatch>();
+	void createSessionCatchesListView() {
+		sessionCatchesList = new ArrayList<>();
 		sessionCatchesAdapter = new FishingSessionCatchesAdapter(this, getActivity(), R.layout.fish_catch_row_with_delete, sessionCatchesList);
 	}
 
@@ -521,9 +467,11 @@ public class FrgFishingSessions
 	 * @param v
 	 */
 	void createCatchTimeSpinner(View v) {
+		spinnerCatchTime = v.findViewById(R.id.spinnerCatchTime);
+
 		String[] catchHoursArray = getResources().getStringArray(R.array.catch_hours);
 		final List<String> catchHours = Arrays.asList(catchHoursArray);
-		spinnerCatchTime = (Spinner) v.findViewById(R.id.spinnerCatchTime);
+
 		CustomSpinnerAdapter adapter = new CustomSpinnerAdapter(getActivity(), android.R.layout.simple_spinner_item, catchHoursArray, Arrays.asList(catchHoursArray));
 		spinnerCatchTime.setAdapter(adapter);
 		spinnerCatchTime.setOnItemSelectedListener(new OnItemSelectedListener() {
@@ -531,10 +479,10 @@ public class FrgFishingSessions
 			@Override
 			public void onItemSelected(AdapterView<?> arg0, View arg1, int position, long arg3) {
 				if (position == 0) {
-					catchHour = null;
+					fishCatch.setCatchHour(null);
 					return;
 				}
-				catchHour = Integer.valueOf(catchHours.get(position).substring(0, 2));
+				fishCatch.setCatchHour( Integer.valueOf(catchHours.get(position).substring(0, 2)) );
 
 			}
 
@@ -552,20 +500,21 @@ public class FrgFishingSessions
 	 *
 	 */
 	void goToNewSessionChild() {
+		createSessionCatchesListView();
+		clearSessionViews();
+		clearCatchViews();
+
 		sessionsFlipper.setDisplayedChild(POSITION_NEW_SESSION);
 		layoutFishSelect.setVisibility(View.VISIBLE);
 
-		AddressWithCountry addressWithCountry = new LocationUtils().getAddressFromLocation(location, getActivity().getApplicationContext());
+		AddressWithCountry addressWithCountry = new LocationUtils().getAddressFromLocation(session.getLatitude(), session.getLongitude(), getActivity().getApplicationContext());
 		String addressFromLocation = addressWithCountry.getAddress();
 		if (addressFromLocation != null) {
-			textDateAndLocation.setText(DateUtils.dateFromMillis(sessionMillis) + Constants.COMMA_SEP + addressFromLocation);
+			String addressAndDate = DateUtils.dateFromMillis(session.getFishingDate()) + Constants.COMMA_SEP + addressFromLocation;
+			textDateAndLocation.setText(addressAndDate);
 		} else {
-			textDateAndLocation.setText(DateUtils.dateFromMillis(sessionMillis));
+			textDateAndLocation.setText(DateUtils.dateFromMillis(session.getFishingDate()));
 		}
-
-//		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-//			startShowcaseView();
-//		}
 
 	}
 
@@ -587,11 +536,11 @@ public class FrgFishingSessions
 	 */
 	void saveSessionActions() {
 		FishingSession newSession = saveOrUpdateFishingSession();
-		clearCatchViews();
-		clearSessionViews();
+	//	clearCatchViews();
+	//	clearSessionViews();
 		updateSessions();
 		informApplicationForNewSession();
-		updateCheckoutButtonText();
+	//	updateCheckoutButtonText();
 		markSuspiciousSession(newSession);
 		showAd();
 		sessionsFlipper.setDisplayedChild(POSITION_SHOW_SESSIONS);
@@ -659,7 +608,7 @@ public class FrgFishingSessions
 	 *
 	 * @param v
 	 */
-	public void createSessionsList(View v) {
+	public void createSessionsGridViewList(View v) {
 		GridRecyclerView recyclerView = v.findViewById(R.id.recyclerView);
 		recyclerViewAdapter = new FishingSessionRecyclerViewAdapter(getActivity(), fishingSessions, this);
 		recyclerView.setAdapter(recyclerViewAdapter);
@@ -676,15 +625,16 @@ public class FrgFishingSessions
 	public void setSelectedFish(Fish fish) {
 		autoCompleteFish.dismissDropDown();
 		ActSpearoStatsMain activity = (ActSpearoStatsMain) getActivity();
-		selectedFish = Fish.getFromId(activity, fish.getFishId());
-		String addedFishText = activity.getResources().getString(R.string.prey) + selectedFish.getCommonName();
+		fishCatch.setFish(fish);
+		fishCatch.setFishId(fish.getFishId());
+		String addedFishText = activity.getResources().getString(R.string.prey) + fishCatch.getFish().getCommonName();
 		autoCompleteFish.setText(addedFishText);
 
-		String addedFishButtonText = activity.getResources().getString(R.string.click_to_add) + Constants.SPACE + Constants.SINGLE_QUOTE +  selectedFish.getCommonName() + Constants.SINGLE_QUOTE;
-		addCatchButton.setText(addedFishButtonText);
+//		String addedFishButtonText = activity.getResources().getString(R.string.click_to_add) + Constants.SPACE + Constants.SINGLE_QUOTE +  fishCatch.getFish().getCommonName() + Constants.SINGLE_QUOTE;
+//		addCatchButton.setText(addedFishButtonText);
 
-		textViewFishCatchMeta.setText(getActivity().getResources().getString(R.string.textview_fish_meta_question, selectedFish.getCommonName()));
-		textViewFishCatchMeta.setCompoundDrawablesWithIntrinsicBounds(new SpearoUtils(getContext()).getDrawableFromFish(fish), null, null, null);
+		textViewFishCatchMeta.setText(getActivity().getResources().getString(R.string.textview_fish_meta_question, fishCatch.getFish().getCommonName()));
+		textViewFishCatchMeta.setCompoundDrawablesWithIntrinsicBounds(spearoUtils.getDrawableFromFish(fish), null, null, null);
 
 		layoutFishSelect.setVisibility(View.GONE);
 		layoutFishCatchMeta.setVisibility(View.VISIBLE);
@@ -696,30 +646,13 @@ public class FrgFishingSessions
 	 * After saving the session display the interstitial ad.
 	 */
 	FishingSession saveOrUpdateFishingSession() {
-		FishingSession session = new FishingSession();
 
-		session.setFishingSessionId(sessionId);
-		session.setFishingDate(sessionMillis);
-		session.setSessionImage(sessionImgBytes);
-		session.setSessionImageUriPath(sessionImgUriPath);
-
-		if (sessionCatchesList.isEmpty() || sessionId > 0) {
+		if (sessionCatchesList.isEmpty()) {
 			session.setUploadedToMongo(true);
 		}
 		else {
 			session.getFishCatches().addAll(sessionCatchesList);
 		}
-		if (location != null) {
-			session.setLatitude(location.latitude);
-			session.setLongitude(location.longitude);
-		}
-
-		session.setSessionWind(wind);
-		if (Wind.NO_WIND.equals(wind)){
-			windVolume = WindVolume.NOT_KNOWN;
-		}
-
-		session.setSessionWindVolume(windVolume);
 
 		ActSpearoStatsMain activity = (ActSpearoStatsMain) getActivity();
 		Database db = new Database(activity);
@@ -754,7 +687,6 @@ public class FrgFishingSessions
 			}
 		});
 
-		transparentImageViewOverMap = (ImageView) v.findViewById(R.id.transparent_img);
 		sessionsFlipper = (ViewFlipper) v.findViewById(R.id.fishing_sessions_flipper);
 		textDateAndLocation = (TextView) v.findViewById(R.id.textview_session_date_location);
 
@@ -793,18 +725,16 @@ public class FrgFishingSessions
 	}
 
 	void setupSpearGunsSpinner(View v){
-
 		List<Speargun> guns = new ArrayList<>(((SpearoApplication) getActivity().getApplication()).getSpearGuns());
 		guns.add(0, Speargun.dummy(guns.size(), getActivity().getResources()));
-
 		spinnerSpearGuns = v.findViewById(R.id.spinner_gun_fish);
 		SpeargunsSpinnerAdapterForSessions speargunsAdapter = new SpeargunsSpinnerAdapterForSessions(getActivity(), android.R.layout.simple_spinner_item, guns);
-		spinnerSpearGuns.setAdapter(speargunsAdapter);
 
+		spinnerSpearGuns.setAdapter(speargunsAdapter);
 		spinnerSpearGuns.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 			@Override
 			public void onItemSelected(AdapterView<?> arg0, View arg1, int position, long arg3) {
-				caughtByGunId = guns.get(position).getGunId();
+				fishCatch.setCaughtWith( guns.get(position).getGunId());
 			}
 
 			@Override
@@ -834,16 +764,21 @@ public class FrgFishingSessions
 	 * Clear views and objects concerning the fish catch.
 	 */
 	void clearCatchViews() {
-		caughtByGunId = null;
+		fishCatch = new FishCatch();
+
+		//caughtByGunId = null;
 		pickerDepth.setValue(0);
 		pickerWeight.setValue(0);
-		selectedFish = null;
+		//selectedFish = null;
 		autoCompleteFish.setText(Constants.EMPTY);
 		autoCompleteFish.dismissDropDown();
 		spinnerCatchTime.setSelection(0);
-		catchHour = null;
-		catchDateMillis = 0;
-		addCatchButton.setText(getActivity().getResources().getText(R.string.add_catch));
+		spinnerSpearGuns.setSelection(0);
+		//catchHour = null;
+		//catchDateMillis = 0;
+		//addCatchButton.setText(getActivity().getResources().getText(R.string.add_catch));
+
+
 
 		layoutFishCatchMeta.setVisibility(View.INVISIBLE);
 		layoutInsertButtons.setVisibility(View.INVISIBLE);
@@ -854,19 +789,20 @@ public class FrgFishingSessions
 	 * Clear views and objects concerning the fish session.
 	 */
 	void clearSessionViews() {
+
 		autocompleteFragment.setText(Constants.EMPTY);
-		sessionId = Database.INVALID_ID;
-		location = null;
-		sessionImgBytes = null;
-		sessionImgUriPath = null;
-		wind = Wind.NOT_KNOWN;
-		windVolume = WindVolume.NOT_KNOWN;
+		//sessionId = Database.INVALID_ID;
+		//location = null;
+		//sessionImgBytes = null;
+		//sessionImgUriPath = null;
+		//wind = Wind.NOT_KNOWN;
+		//windVolume = WindVolume.NOT_KNOWN;
 		if (googleMap != null) {
 			googleMap.clear();
 		}
 		sessionCatchesList.clear();
 		sessionCatchesAdapter.notifyDataSetChanged();
-		sessionMillis = 0L;
+		//sessionMillis = 0L;
 		textDateAndLocation.setText(Constants.EMPTY);
 		updateCheckoutButtonText();
 		folaButton.setVisibility(View.VISIBLE);
@@ -878,25 +814,22 @@ public class FrgFishingSessions
 	boolean addCatchToSession() {
 		SharedPreferences app_preferences = getActivity().getSharedPreferences(Constants.PREFERENCES, Context.MODE_PRIVATE);
 		double weightFromPickers = MetricConverter.convertWeightFromPickers(app_preferences, pickerWeight.getValue());
-		if (selectedFish.isRecordCatch(weightFromPickers)) {
-			alertRecordAttemptFor(selectedFish, pickerWeight.getValue());
+		if (fishCatch.getFish().isRecordCatch(weightFromPickers)) {
+			alertRecordAttemptFor(fishCatch.getFish(), pickerWeight.getValue());
 			return false;
 		}
 
-		FishCatch fishCatchToAdd = new FishCatch();
-		int selectedFishId = selectedFish.getFishId().intValue();
-		fishCatchToAdd.setFishId(selectedFishId);
-		ActSpearoStatsMain activity = (ActSpearoStatsMain) getActivity();
-		Fish fish = Fish.getFromId(activity, selectedFishId);
-		fishCatchToAdd.setFish(fish);
-		fishCatchToAdd.setDepthMeters(MetricConverter.convertDepthFromPickers(app_preferences, pickerDepth.getValue()));
-		fishCatchToAdd.setWeight(weightFromPickers);
-		fishCatchToAdd.setCaughtWith(caughtByGunId);
+		//FishCatch fishCatchToAdd = new FishCatch();
+		//int selectedFishId = fishCatch.getFish().getFishId();
+		//fishCatchToAdd.setFishId(selectedFishId);
+		//ActSpearoStatsMain activity = (ActSpearoStatsMain) getActivity();
+		//Fish fish = Fish.getFromId(activity, selectedFishId);
+		//fishCatchToAdd.setFish(fish);
+		fishCatch.setDepthMeters(MetricConverter.convertDepthFromPickers(app_preferences, pickerDepth.getValue()));
+		fishCatch.setWeight(weightFromPickers);
+		//fishCatchToAdd.setCaughtWith(caughtByGunId);
 
-		if (catchHour != null) {
-			fishCatchToAdd.setCatchHour(catchHour);
-		}
-		sessionCatchesList.add(fishCatchToAdd);
+		sessionCatchesList.add(fishCatch);
 		sessionCatchesAdapter.notifyDataSetChanged();
 
 		return true;
@@ -968,7 +901,10 @@ public class FrgFishingSessions
 	 */
 	void addMarker(LatLng point) {
 		googleMap.clear();
-		location = point;
+
+		session.setLatitude(point.latitude);
+		session.setLongitude(point.longitude);
+		//location = point;
 
 		View markerView = ((LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.map_marker_layout_sessions, null);
 		TextView numTxt = (TextView) markerView.findViewById(R.id.fish_num_txt);
@@ -988,12 +924,14 @@ public class FrgFishingSessions
 	 * @param sessionBytes
 	 */
 	public void setSessionBytesAndSave(String sessionBytes) {
-		this.sessionImgBytes = sessionBytes;
+		session.setSessionImage(sessionBytes);
+		session.setSessionImageUriPath(null);
 		saveSessionActions();
 	}
 
 	public void setSessionUriAndSave(String uriPath) {
-		this.sessionImgUriPath = uriPath;
+		session.setSessionImageUriPath(uriPath);
+		session.setSessionImage(null);
 		saveSessionActions();
 	}
 
@@ -1012,8 +950,8 @@ public class FrgFishingSessions
 		}
 		
 		refreshFish();
-		
-		autoCompleteSearchAdapter = new AutoCompleteSearchAdapter(this, fishies);
+
+		AutoCompleteSearchAdapter autoCompleteSearchAdapter = new AutoCompleteSearchAdapter(this, fishies);
 		autoCompleteFish.setAdapter(autoCompleteSearchAdapter);
 		autoCompleteSearchAdapter.notifyDataSetChanged();
 		((SpearoApplication)getActivity().getApplication()).setNewCommunityDataRecord(false);
@@ -1048,7 +986,6 @@ public class FrgFishingSessions
 		sessionCatchesList.remove(fishCatch);
 		sessionCatchesAdapter.notifyDataSetChanged();
 		updateCheckoutButtonText();
-
 		addSessionCatchesImages();
 	}
 
@@ -1065,8 +1002,8 @@ public class FrgFishingSessions
 		buttonCheckout.setText(getResources().getString(R.string.save_session) + Constants.SPACE + fishCatchesSize + Constants.SPACE + fishText);
 	}
 
-	void setInScrollViewTouchListener(){
-		 inScrollTouchListener = new View.OnTouchListener() {
+	void setInScrollViewTouchListener(View v){
+		View.OnTouchListener inScrollTouchListener = new View.OnTouchListener() {
 
 	    	    @Override
 	    	    public boolean onTouch(View v, MotionEvent event) {
@@ -1090,6 +1027,8 @@ public class FrgFishingSessions
 	    	        }   
 	    	    }
 	    	};
+
+			ImageView transparentImageViewOverMap = (ImageView) v.findViewById(R.id.transparent_img);
 	    	transparentImageViewOverMap.setOnTouchListener(inScrollTouchListener);
 	 }
 
@@ -1104,8 +1043,8 @@ public class FrgFishingSessions
 	}
 	
 	void clearAndGoToSessions() {
-		clearCatchViews();
-        clearSessionViews();
+//		clearCatchViews();
+//        clearSessionViews();
     	goToSessionsChild();
 	}
 
@@ -1120,20 +1059,6 @@ public class FrgFishingSessions
 	 private void placeAds() {
 	        adRequest = new AdRequest.Builder().build();
 	    }
-
-//	public void editSession(FishingSession item) {
-//		clearCatchViews();
-//		clearSessionViews();
-//		sessionId = item.getFishingSessionId();
-//		sessionCatchesList.addAll(item.getFishCatches());
-//		sessionCatchesAdapter.notifyDataSetChanged();
-//		sessionMillis = item.getFishingDate();
-//		location = new LatLng(item.getLatitude(), item.getLongitude());
-//		updateCheckoutButtonText();
-//		collapseAppbar();
-//		goToNewSessionChild();
-//		AlertDialogHelper.alertDialogWithPositive(getActivity(), getResources().getString(android.R.string.ok), null, getResources().getString(R.string.editing_session_alert));
-//	}
 
 	private class LoadAsyncAd extends AsyncTask<Void, Void, Void> {
 
@@ -1164,6 +1089,7 @@ public class FrgFishingSessions
 	 * User confirms his bad luck, when no catches.
 	 */
 	void confirmFolaAlertDialog() {
+
 		AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getActivity());
 		View dialogView = getActivity().getLayoutInflater().inflate(R.layout.custom_fola_alert_dialog, null);
 		dialogBuilder.setView(dialogView);
@@ -1211,28 +1137,7 @@ public class FrgFishingSessions
 
 		ListView sessionCatchesListView = (ListView) dialogView.findViewById(R.id.listViewSessionCatches);
 		sessionCatchesListView.setAdapter(sessionCatchesAdapter);
-//		dialogBuilder.setPositiveButton(
-//				getResources().getString(R.string.confirm),
-//				new DialogInterface.OnClickListener() {
-//					public void onClick(DialogInterface dialog, int id) {
-//						if (sessionCatchesList.isEmpty()) {
-//							confirmFolaAlertDialog();
-//							return;
-//						}
-//						alertSessionImage();
-//					}
-//				});
-//
-//
-//		dialogBuilder
-//				.setNegativeButton(
-//						getResources().getString(R.string.close),
-//						new DialogInterface.OnClickListener() {
-//							public void onClick(DialogInterface dialog, int id) {
-//								clearCatchViews();
-//							}
-//
-//						});
+
 
 		AlertDialog alertDialog = dialogBuilder.create();
 		Button positiveButton = dialogView.findViewById(R.id.alertConfirmButton);
@@ -1259,8 +1164,6 @@ public class FrgFishingSessions
 
 			}
 		});
-
-
 
 		alertDialog.show();
 	}
@@ -1298,20 +1201,7 @@ public class FrgFishingSessions
 		TextView sessionDateTextView = (TextView) dialogView.findViewById(R.id.sessionDateText);
 		sessionDateTextView.setText(getResources().getString(R.string.session_date));
 
-
-
-		dialogBuilder
-//				.
-//				setPositiveButton(getResources().getString(R.string.confirm), new DialogInterface.OnClickListener() {
-//			public void onClick(DialogInterface dialog, int id) {
-//
-//			}
-//		}).setNegativeButton(getResources().getString(R.string.exit), new DialogInterface.OnClickListener() {
-//			public void onClick(DialogInterface dialog, int id) {
-//				clearAndGoToSessions();
-//			}
-//		})
-				.setCancelable(false);
+		dialogBuilder.setCancelable(false);
 
 		AlertDialog alertDialog = dialogBuilder.create();
 		Button positiveButton = dialogView.findViewById(R.id.alertConfirmButton);
@@ -1322,9 +1212,9 @@ public class FrgFishingSessions
 				int day = sessionPicker.getDayOfMonth();
 				int month = sessionPicker.getMonth();
 				int year = sessionPicker.getYear();
-				calendar = Calendar.getInstance();
+				Calendar calendar = Calendar.getInstance();
 				calendar.set(year, month, day);
-				sessionMillis = calendar.getTime().getTime();
+				session.setFishingDate(calendar.getTime().getTime());
 				beginWindInteraction();
 			}
 		});
@@ -1363,11 +1253,12 @@ public class FrgFishingSessions
 		spinnerWind.setOnItemSelectedListener(new OnItemSelectedListener() {
 			@Override
 			public void onItemSelected(AdapterView<?> arg0, View arg1, int position, long arg3) {
-				wind = Wind.ofPosition(winds.get(position).getPosition());
+				Wind wind = Wind.ofPosition(winds.get(position).getPosition());
+				session.setSessionWind(wind);
 
 				if (Wind.NO_WIND.equals(wind)){
 					spinnerWindVolume.setVisibility(View.INVISIBLE);
-					windVolume = WindVolume.NOT_KNOWN;
+					session.setSessionWindVolume(WindVolume.NOT_KNOWN);
 				}else{
 					spinnerWindVolume.setVisibility(View.VISIBLE);
 				}
@@ -1381,24 +1272,14 @@ public class FrgFishingSessions
 		spinnerWindVolume.setOnItemSelectedListener(new OnItemSelectedListener() {
 			@Override
 			public void onItemSelected(AdapterView<?> arg0, View arg1, int position, long arg3) {
-				windVolume = WindVolume.ofPosition(windVols.get(position).getPosition());
+				session.setSessionWindVolume(WindVolume.ofPosition(windVols.get(position).getPosition()));
 			}
 
 			@Override
 			public void onNothingSelected(AdapterView<?> arg0) { }
 		});
 
-		dialogBuilder
-//				.setPositiveButton(getResources().getString(R.string.confirm), new DialogInterface.OnClickListener() {
-//			public void onClick(DialogInterface dialog, int id) {
-//				beginMapInteraction();
-//			}
-//		}).setNegativeButton(getResources().getString(R.string.exit), new DialogInterface.OnClickListener() {
-//			public void onClick(DialogInterface dialog, int id) {
-//				clearAndGoToSessions();
-//			}
-//		})
-				.setCancelable(false);
+		dialogBuilder.setCancelable(false);
 
 		AlertDialog alertDialog = dialogBuilder.create();
 
@@ -1406,6 +1287,7 @@ public class FrgFishingSessions
 		positiveButton.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
+				initializeMap();
 				alertDialog.cancel();
 				beginMapInteraction();
 			}
@@ -1421,7 +1303,6 @@ public class FrgFishingSessions
 			}
 		});
 
-
 		alertDialog.show();
 	}
 
@@ -1430,21 +1311,29 @@ public class FrgFishingSessions
 	 */
 	void alertSessionImage() {
 		AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getActivity());
-		dialogBuilder.setPositiveButton(getResources().getString(R.string.yes), new DialogInterface.OnClickListener() {
-			public void onClick(DialogInterface dialog, int id) {
+		View dialogView = getActivity().getLayoutInflater().inflate(R.layout.custom_session_image_alert_dialog, null);
+		dialogBuilder.setView(dialogView);
+		dialogBuilder.setCancelable(false);
+		AlertDialog alertDialog = dialogBuilder.create();
+
+		Button positiveButton = dialogView.findViewById(R.id.alertConfirmButton);
+		positiveButton.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				alertDialog.cancel();
 				selectImage();
 			}
-		})
-				.setNegativeButton(getResources().getString(R.string.no), new DialogInterface.OnClickListener() {
-					public void onClick(DialogInterface dialog, int id) {
-						dialog.cancel();
-						saveSessionActions();
-					}
+		});
 
-				})
-				.setMessage(getResources().getString(R.string.session_image));
+		Button negativeButton = dialogView.findViewById(R.id.alertCloseButton);
+		negativeButton.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				alertDialog.cancel();
+				saveSessionActions();
+			}
+		});
 
-		AlertDialog alertDialog = dialogBuilder.create();
 		alertDialog.show();
 	}
 

@@ -299,4 +299,10 @@
     <string name="fish_already_exists">Το ψάρι \'%1$s\' υπάρχει ήδη στην εφαρμογή!</string>
     <string name="new_species">Νέα είδη στην εφαρμογή:</string>
 
+
+	<string name="max_model_length_text">Το μοντέλο του όπλου μπορεί να είναι έως 30 χαρακτήρες</string>
+	<string name="session_image_alert">Προσθήκη φωτογραφίας</string>
+	<string name="session_image_alert_prompt_text">Θέλετε να προσθέσετε μια φωτογραφία από το ψάρεμά σας;</string>
+
+
 </resources>

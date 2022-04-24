@@ -29,14 +29,14 @@ public class CustomSpinnerAdapter  extends ArrayAdapter<String> {
 		return getCustomView(position, cnvtView, prnt); 
 	} 
 	
-	@Override 
+	@Override
 	public View getView(int pos, View cnvtView, ViewGroup prnt) { 
 		return getCustomView(pos, cnvtView, prnt); 
 		} 
 	
 	public View getCustomView(int position, View convertView, ViewGroup parent) { 
-		LayoutInflater inflater = act.getLayoutInflater(); 
-		View mySpinner = inflater.inflate(R.layout.spinner_item, parent, false); 
+		LayoutInflater inflater = act.getLayoutInflater();
+		View mySpinner = inflater.inflate(R.layout.spinner_item, parent, false);
 		TextView main_text = (TextView) mySpinner .findViewById(R.id.spinnerItemText); 
 		String hour = catchHours.get(position);
 		main_text.setText(hour); 

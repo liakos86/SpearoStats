@@ -9,7 +9,7 @@
     
     <gr.liakos.spearo.application.NumberPicker
         android:layout_alignParentTop="true"
-            android:layout_marginBottom="@dimen/eight"
+            android:layout_marginBottom="@dimen/four"
             app:minValue="0.00"
             app:maxValue="50.00"
             app:step="0.5"
@@ -22,7 +22,7 @@
     
     <gr.liakos.spearo.application.NumberPicker
         android:layout_below="@+id/picker_catch_depth"
-            android:layout_marginBottom="@dimen/eight"
+            android:layout_marginBottom="@dimen/four"
             app:minValue="0.00"
             app:maxValue="300.00"
             app:step="0.25"
