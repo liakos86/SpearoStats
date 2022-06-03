@@ -17,16 +17,6 @@
         android:singleLine="true"
         android:ellipsize="end"
         />
-    
-  <!-- <TextView android:id="@+id/catchTimeText"
-        android:background="@color/colorAccent"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/standard_view_height"
-        android:textColor="@color/white_back"
-        android:textStyle="bold"
-        android:textSize="@dimen/twenty_sp"
-        />
- -->      
    
     
     <TimePicker

@@ -14,7 +14,6 @@
 	<string name="legend_num">Συνολικές συλλήψεις</string>
 
 	<string name="app_store_try_later">Προέκυψε ένα σφάλμα στο app-store, δοκιμάστε ξανά</string>
-	<string name="app_name">SpearoStats</string>
 	<string name="action_settings">Ρυθμίσεις</string>
 	<string name="close">Κλείσιμο</string>
 	<string name="exit">Έξοδος</string>
@@ -303,6 +302,28 @@
 	<string name="max_model_length_text">Το μοντέλο του όπλου μπορεί να είναι έως 30 χαρακτήρες</string>
 	<string name="session_image_alert">Προσθήκη φωτογραφίας</string>
 	<string name="session_image_alert_prompt_text">Θέλετε να προσθέσετε μια φωτογραφία από το ψάρεμά σας;</string>
+    <string name="showcase_spearguns">Εδώ μπορείτε να αποθηκεύσετε τα όπλα σας και να δείτε τα στατιστικά τους</string>
+    <string name="delete_speargun_entry_alert">Είστε βέβαιοι ότι θέλετε να διαγραφεί το %1$s και όλα του τα δεδομένα;</string>
+	<string name="no_length_selected">πρέπει να επιλέξετε μήκος όπλου</string>
+	<string name="no_type_selected">πρέπει να επιλέξετε τύπο όπλου</string>
+	<string name="no_brand_selected">πρέπει να επιλέξετε εταιρεία</string>
+	<string name="pneumatic_spinner_text">Αεροβόλο</string>
+	<string name="rubber_band_spinner_text">Συμβατικό λαστιχοβόλο</string>
+	<string name="select_type_spinner_text">Τύπος όπλου</string>
+	<string name="select_gun_spinner_text">Εταιρεία</string>
+	<string name="custom_gun">Άλλο/Ειδική κατασκευή</string>
+	<string name="existing_guns_spinner_text">Με ποιο όπλο πιάστηκε;</string>
+	<string name="no_guns_spinner_text">Δεν έχετε δημιουργήσει ακόμη όπλα</string>
+	<string name="roller_spinner_text">Ρόλλερ</string>
+	<string name="select_gun_length">Μήκος όπλου</string>
+	<string name="gun_model">Μοντέλο</string>
+	<string name="alert_title_new_gun">Δημιουργία όπλου</string>
+    <string name="new_session_fab">Νέο ψάρεμα</string>
+	<string name="new_speargun_fab">Νέο όπλο</string>
+    <string name="no_record_yet">Δεν υπάρχει ρεκόρ ακόμη</string>
+
+	<string name="gun_caught_fish">%1$d ψάρια</string>
+	<string name="record_prefix">"Ρεκόρ: "</string>
 
 
 </resources>

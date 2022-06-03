@@ -61,6 +61,10 @@ public class FishingSession implements Comparable<FishingSession>{
 		return fishingSessionId;
 	}
 
+	public void setFishingSessionId(Integer fishingSessionId) {
+		this.fishingSessionId = fishingSessionId;
+	}
+
 	public boolean isUploadedToMongo() {
 		return uploadedToMongo;
 	}

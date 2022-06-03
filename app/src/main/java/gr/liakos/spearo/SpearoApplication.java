@@ -26,6 +26,8 @@ import gr.liakos.spearo.async.AsyncLoadCommunityDataFromMongo;
 import gr.liakos.spearo.async.AsyncSaveUserMongo;
 import gr.liakos.spearo.def.AsyncListener;
 import gr.liakos.spearo.def.AsyncSaveUserListener;
+import gr.liakos.spearo.def.SpearoDataChangeListener;
+import gr.liakos.spearo.enums.FishingSessionsState;
 import gr.liakos.spearo.model.Database;
 import gr.liakos.spearo.model.bean.FishStatistic;
 import gr.liakos.spearo.model.object.Fish;
@@ -57,14 +59,16 @@ public class SpearoApplication extends Application {
     List<FishingSession> fishingSessions = new ArrayList<FishingSession>();
     List<FishCatch> fishCatches = new ArrayList<FishCatch>();
     List<FishAverageStatistic> dbCommunityData = new ArrayList<FishAverageStatistic>();
+
+    List<SpearoDataChangeListener> listeners = new ArrayList<>();
     
 	boolean loaded;
 	
-	boolean sessionsHaveChanged;
+	//FishingSessionsState sessionsState;
 	
 	boolean newCommunityDataRecord;
 
-	boolean spearGunsUpdated;
+	//boolean spearGunsUpdated;
 	
 	User user;
 
@@ -104,19 +108,22 @@ public class SpearoApplication extends Application {
 		this.user = user;
 	}
 
-	public List<Fish> getFishies() {
-        return fishies;
-    }
-
     public void loadCommunityData(AsyncListener asyncListener){
     	new AsyncLoadCommunityDataFromMongo(this, asyncListener).execute();
     }
     
-    public List<FishingSession> getDbFishingSessions(){
+    List<FishingSession> getDbFishingSessions(){
     	Database db = new Database(this);
-    	List<FishingSession> dbFishingSessions = db.fetchFishingSessionsFromDb();
-        return dbFishingSessions;
+    	return  db.fetchFishingSessionsFromDb();
     }
+
+	public List<SpearoDataChangeListener> getListeners() {
+		return listeners;
+	}
+
+	public List<Fish> getFishies() {
+		return fishies;
+	}
 
 	public List<Speargun> getSpearGuns() {
 		return spearGuns;
@@ -138,13 +145,13 @@ public class SpearoApplication extends Application {
 		return fishingSessions;
 	}
 
-	public boolean isSessionsHaveChanged() {
-		return sessionsHaveChanged;
-	}
-
-	public void setSessionsHaveChanged(boolean sessionsChanged) {
-		this.sessionsHaveChanged = sessionsChanged;
-	}
+//	public FishingSessionsState getSessionsState() {
+//		return sessionsState;
+//	}
+//
+//	public void setSessionsState(FishingSessionsState sessionsChanged) {
+//		this.sessionsState = sessionsChanged;
+//	}
 
 	/**
 	 * Since initializeUser has run, this will never be null.
@@ -171,13 +178,13 @@ public class SpearoApplication extends Application {
 		this.newCommunityDataRecord = newCommunityDataRecord;
 	}
 
-	public boolean isSpearGunsUpdated() {
-		return spearGunsUpdated;
-	}
-
-	public void setSpearGunsUpdated(boolean spearGunsUpdated) {
-		this.spearGunsUpdated = spearGunsUpdated;
-	}
+//	public boolean isSpearGunsUpdated() {
+//		return spearGunsUpdated;
+//	}
+//
+//	public void setSpearGunsUpdated(boolean spearGunsUpdated) {
+//		this.spearGunsUpdated = spearGunsUpdated;
+//	}
 
 	public void saveUser(User newUser, AsyncSaveUserListener list) {
 		new AsyncSaveUserMongo(this, list, newUser).execute();
@@ -186,25 +193,81 @@ public class SpearoApplication extends Application {
 	public void addSpeargun(Speargun newSpeargun) {
 		Speargun speargun = new Database(getApplicationContext()).addSpeargun(newSpeargun);
 		spearGuns.add(speargun);
-		spearGunsUpdated = true;
+
+		for (SpearoDataChangeListener listener : listeners) {
+			listener.notifyChanges(FishingSessionsState.ADDED_GUN);
+		}
 	}
 
+	//TODO: NOT FROM DB!
 	void refreshSpearGuns(){
 		spearGuns.clear();
 		spearGuns.addAll(new Database(getApplicationContext()).fetchSpeargunsFromDb());
-		spearGunsUpdated = true;
+	}
+//
+//    public void checkForSpearGunUpdate(List<FishCatch> fishCatches) {
+//		for (FishCatch fishCatch: fishCatches ) {
+//			if (fishCatch.getCaughtWith() != null){
+//				refreshSpearGuns();
+//				return;
+//			}
+//		}
+//    }
+
+	/**
+	 * Inserts the session in db. Then adds it to the sessions list. No db query again.
+	 *
+	 * @param session
+	 */
+	public void insertSession(FishingSession session) {
+		Database db = new Database(this);
+		db.saveFishingSession(session);
+		fishingSessions.add(session);
+		Collections.sort(fishingSessions);
+
+		refreshGunsUponChanges(session);
+
+		for (SpearoDataChangeListener listener : listeners) {
+			listener.notifyChanges(FishingSessionsState.ADDED_SESSION);
+			listener.notifyChanges(FishingSessionsState.GUN_STATS_CHANGED);
+		}
 	}
 
-    public void checkForSpearGunUpdate(List<FishCatch> fishCatches) {
-		for (FishCatch fishCatch: fishCatches ) {
-			if (fishCatch.getCaughtWith() != null){
+	private void refreshGunsUponChanges(FishingSession session) {
+		for (FishCatch fishCatch : session.getFishCatches()){
+			if (fishCatch.getCaughtWith() != null && fishCatch.getCaughtWith() > 0){
 				refreshSpearGuns();
 				return;
 			}
 		}
-    }
+	}
 
-    /**
+	/**
+	 *
+	 *
+	 * @param fishingSession
+	 */
+	public void deleteSession(FishingSession fishingSession) {
+		new Database(this).deleteSession(fishingSession);
+		fishingSessions.remove(fishingSession);
+
+		refreshGunsUponChanges(fishingSession);
+
+		for (SpearoDataChangeListener listener : listeners) {
+			listener.notifyChanges(FishingSessionsState.REMOVED_SESSION);
+			listener.notifyChanges(FishingSessionsState.GUN_STATS_CHANGED);
+		}
+	}
+
+	public void deleteSpearGun(Speargun gun) {
+		new Database(this).deleteSpearGun(gun);
+		spearGuns.remove(gun);
+		for (SpearoDataChangeListener listener : listeners) {
+			listener.notifyChanges(FishingSessionsState.REMOVED_GUN);
+		}
+	}
+
+	/**
      * 1. Fetches all data from db.
      * 2. Uploads the ones that have not been uploaded to mongo.
      * 
@@ -328,7 +391,6 @@ public class SpearoApplication extends Application {
 			fishies.add(fish);
 		}
 	}
-
 
 	public void checkForMongoUpload() {
 		SharedPreferences app_preferences = getSharedPreferences(Constants.PREFERENCES, Context.MODE_PRIVATE);

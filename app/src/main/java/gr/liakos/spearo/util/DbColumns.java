@@ -72,8 +72,7 @@ public class DbColumns {
 				ContentDescriptor.Speargun.Cols.BRAND,
 				ContentDescriptor.Speargun.Cols.MODEL,
 				ContentDescriptor.Speargun.Cols.TYPE,
-				ContentDescriptor.Speargun.Cols.LENGTH,
-				ContentDescriptor.Speargun.Cols.NICKNAME
+				ContentDescriptor.Speargun.Cols.LENGTH
 		};
 
 		return FROM;

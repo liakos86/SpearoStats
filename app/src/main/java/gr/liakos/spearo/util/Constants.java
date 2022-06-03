@@ -92,4 +92,7 @@ public interface Constants {
 	 */
     String PREFS_NEW_SPECIES = "new_species";
 
+    String LEFT_PAREN = "(";
+
+	String RIGHT_PAREN = ")";
 }

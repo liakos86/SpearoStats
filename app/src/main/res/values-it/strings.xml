@@ -295,7 +295,8 @@
         <string name="textview_fish_meta_question">Informazioni su %1$s</string>
 
         <string name="showcase_fb">Clicca per condividere su facebook</string>
-    <string name="complete_session_or_add_fish" />
-    <string name="add_one_more_catch" />
+
+
+    <string name="gun_caught_fish">1%d pesci</string>
 
 </resources>

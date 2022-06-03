@@ -24,6 +24,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -58,6 +59,7 @@ import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.io.PrintWriter;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 
 import gr.liakos.spearo.application.BaseFrgActivityWithBottomButtons;
@@ -66,21 +68,25 @@ import gr.liakos.spearo.async.AsyncLoadProfilePic;
 import gr.liakos.spearo.billing.BillingDiagramsHelper;
 import gr.liakos.spearo.billing.BillingHelper;
 import gr.liakos.spearo.def.AsyncListener;
+import gr.liakos.spearo.def.SpearoDataChangeListener;
+import gr.liakos.spearo.enums.FishingSessionsState;
 import gr.liakos.spearo.fragment.FrgFishingSessions;
 import gr.liakos.spearo.fragment.FrgFishingStats;
 import gr.liakos.spearo.fragment.FrgFishingStatsGlobal;
 import gr.liakos.spearo.fragment.FrgMyPlaces;
 import gr.liakos.spearo.fragment.FrgSpeargunStats;
 import gr.liakos.spearo.model.adapter.MyPagerAdapter;
+import gr.liakos.spearo.model.object.FishingSession;
 import gr.liakos.spearo.model.object.User;
 import gr.liakos.spearo.util.Constants;
 import gr.liakos.spearo.util.SpearoUtils;
 import uk.co.deanwild.materialshowcaseview.MaterialShowcaseSequence;
+import uk.co.deanwild.materialshowcaseview.MaterialShowcaseView;
 import uk.co.deanwild.materialshowcaseview.ShowcaseConfig;
 
 public class ActSpearoStatsMain 
 extends BaseFrgActivityWithBottomButtons
-implements LocationListener {
+implements LocationListener, SpearoDataChangeListener {
 
     private Menu menu;
     
@@ -113,7 +119,10 @@ implements LocationListener {
 	@Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.act_main);
+
+		((SpearoApplication) getApplication()).getListeners().add(this);
+
+		setContentView(R.layout.act_main);
         Toolbar mToolbar = findViewById(R.id.toolbar);
         setSupportActionBar(mToolbar);
         setupPager();
@@ -180,6 +189,7 @@ implements LocationListener {
 	private void startShowcaseView() {
 		LinearLayout frgSessions = findViewById(R.id.btn_fishing_sessions);
 		LinearLayout frgStats = findViewById(R.id.btn_fishing_stats);
+		LinearLayout frgSpearGuns = findViewById(R.id.btn_guns);
 		LinearLayout frgGlobal = findViewById(R.id.btn_fishing_stats_global);
 		LinearLayout frgMap = findViewById(R.id.btn_map);
 		
@@ -195,12 +205,15 @@ implements LocationListener {
 				getResources().getString(R.string.showcase_sessions), gotIt);
 		sequence.addSequenceItem(frgStats,
 				getResources().getString(R.string.showcase_stats), gotIt);
+		sequence.addSequenceItem(frgSpearGuns,
+				getResources().getString(R.string.showcase_spearguns), gotIt);
 		sequence.addSequenceItem(frgGlobal,
 				getResources().getString(R.string.showcase_global), gotIt);
 		sequence.addSequenceItem(frgMap,
 				getResources().getString(R.string.showcase_map), gotIt);
 
 		sequence.start();
+
 	}
 
 	public void tryToShare(SharePhotoContent photoContent){
@@ -320,7 +333,7 @@ implements LocationListener {
 	}
 
 	void setupFabSettings() {
-	   FloatingActionButton fabSettings = (FloatingActionButton) findViewById(R.id.fab_settings);
+	   FloatingActionButton fabSettings = findViewById(R.id.fab_settings);
 			fabSettings.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View view) {
@@ -412,7 +425,7 @@ implements LocationListener {
     void startSettings() {
         Intent intent = new Intent(this, ActSettings.class);
         startActivity(intent);
-        finish();
+       // finish();
     }
     
     /**
@@ -442,18 +455,13 @@ implements LocationListener {
                 if (fragment instanceof FrgFishingSessions) {
                     ((FrgFishingSessions) fragment).collapseAppbarIfNeeded();
                     ((FrgFishingSessions) fragment).reloadFishiesOnNewRecord();
-					((FrgFishingSessions) fragment).reloadGunsSpinner();
-                }else if (fragment instanceof FrgFishingStatsGlobal) {
-                }else if (fragment instanceof FrgFishingStats) {
-                   ((FrgFishingStats) fragment).recalculateAverageStatsIfNeeded();
+                }
+                else if (fragment instanceof FrgFishingStats) {
 					((FrgFishingStats) fragment).statsShowCase();
-                }else if (fragment instanceof FrgSpeargunStats) {
-					((FrgSpeargunStats) fragment).recalculateGunStatsIfNeeded();
-					((FrgSpeargunStats) fragment).gunsShowCase();
-				}else if (fragment instanceof FrgMyPlaces){
+                }else if (fragment instanceof FrgMyPlaces){
                 	collapseAppbar();
                 	FrgMyPlaces frgMyPlaces = (FrgMyPlaces) fragment;
-					frgMyPlaces.redrawMarkersIfNeeded();
+					//frgMyPlaces.redrawMarkersIfNeeded();
 					frgMyPlaces.hideKeyboardFrom();
 					frgMyPlaces.zoomInLocation(currentLatLng);
                 }
@@ -501,11 +509,6 @@ implements LocationListener {
     public void interceptEvents(boolean doIntercept){
     	NestedScrollView nsv = findViewById(R.id.nestedScrollView);
     	nsv.requestDisallowInterceptTouchEvent(doIntercept);
-    }
-
-    public void fixCatchesNum(int total){
-    	TextView textCatchesNum = (TextView) findViewById(R.id.textCatchesNum);
-    	textCatchesNum.setText(String.valueOf(total));
     }
     
     public void fixAppBarTextViews() {
@@ -702,6 +705,24 @@ implements LocationListener {
 
 	public boolean isMapPermissionGiven() {
 		return mapPermissionGiven;
+	}
+
+	@Override
+	public void notifyChanges(FishingSessionsState state) {
+		if (!(FishingSessionsState.REMOVED_SESSION.equals(state)
+				|| FishingSessionsState.ADDED_SESSION.equals(state))){
+			return;
+		}
+
+		List<FishingSession> sessions = ((SpearoApplication) getApplication()).getFishingSessions();
+		int total = 0;
+		for (FishingSession session : sessions)
+		{
+			total += session.getFishCatches().size();
+		}
+
+		TextView textCatchesNum = (TextView) findViewById(R.id.textCatchesNum);
+		textCatchesNum.setText(String.valueOf(total));
 	}
 
 }

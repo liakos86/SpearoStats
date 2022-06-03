@@ -5,6 +5,8 @@ import gr.liakos.spearo.R;
 import gr.liakos.spearo.SpearoApplication;
 import gr.liakos.spearo.custom.NestedScrollingListView;
 import gr.liakos.spearo.def.AsyncListener;
+import gr.liakos.spearo.def.SpearoDataChangeListener;
+import gr.liakos.spearo.enums.FishingSessionsState;
 import gr.liakos.spearo.enums.StatMode;
 import gr.liakos.spearo.model.Database;
 import gr.liakos.spearo.model.adapter.FishStatAdapterWithCarousel;
@@ -14,6 +16,7 @@ import gr.liakos.spearo.model.object.FishAverageStatistic;
 import gr.liakos.spearo.model.object.FishingSession;
 import gr.liakos.spearo.util.Constants;
 import gr.liakos.spearo.util.FishingHelper;
+import gr.liakos.spearo.util.SpearoUtils;
 import uk.co.deanwild.materialshowcaseview.MaterialShowcaseView;
 
 import java.util.ArrayList;
@@ -36,7 +39,7 @@ import androidx.fragment.app.Fragment;
  */
 public class FrgFishingStats 
 extends Fragment
-implements AsyncListener {
+implements AsyncListener, SpearoDataChangeListener {
 	
 	/**
 	 * Flipper position when no {@link FishingSession}s exist yet.
@@ -77,6 +80,13 @@ implements AsyncListener {
 	 * Will be true when user pays for premium diagrams.
 	 */
 	boolean isPremiumDiagramsUser = false;
+
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		((SpearoApplication) requireActivity().getApplication()).getListeners().add(this);
+	}
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -137,8 +147,10 @@ implements AsyncListener {
 	 * If user has inserted or deleted a {@link FishingSession} we need
 	 * to calculate the statistics again.
 	 */
-	public void recalculateAverageStatsIfNeeded() {
-    	if (((SpearoApplication)getActivity().getApplication()).isSessionsHaveChanged()){
+	@Override
+	public void notifyChanges(FishingSessionsState state) {
+		if (FishingSessionsState.ADDED_SESSION.equals(state)
+				|| FishingSessionsState.REMOVED_SESSION.equals(state)) {
     		loadUserStatsAndSetupDiagramsAdapter(true);
     		calculateAverageStats(true);
 
@@ -176,13 +188,10 @@ implements AsyncListener {
 			avgStat.setCatchesPerMonth(fishPerMonth);
 		}
 
-		int totalCatches = 0;
 		for (FishAverageStatistic fishAverageStatistic : userAverageStats) {
-			totalCatches += fishAverageStatistic.getTotalCatches();
 			fishAverageStats.add(fishAverageStatistic);
 		}
-		((ActSpearoStatsMain)getActivity()).fixCatchesNum(totalCatches);
-		
+
 	}
 
 	/**

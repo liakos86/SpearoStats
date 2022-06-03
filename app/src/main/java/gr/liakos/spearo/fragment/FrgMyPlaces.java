@@ -3,6 +3,8 @@ package gr.liakos.spearo.fragment;
 import gr.liakos.spearo.ActSpearoStatsMain;
 import gr.liakos.spearo.R;
 import gr.liakos.spearo.SpearoApplication;
+import gr.liakos.spearo.def.SpearoDataChangeListener;
+import gr.liakos.spearo.enums.FishingSessionsState;
 import gr.liakos.spearo.model.Database;
 import gr.liakos.spearo.model.adapter.FishingSessionInfoWindowAdapter;
 import gr.liakos.spearo.model.object.FishingSession;
@@ -44,7 +46,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 
 public class FrgMyPlaces extends Fragment
-		implements OnMapReadyCallback {
+		implements OnMapReadyCallback, SpearoDataChangeListener {
 
 	GoogleMap googleMap;
 	SupportMapFragment mapFragment;
@@ -66,6 +68,7 @@ public class FrgMyPlaces extends Fragment
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		((SpearoApplication) getActivity().getApplication()).getListeners().add(this);
 	}
 
 	@Override
@@ -136,13 +139,14 @@ public class FrgMyPlaces extends Fragment
 		drawMapMarkers(false);
 	}
 
-	public void redrawMarkersIfNeeded() {
+	@Override
+	public void notifyChanges(FishingSessionsState state) {
 		
 		if (googleMap == null){
 			return;
 		}
 		
-		if (((SpearoApplication)getActivity().getApplication()).isSessionsHaveChanged()){
+		if (FishingSessionsState.ADDED_SESSION.equals(state) || FishingSessionsState.REMOVED_SESSION.equals(state)){
     		drawMapMarkers(true);
     	}
 		
@@ -157,9 +161,9 @@ public class FrgMyPlaces extends Fragment
 	 * @param shouldLoadFromDb
 	 */
 	void drawMapMarkers(boolean shouldLoadFromDb) {
-		sessions2MarkerIds = new HashMap<String, FishingSession>();
+		sessions2MarkerIds = new HashMap<>();
 		googleMap.clear();
-		List<FishingSession> sessions = new ArrayList<FishingSession>();
+		List<FishingSession> sessions;
 		if (shouldLoadFromDb){
 			ActSpearoStatsMain activity = (ActSpearoStatsMain)getActivity();
 			sessions = new Database(activity).fetchFishingSessionsFromDb();

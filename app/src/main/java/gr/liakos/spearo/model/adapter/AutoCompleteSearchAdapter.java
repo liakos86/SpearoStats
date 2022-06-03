@@ -1,5 +1,6 @@
 package gr.liakos.spearo.model.adapter;
 
+import gr.liakos.spearo.ActSpearoStatsMain;
 import gr.liakos.spearo.R;
 import gr.liakos.spearo.fragment.FrgFishingSessions;
 import gr.liakos.spearo.model.object.Fish;
@@ -69,7 +70,7 @@ extends ArrayAdapter<Fish>{
         
         void setSelectedFish(Fish fish) {
         	fragment.setSelectedFish(fish);
-			SpearoUtils.hideSoftKeyboard(fragment.requireActivity());
+            SpearoUtils.hideSoftKeyboard(null, fragment);
 		}
 
         @Override
@@ -80,31 +81,29 @@ extends ArrayAdapter<Fish>{
             return filter;
         }
 
-
         Filter fishFilter = new Filter() {
-	
 
-		@Override
-        protected FilterResults performFiltering(CharSequence constraint) {
-			
-			if (constraint != null && constraint.toString().length() > 1) {
-				String constraintString = constraint.toString().trim();
-				String searchString = constraintString.toLowerCase(Locale.getDefault());
-                filteredList.clear();
-                for (Fish fish : tempFishList) {
-                 		
-                	if (match(fish.getLatinName(), fish.getCommonName(), fish.getSecondaryCommonNameForSearch(), searchString)){
-                		filteredList.add(fish);
-                     }
-                	 
+            @Override
+            protected FilterResults performFiltering(CharSequence constraint) {
+
+                if (constraint != null && constraint.toString().length() > 1) {
+                    String constraintString = constraint.toString().trim();
+                    String searchString = constraintString.toLowerCase(Locale.getDefault());
+                    filteredList.clear();
+                    for (Fish fish : tempFishList) {
+
+                        if (match(fish.getLatinName(), fish.getCommonName(), fish.getSecondaryCommonNameForSearch(), searchString)){
+                            filteredList.add(fish);
+                         }
+
+                    }
+                    FilterResults filterResults = new FilterResults();
+                    filterResults.values = filteredList;
+                    filterResults.count = filteredList.size();
+                    return filterResults;
+                } else {
+                    return new FilterResults();
                 }
-                FilterResults filterResults = new FilterResults();
-                filterResults.values = filteredList;
-                filterResults.count = filteredList.size();
-                return filterResults;
-            } else {
-                return new FilterResults();
-            }
 		}
 			
         @SuppressWarnings("unchecked")

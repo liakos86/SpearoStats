@@ -48,11 +48,11 @@
 	<string name="invalid_length">Invalid username or password length</string>
 	<string name="metric_explained">* Metric = kilograms, meters / Imperial = pounds, feet</string>
 
-	<string name="button_sessions">My diary</string>
-	<string name="button_stats">My stats</string>
-	<string name="button_guns">My guns</string>
+	<string name="button_sessions">Diary</string>
+	<string name="button_stats">Stats</string>
+	<string name="button_guns">SpearGuns</string>
 	<string name="button_stats_global">Global stats</string>
-	<string name="button_map">My places</string>
+	<string name="button_map">Places</string>
 	<string name="press_for_more">press for more info&#8230;</string>
 
 	<string name="prey">Prey: </string>
@@ -420,25 +420,24 @@
     <string name="fish_already_exists">Species \'%1$s\' exists already in the app!</string>
 
 
-	<string name="concat_fish_family">%1$s, %2$s</string>
+	<string name="concat_fish_family" translatable="false">%1$s, %2$s</string>
     <string name="new_species">New species added:</string>
 
 
-	<string name="pathos">Pathos</string>
-	<string name="apnea">Apnea</string>
+	<string name="pathos" translatable="false">Pathos</string>
+	<string name="apnea" translatable="false">Apnea</string>
 	<string name="gun_model">Model of gun</string>
     <string name="alert_title_new_gun">New speargun info</string>
-	<string name="gun_nickname">Your nickname for the gun</string>
     <string name="select_gun_length">Gun length</string>
-    <string name="alemanni">Alemanni</string>
-	<string name="wong">Wong</string>
-	<string name="arcus">Arcus</string>
-	<string name="balco">Balco</string>
-	<string name="demka">Demka</string>
+    <string name="alemanni" translatable="false">Alemanni</string>
+	<string name="wong" translatable="false">Wong</string>
+	<string name="arcus" translatable="false">Arcus</string>
+	<string name="balco" translatable="false">Balco</string>
+	<string name="demka" translatable="false">Demka</string>
     <string name="no_guns_spinner_text">create a gun in order to select it here</string>
 	<string name="existing_guns_spinner_text">Which gun did you catch it with?</string>
 	<string name="custom_gun">Custom gun</string>
-	<string name="select_gun_spinner_text">Select brand</string>
+	<string name="select_gun_spinner_text">Brand</string>
 	<string name="select_type_spinner_text">Select type</string>
 	<string name="rubber_band_spinner_text">Rubber band</string>
 	<string name="roller_spinner_text">Roller gun</string>
@@ -447,46 +446,54 @@
 	<string name="no_brand_selected">please select a brand</string>
 	<string name="no_type_selected">please select a gun type</string>
     <string name="no_length_selected">please define length</string>
-    <string name="roisub">Roi-sub</string>
-	<string name="mythicon">Mythicon</string>
-	<string name="velco">Velco</string>
-	<string name="meandros">Meandros</string>
-	<string name="torelli">Torelli</string>
-	<string name="koah">Koah</string>
-	<string name="seatec">Seatec</string>
-	<string name="spetton">Spetton</string>
-	<string name="jbl">JBL</string>
-	<string name="teaksea">TEAKSEA</string>
-	<string name="lanara">Lanara</string>
-	<string name="dnsub">DN SUB</string>
-	<string name="azure">Azure</string>
-	<string name="bluegreen">Bluegreen</string>
-	<string name="c4">C4 Carbon</string>
-	<string name="seac">Seac-Sub</string>
-	<string name="salvimar">Salvimar</string>
-	<string name="beauchat">Beauchat</string>
-	<string name="cressi">Cressi</string>
-	<string name="riffe">Riffe</string>
-	<string name="roballen">Rob-Allen</string>
-	<string name="xdive">X-Dive</string>
-	<string name="epsealon">Epsealon</string>
-	<string name="picasso">Picasso</string>
-	<string name="omer">Omer</string>
-	<string name="mares">Mares</string>
-	<string name="cetma">Cetma</string>
-	<string name="campus">Campus</string>
-	<string name="bucanero">Bucanero</string>
-	<string name="bleu">Bleutec</string>
-	<string name="tixi">Tixi</string>
-	<string name="xifias">Xifias</string>
-	<string name="tigullio">Tigullio</string>
-	<string name="mvd">MVD</string>
-	<string name="mastro">Mastro</string>
-	<string name="hammerhead">Hammerhead</string>
-	<string name="abbiller">AB Biller</string>
-	<string name="mako">Mako</string>
+    <string name="roisub" translatable="false">Roi-sub</string>
+	<string name="mythicon" translatable="false">Mythicon</string>
+	<string name="velco" translatable="false">Velco</string>
+	<string name="meandros" translatable="false">Meandros</string>
+	<string name="torelli" translatable="false">Torelli</string>
+	<string name="koah" translatable="false">Koah</string>
+	<string name="seatec" translatable="false">Seatec</string>
+	<string name="spetton" translatable="false">Spetton</string>
+	<string name="jbl" translatable="false">JBL</string>
+	<string name="teaksea" translatable="false">TEAKSEA</string>
+	<string name="lanara" translatable="false">Lanara</string>
+	<string name="dnsub" translatable="false">DN SUB</string>
+	<string name="azure" translatable="false">Azure</string>
+	<string name="bluegreen" translatable="false">Bluegreen</string>
+	<string name="c4" translatable="false">C4 Carbon</string>
+	<string name="seac" translatable="false">Seac-Sub</string>
+	<string name="salvimar" translatable="false">Salvimar</string>
+	<string name="beauchat" translatable="false">Beauchat</string>
+	<string name="cressi" translatable="false">Cressi</string>
+	<string name="riffe" translatable="false">Riffe</string>
+	<string name="roballen" translatable="false">Rob-Allen</string>
+	<string name="xdive" translatable="false">X-Dive</string>
+	<string name="epsealon" translatable="false">Epsealon</string>
+	<string name="picasso" translatable="false">Picasso</string>
+	<string name="omer" translatable="false">Omer</string>
+	<string name="mares" translatable="false">Mares</string>
+	<string name="cetma" translatable="false">Cetma</string>
+	<string name="campus" translatable="false">Campus</string>
+	<string name="bucanero" translatable="false">Bucanero</string>
+	<string name="bleu" translatable="false">Bleutec</string>
+	<string name="tixi" translatable="false">Tixi</string>
+	<string name="xifias" translatable="false">Xifias</string>
+	<string name="tigullio" translatable="false">Tigullio</string>
+	<string name="mvd" translatable="false">MVD</string>
+	<string name="mastro" translatable="false">Mastro</string>
+	<string name="hammerhead" translatable="false">Hammerhead</string>
+	<string name="abbiller" translatable="false">AB Biller</string>
+	<string name="mako" translatable="false">Mako</string>
     <string name="max_model_length_text">Gun model too long (30 chars max)</string>
     <string name="session_image_alert">Session image</string>
     <string name="session_image_alert_prompt_text">Is there a photo from your fishing trip you want to add?</string>
+    <string name="delete_speargun_entry_alert">Are you sure you want to delete %1$s and all its data?</string>
+	<string name="showcase_spearguns">You can save your spearguns and view their stats here</string>
+	<string name="new_session_fab">New fishing session</string>
+	<string name="new_speargun_fab">New speargun</string>
+    <string name="no_record_yet">No record yet</string>
+
+	<string name="gun_caught_fish">%1$d fish</string>
+	<string name="record_prefix">"Record: "</string>
 
 </resources>

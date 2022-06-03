@@ -20,6 +20,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.core.content.res.ResourcesCompat;
@@ -103,17 +104,8 @@ public class FishingSessionRecyclerViewAdapter extends RecyclerView.Adapter {
             setMoonPhaseTextAndImg(item);
             setShareButton();
             showFbShowcase();
-            //setEditSessionButton();
         }
 
-//        private void setEditSessionButton() {
-//            editSessionButton.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View v) {
-//                    fragment.editSession(item);
-//                }
-//            });
-//        }
 
         private void setShareButton() {
             if (sessionImage == null && !validUriPath){
@@ -131,10 +123,6 @@ public class FishingSessionRecyclerViewAdapter extends RecyclerView.Adapter {
         }
 
         private void showFbShowcase() {
-
-            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
-                return;
-            }
 
             if (item.getSessionImageUriPath() == null){
                 return;
@@ -265,7 +253,6 @@ public class FishingSessionRecyclerViewAdapter extends RecyclerView.Adapter {
 
             Glide.with(mContext).load(drawableFromFish).into(fishingSessionIcon);
 
-           // fishingSessionIcon.setImageDrawable(drawableFromFish);
         }
 
         @Override
@@ -288,9 +275,7 @@ public class FishingSessionRecyclerViewAdapter extends RecyclerView.Adapter {
             Resources res = fragment.getActivity().getResources();
             dialogBuilder.setPositiveButton(res.getString(R.string.yes), new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int id) {
-                    new Database(fragment.getContext()).deleteSession(fishingSession);
-                    ((SpearoApplication) fragment.getActivity().getApplication()).setSessionsHaveChanged(true);
-                    fragment.updateSessions();
+                    ((SpearoApplication) fragment.getActivity().getApplication()).deleteSession(fishingSession);
                 }
             })
             .setNegativeButton(res.getString(R.string.no), new DialogInterface.OnClickListener() {
@@ -300,7 +285,6 @@ public class FishingSessionRecyclerViewAdapter extends RecyclerView.Adapter {
 
             })
             .setMessage(res.getString(R.string.delete_session_entry_alert));//spearoUtils.getStringResourceByName( "cancel_session_entry_alert"));
-
 
             AlertDialog alertDialog = dialogBuilder.create();
             alertDialog.show();

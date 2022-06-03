@@ -29,16 +29,6 @@
 
        />
 
-    <!--<Button
-        android:visibility="gone"
-        android:layout_gravity="top|end"
-        android:layout_margin="@dimen/four"
-        android:layout_height="@dimen/thirty"
-        android:layout_width="@dimen/thirty"
-        android:id="@+id/editSessionButton"
-        android:background="@drawable/pencil"
-
-        />-->
 
      <RelativeLayout
          android:layout_gravity="bottom"

@@ -3,10 +3,8 @@ package gr.liakos.spearo.model.viewholder;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-public class GunLengthHolder {
+public class SingleTextViewHolder {
 
-	
-	public TextView gunLengthTextView;
-	
+	public TextView mainTextView;
 
 }

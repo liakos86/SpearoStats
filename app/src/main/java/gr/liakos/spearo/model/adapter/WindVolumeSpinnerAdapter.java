@@ -2,7 +2,6 @@ package gr.liakos.spearo.model.adapter;
 
 import gr.liakos.spearo.R;
 import gr.liakos.spearo.enums.WindVolume;
-import gr.liakos.spearo.util.Constants;
 
 import java.util.List;
 
@@ -41,7 +40,7 @@ public class WindVolumeSpinnerAdapter  extends ArrayAdapter<String> {
 
     public View getCustomView(int position, View convertView, ViewGroup parent) {
         LayoutInflater inflater = act.getLayoutInflater();
-        View mySpinner = inflater.inflate(R.layout.spinner_item_with_pic, parent, false);
+        View mySpinner = inflater.inflate(R.layout.spinner_item_with_pic_desc_subdesc, parent, false);
         mySpinner.findViewById(R.id.left_pic).setVisibility(View.GONE);
         TextView main_text = mySpinner .findViewById(R.id.text_main_seen);
         main_text.setText(volumeStrings[position]);

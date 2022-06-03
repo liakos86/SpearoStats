@@ -29,6 +29,8 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.net.Uri;
+import android.util.Log;
+import android.widget.Toast;
 
 public class Database extends SQLiteOpenHelper {
 
@@ -52,6 +54,8 @@ public class Database extends SQLiteOpenHelper {
         db.execSQL(ContentDescriptor.Speargun.createTable());
 
         db.execSQL(ContentDescriptor.Fish.insertSpecies());
+
+        Log.d("SSPEARO", "ON CREATE DB VERSION " + db.getVersion());
     }
 
     /**
@@ -102,6 +106,7 @@ public class Database extends SQLiteOpenHelper {
 //        }
 
         if (newVersion == 5){
+            Log.d("SSPEARO", "UPGRADING DB to 5");
             db.execSQL(ContentDescriptor.Fish.insertAdditionalSpecies_27_11_2021());
             SharedPreferences app_preferences = mContext.getSharedPreferences(Constants.PREFERENCES, Context.MODE_PRIVATE);
             SharedPreferences.Editor editor = app_preferences.edit();
@@ -110,6 +115,8 @@ public class Database extends SQLiteOpenHelper {
         }
 
         if (newVersion == 6){
+            Log.d("SSPEARO", "UPGRADING DB to 6");
+
             db.execSQL(ContentDescriptor.Speargun.createTable());
             db.execSQL("ALTER TABLE " + ContentDescriptor.FishCatch.TABLE_NAME + " ADD COLUMN " + ContentDescriptor.FishCatch.Cols.CAUGHT_WITH + " INTEGER;");
         }
@@ -135,6 +142,7 @@ public class Database extends SQLiteOpenHelper {
 
     @Override
     public void onOpen(SQLiteDatabase db) {
+        Log.d("SSPEARO", "OPENING DB VERSION " + db.getVersion());
 //    	db.execSQL(ContentDescriptor.Fish.insertSpecies());
     }
 
@@ -143,17 +151,11 @@ public class Database extends SQLiteOpenHelper {
      *
      * @param fishingSession the session
      */
-    public void addOrUpdateFishingSession(FishingSession fishingSession) {
+    public void saveFishingSession(FishingSession fishingSession) {
         ContentResolver resolver = mContext.getContentResolver();
-        Integer fishingSessionId = null;
-        if (fishingSession.getFishingSessionId().equals(Database.INVALID_ID)) {
-            Uri uri = resolver.insert(ContentDescriptor.FishingSession.CONTENT_URI, FishingSession.asContentValues(fishingSession));
-            fishingSessionId = Integer.valueOf(uri.getLastPathSegment());
-        }else{
-            fishingSessionId = fishingSession.getFishingSessionId();
-            resolver.delete(ContentDescriptor.FishCatch.CONTENT_URI, ContentDescriptor.FishCatch.Cols.FISHINGSESSIONID +"="+fishingSession.getFishingSessionId(), null);
-        }
-
+        Uri uri = resolver.insert(ContentDescriptor.FishingSession.CONTENT_URI, FishingSession.asContentValues(fishingSession));
+        Integer fishingSessionId = Integer.valueOf(uri.getLastPathSegment());
+        fishingSession.setFishingSessionId(fishingSessionId);
         saveCatches(fishingSessionId, fishingSession.getFishCatches());
     }
 
@@ -173,7 +175,18 @@ public class Database extends SQLiteOpenHelper {
         ContentResolver resolver = mContext.getContentResolver();
         String idToDelete = String.valueOf(session.getFishingSessionId());
 		resolver.delete(ContentDescriptor.FishingSession.CONTENT_URI, ContentDescriptor.FishingSession.Cols.FISHINGSESSIONID + "=" + idToDelete, null);
-        resolver.delete(ContentDescriptor.FishCatch.CONTENT_URI, ContentDescriptor.FishingSession.Cols.FISHINGSESSIONID + "=" + idToDelete, null);
+        resolver.delete(ContentDescriptor.FishCatch.CONTENT_URI, ContentDescriptor.FishCatch.Cols.FISHINGSESSIONID + "=" + idToDelete, null);
+    }
+
+    /**
+     * Self explanatory.
+     *
+     * @param gun
+     */
+    public void deleteSpearGun(Speargun gun) {
+        ContentResolver resolver = mContext.getContentResolver();
+        String idToDelete = String.valueOf(gun.getGunId());
+        resolver.delete(ContentDescriptor.Speargun.CONTENT_URI, ContentDescriptor.Speargun.Cols.GUN_ID + "=" + idToDelete, null);
     }
 
     /**
@@ -183,7 +196,8 @@ public class Database extends SQLiteOpenHelper {
      */
 	void addFishCatch(FishCatch fishCatch) {
         ContentResolver resolver = mContext.getContentResolver();
-        resolver.insert(ContentDescriptor.FishCatch.CONTENT_URI, FishCatch.asContentValues(fishCatch));
+        Uri inserted = resolver.insert(ContentDescriptor.FishCatch.CONTENT_URI, FishCatch.asContentValues(fishCatch));
+        fishCatch.setFishCatchId(Long.parseLong(inserted.getLastPathSegment()));
     }
 
     /**
@@ -232,7 +246,8 @@ public class Database extends SQLiteOpenHelper {
         }
         c.close();
         c = null;
-        
+
+        Collections.sort(fishingSessions);
         return fishingSessions;
 
     }
@@ -245,7 +260,6 @@ public class Database extends SQLiteOpenHelper {
         int sModelPosition = 2;
         int sTypePosition = 3;
         int sLengthPosition = 4;
-        int sNicknamePosition = 5;
 
         String selection = null;
         Cursor c = mContext.getContentResolver().query(ContentDescriptor.Speargun.CONTENT_URI, FROM, selection,
@@ -259,8 +273,7 @@ public class Database extends SQLiteOpenHelper {
                         SpearGunBrand.ofPosition(c.getInt(sBrandPosition)),
                                 c.getString(sModelPosition),
                                 SpeargunType.ofPosition(c.getInt(sTypePosition)),
-                                c.getInt(sLengthPosition),
-                                c.getString(sNicknamePosition));
+                                c.getInt(sLengthPosition));
 
                 String selectionStringForCatches = ContentDescriptor.FishCatch.Cols.CAUGHT_WITH + " = " + speargun.getGunId();
                 speargun.setCaughtFish(fetchCatchesForSelection(selectionStringForCatches));

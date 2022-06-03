@@ -1,17 +1,19 @@
 package gr.liakos.spearo.fragment;
 
 import android.app.AlertDialog;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.ViewFlipper;
 
 import androidx.fragment.app.Fragment;
 
@@ -23,19 +25,38 @@ import java.util.List;
 
 import gr.liakos.spearo.R;
 import gr.liakos.spearo.SpearoApplication;
+import gr.liakos.spearo.def.SpearoDataChangeListener;
+import gr.liakos.spearo.enums.FishingSessionsState;
 import gr.liakos.spearo.enums.SpearGunBrand;
 import gr.liakos.spearo.enums.SpeargunType;
+import gr.liakos.spearo.model.adapter.SpearGunTypesSpinnerAdapter;
 import gr.liakos.spearo.model.adapter.SpeargunLengthsAdapter;
 import gr.liakos.spearo.model.adapter.SpeargunListViewAdapter;
 import gr.liakos.spearo.model.adapter.SpeargunBrandsSpinnerAdapter;
 import gr.liakos.spearo.model.object.FishingSession;
 import gr.liakos.spearo.model.object.Speargun;
+import gr.liakos.spearo.util.Constants;
 
 /**
  * Fragment for displaying user's personal statistics and {@link FishingSession}s.
  */
 public class FrgSpeargunStats
-extends Fragment {
+extends Fragment implements SpearoDataChangeListener {
+
+	/**
+	 * Flipper position when no {@link Speargun}s exist yet.
+	 */
+	static final Integer POSITION_NO_GUNS = 0;
+
+	/**
+	 * Flipper position when {@link Speargun}s exist.
+	 */
+	static final Integer POSITION_SHOW_GUN_STATS = 1;
+
+	/**
+	 * Flipper for changing between views.
+	 */
+	ViewFlipper gunsFlipper;
 
 	Speargun newSpeargun = null;
 
@@ -44,18 +65,40 @@ extends Fragment {
 	SpeargunListViewAdapter speargunsAdapter;
 
 	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		((SpearoApplication) requireActivity().getApplication()).getListeners().add(this);
+	}
+
+	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		super.onCreateView(inflater, container, savedInstanceState);
 		View v = inflater.inflate(R.layout.frg_speargun_stats, container, false);
 		setupGunListView(v);
 		setupAddGunButton(v);
+		initFlipper(v);
 		return v;
+	}
+
+	void initFlipper(View v) {
+		gunsFlipper = v.findViewById(R.id.gun_stats_flipper);
+		setFlipperChild();
+	}
+
+	void setFlipperChild() {
+		if (allSpearguns.isEmpty()){
+			gunsFlipper.setDisplayedChild(POSITION_NO_GUNS);
+		}else{
+			gunsFlipper.setDisplayedChild(POSITION_SHOW_GUN_STATS);
+		}
 	}
 
 	void setupGunListView(View v) {
 		ListView speargunsListView = v.findViewById(R.id.listview_speargun_stats);
 		allSpearguns = ((SpearoApplication) getActivity().getApplication()).getSpearGuns();
-		speargunsAdapter = new SpeargunListViewAdapter(getActivity(), R.layout.speargun_stat_row, allSpearguns);
+		SharedPreferences app_preferences = getActivity().getSharedPreferences(Constants.PREFERENCES, Context.MODE_PRIVATE);
+		boolean isMetric = !app_preferences.getBoolean(Constants.IMPERIAL, false);
+		speargunsAdapter = new SpeargunListViewAdapter(getActivity(), R.layout.speargun_stat_row, allSpearguns, isMetric);
 		speargunsListView.setAdapter(speargunsAdapter);
 	}
 
@@ -70,6 +113,8 @@ extends Fragment {
 
 		FloatingActionButton fabAdd = v.findViewById(R.id.fab_add_gun);
 			fabAdd.setOnClickListener(addListener);
+		FloatingActionButton fabAdd2 = v.findViewById(R.id.fab_add_gun2);
+		fabAdd2.setOnClickListener(addListener);
 	}
 
 	/**
@@ -155,14 +200,8 @@ extends Fragment {
 
 	void spinnerGunTypes(View dialogView) {
 		Spinner spinnerGunTypes = dialogView.findViewById(R.id.spinner_gun_types);
-
 		SpeargunType[] speargunTypes = SpeargunType.values();
-		String[] gunTypes = new String[speargunTypes.length];
-
-		for (int i=0; i<speargunTypes.length; i++){
-			gunTypes[i] = getResources().getString(speargunTypes[i].getTextId());
-		}
-		ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, gunTypes);
+		SpearGunTypesSpinnerAdapter adapter = new SpearGunTypesSpinnerAdapter(getActivity(), android.R.layout.simple_spinner_item, Arrays.asList(speargunTypes));
 		spinnerGunTypes.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 			@Override
 			public void onItemSelected(AdapterView<?> arg0, View arg1, int position, long arg3) {
@@ -172,7 +211,6 @@ extends Fragment {
 			@Override
 			public void onNothingSelected(AdapterView<?> arg0) {}
 		});
-
 
 		spinnerGunTypes.setAdapter(adapter);
 	}
@@ -236,12 +274,14 @@ extends Fragment {
         return truitonList;
     }
 
-	public void recalculateGunStatsIfNeeded() {
-		if (((SpearoApplication) getActivity().getApplication()).isSpearGunsUpdated()){
+    @Override
+	public void notifyChanges(FishingSessionsState state) {
+		if (FishingSessionsState.GUN_STATS_CHANGED.equals(state)
+		|| FishingSessionsState.ADDED_GUN.equals(state)
+		|| FishingSessionsState.REMOVED_GUN.equals(state)){
 			speargunsAdapter.notifyDataSetChanged();
+			setFlipperChild();
 		}
 	}
 
-	public void gunsShowCase() {
-	}
 }

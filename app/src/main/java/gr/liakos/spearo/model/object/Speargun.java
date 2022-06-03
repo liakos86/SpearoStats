@@ -19,21 +19,18 @@ public class Speargun implements Comparable<Speargun>{
 
     String model;
 
-    String nickName;
-
     Integer length;
 
     SpeargunType type;
 
     List<FishCatch> caughtFish;
 
-    public Speargun(int gunId, SpearGunBrand brand, String model, SpeargunType type, int length, String nickName) {
+    public Speargun(int gunId, SpearGunBrand brand, String model, SpeargunType type, int length) {
         this.gunId = gunId;
         this.brand = brand;
         this.model = model;
         this.type = type;
         this.length = length;
-        this.nickName = nickName;
     }
 
     public Speargun() {
@@ -75,14 +72,6 @@ public class Speargun implements Comparable<Speargun>{
         this.model = model;
     }
 
-    public String getNickName() {
-        return nickName;
-    }
-
-    public void setNickName(String nickName) {
-        this.nickName = nickName;
-    }
-
     public Integer getLength() {
         return length;
     }
@@ -117,7 +106,6 @@ public class Speargun implements Comparable<Speargun>{
             toRet.put(ContentDescriptor.Speargun.Cols.MODEL, item.model);
             toRet.put(ContentDescriptor.Speargun.Cols.TYPE, item.type.getId());
             toRet.put(ContentDescriptor.Speargun.Cols.LENGTH, item.length);
-            toRet.put(ContentDescriptor.Speargun.Cols.NICKNAME, item.nickName);
 
             return toRet;
         }

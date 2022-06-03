@@ -2,6 +2,7 @@ package gr.liakos.spearo.fragment;
 
 import android.animation.ObjectAnimator;
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -57,7 +58,6 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
-import java.util.Collections;
 import java.util.List;
 
 import gr.liakos.spearo.ActSpearoStatsMain;
@@ -67,9 +67,10 @@ import gr.liakos.spearo.application.ClearableAutoCompleteTextView;
 import gr.liakos.spearo.application.NumberPicker;
 import gr.liakos.spearo.bean.AddressWithCountry;
 import gr.liakos.spearo.custom.GridRecyclerView;
+import gr.liakos.spearo.def.SpearoDataChangeListener;
+import gr.liakos.spearo.enums.FishingSessionsState;
 import gr.liakos.spearo.enums.Wind;
 import gr.liakos.spearo.enums.WindVolume;
-import gr.liakos.spearo.model.Database;
 import gr.liakos.spearo.model.adapter.AutoCompleteSearchAdapter;
 import gr.liakos.spearo.model.adapter.CustomSpinnerAdapter;
 import gr.liakos.spearo.model.adapter.FishingSessionCatchesAdapter;
@@ -91,7 +92,7 @@ import gr.liakos.spearo.util.helper.AlertDialogHelper;
 
 public class FrgFishingSessions
 		extends Fragment
-		implements OnMapReadyCallback {
+		implements OnMapReadyCallback, SpearoDataChangeListener {
 
 	/**
 	 * Flipper positions
@@ -127,9 +128,7 @@ public class FrgFishingSessions
 	/**
 	 * Lists.
 	 */
-	List<FishingSession> fishingSessions = new ArrayList<FishingSession>();
 	List<FishCatch> sessionCatchesList;//we want to keep the same reference for the adapter to work properly
-	List<Fish> fishies = new ArrayList<Fish>();
 
 	/**
 	 * Other stuff
@@ -159,9 +158,7 @@ public class FrgFishingSessions
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-
-		fishingSessions = getFishingSessions();
-		Collections.sort(fishingSessions);
+		((SpearoApplication) requireActivity().getApplication()).getListeners().add(this);
 
 		initializePlaces();
 		spearoUtils = new SpearoUtils(getActivity());
@@ -174,7 +171,6 @@ public class FrgFishingSessions
 
 		View v = inflater.inflate(R.layout.frg_fishing_sessions, container, false);
 
-//		createSessionCatchesListView();
 		createSessionsGridViewList(v);
 		createCatchTimeSpinner(v);
 		setupSpearGunsSpinner(v);
@@ -188,12 +184,8 @@ public class FrgFishingSessions
 		setAddCatchButton(v);
 		setInScrollViewTouchListener(v);
 		setFloatingAddButtonListenersForNewSession(v);
-		//updateCheckoutButtonText();
 
-		//clearCatchViews();
-		//clearSessionViews();
-
-		if (fishingSessions.isEmpty()) {
+		if (((SpearoApplication) getActivity().getApplication()).getFishingSessions().isEmpty()) {
 			sessionsFlipper.setDisplayedChild(POSITION_NO_SESSIONS);
 		}
 
@@ -299,7 +291,6 @@ public class FrgFishingSessions
 			animation.setRepeatCount(0);
 			animation.setStartDelay(delay);
 			animation.start();
-
 		}
 
 	}
@@ -402,9 +393,9 @@ public class FrgFishingSessions
 			}
 		};
 
-		FloatingActionButton fabAdd = (FloatingActionButton) v.findViewById(R.id.fab_add);
+		FloatingActionButton fabAdd =  v.findViewById(R.id.fab_add);
 		fabAdd.setOnClickListener(addListener);
-		FloatingActionButton fabAdd2 = (FloatingActionButton) v.findViewById(R.id.fab_add_2);
+		FloatingActionButton fabAdd2 = v.findViewById(R.id.fab_add_2);
 		fabAdd2.setOnClickListener(addListener);
 	}
 
@@ -429,12 +420,15 @@ public class FrgFishingSessions
 	void createAutoCompleteDropDown(View v) {
 		autoCompleteFish = (ClearableAutoCompleteTextView) v.findViewById(R.id.auto_complete_fish);
 		autoCompleteFish.setContext(getActivity().getApplicationContext());
-
-		refreshFish();
-		AutoCompleteSearchAdapter autoCompleteSearchAdapter = new AutoCompleteSearchAdapter(this, fishies);
-		autoCompleteFish.setAdapter(autoCompleteSearchAdapter);
 		autoCompleteFish.setDropDownVerticalOffset(4);
+		setFishAutoCompleteAdapter();
 
+	}
+
+	void setFishAutoCompleteAdapter(){
+		List<Fish> appFish = ((SpearoApplication) getActivity().getApplication()).getFishies();
+		AutoCompleteSearchAdapter autoCompleteSearchAdapter = new AutoCompleteSearchAdapter(this, appFish);
+		autoCompleteFish.setAdapter(autoCompleteSearchAdapter);
 	}
 
 	/**
@@ -522,7 +516,7 @@ public class FrgFishingSessions
 	 * If no sessions available, show the empty view with add button.
 	 */
 	void goToSessionsChild() {
-		if (fishingSessions.isEmpty()) {
+		if (((SpearoApplication) getActivity().getApplication()).getFishingSessions().isEmpty()) {
 			sessionsFlipper.setDisplayedChild(POSITION_NO_SESSIONS);
 			return;
 		}
@@ -535,18 +529,11 @@ public class FrgFishingSessions
 	 * The interstitial ad is shown.
 	 */
 	void saveSessionActions() {
-		FishingSession newSession = saveOrUpdateFishingSession();
-	//	clearCatchViews();
-	//	clearSessionViews();
-		updateSessions();
-		informApplicationForNewSession();
-	//	updateCheckoutButtonText();
-		markSuspiciousSession(newSession);
+		saveOrUpdateFishingSession();
+		markSuspiciousSession(session);
 		showAd();
 		sessionsFlipper.setDisplayedChild(POSITION_SHOW_SESSIONS);
 		((SpearoApplication) getActivity().getApplication()).uploadSessions();
-		((SpearoApplication) getActivity().getApplication()).checkForSpearGunUpdate(newSession.getFishCatches());
-
 	}
 
 	/**
@@ -597,10 +584,6 @@ public class FrgFishingSessions
 		sessionsFlipper.setDisplayedChild(POSITION_MAP);
 	}
 
-	void informApplicationForNewSession() {
-		((SpearoApplication) getActivity().getApplication()).setSessionsHaveChanged(true);
-	}
-
 	/**
 	 * {@link GridRecyclerView} view to display the sessions.
 	 * {@link FishingSessionRecyclerViewAdapter} to handle the data.
@@ -610,7 +593,8 @@ public class FrgFishingSessions
 	 */
 	public void createSessionsGridViewList(View v) {
 		GridRecyclerView recyclerView = v.findViewById(R.id.recyclerView);
-		recyclerViewAdapter = new FishingSessionRecyclerViewAdapter(getActivity(), fishingSessions, this);
+		Activity act = getActivity();
+		recyclerViewAdapter = new FishingSessionRecyclerViewAdapter(act, ((SpearoApplication) act.getApplication()).getFishingSessions(), this);
 		recyclerView.setAdapter(recyclerViewAdapter);
 
 		GridLayoutManager manager = new GridLayoutManager(getActivity(), 3, GridLayoutManager.VERTICAL, false);
@@ -630,9 +614,6 @@ public class FrgFishingSessions
 		String addedFishText = activity.getResources().getString(R.string.prey) + fishCatch.getFish().getCommonName();
 		autoCompleteFish.setText(addedFishText);
 
-//		String addedFishButtonText = activity.getResources().getString(R.string.click_to_add) + Constants.SPACE + Constants.SINGLE_QUOTE +  fishCatch.getFish().getCommonName() + Constants.SINGLE_QUOTE;
-//		addCatchButton.setText(addedFishButtonText);
-
 		textViewFishCatchMeta.setText(getActivity().getResources().getString(R.string.textview_fish_meta_question, fishCatch.getFish().getCommonName()));
 		textViewFishCatchMeta.setCompoundDrawablesWithIntrinsicBounds(spearoUtils.getDrawableFromFish(fish), null, null, null);
 
@@ -645,7 +626,7 @@ public class FrgFishingSessions
 	 * If no catches, it does not need a mongo upload.
 	 * After saving the session display the interstitial ad.
 	 */
-	FishingSession saveOrUpdateFishingSession() {
+	void saveOrUpdateFishingSession() {
 
 		if (sessionCatchesList.isEmpty()) {
 			session.setUploadedToMongo(true);
@@ -654,10 +635,8 @@ public class FrgFishingSessions
 			session.getFishCatches().addAll(sessionCatchesList);
 		}
 
-		ActSpearoStatsMain activity = (ActSpearoStatsMain) getActivity();
-		Database db = new Database(activity);
-		db.addOrUpdateFishingSession(session);
-		return session;
+		((SpearoApplication) getActivity().getApplication()).insertSession(session);
+
 	}
 
 	/**
@@ -725,9 +704,13 @@ public class FrgFishingSessions
 	}
 
 	void setupSpearGunsSpinner(View v){
+		spinnerSpearGuns = v.findViewById(R.id.spinner_gun_fish);
+		setupSpearGunsSpinnerAdapter();
+	}
+
+	void setupSpearGunsSpinnerAdapter(){
 		List<Speargun> guns = new ArrayList<>(((SpearoApplication) getActivity().getApplication()).getSpearGuns());
 		guns.add(0, Speargun.dummy(guns.size(), getActivity().getResources()));
-		spinnerSpearGuns = v.findViewById(R.id.spinner_gun_fish);
 		SpeargunsSpinnerAdapterForSessions speargunsAdapter = new SpeargunsSpinnerAdapterForSessions(getActivity(), android.R.layout.simple_spinner_item, guns);
 
 		spinnerSpearGuns.setAdapter(speargunsAdapter);
@@ -744,41 +727,17 @@ public class FrgFishingSessions
 	}
 
 	/**
-	 * If a new gun is added via the {@link FrgSpeargunStats}, we need to present it to the user.
-	 */
-	public void reloadGunsSpinner(){
-		if (!((SpearoApplication) requireActivity().getApplication()).isSpearGunsUpdated()){
-			return;
-		}
-
-		SpearoApplication application = ((SpearoApplication) requireActivity().getApplication());
-		application.setSpearGunsUpdated(false);
-
-		List<Speargun> guns = new ArrayList<>(application.getSpearGuns());
-		guns.add(0, Speargun.dummy(guns.size(), application.getResources()));
-		SpeargunsSpinnerAdapterForSessions speargunsAdapter = new SpeargunsSpinnerAdapterForSessions(getActivity(), android.R.layout.simple_spinner_item, guns);
-		spinnerSpearGuns.setAdapter(speargunsAdapter);
-	}
-
-	/**
 	 * Clear views and objects concerning the fish catch.
 	 */
 	void clearCatchViews() {
 		fishCatch = new FishCatch();
 
-		//caughtByGunId = null;
 		pickerDepth.setValue(0);
 		pickerWeight.setValue(0);
-		//selectedFish = null;
 		autoCompleteFish.setText(Constants.EMPTY);
 		autoCompleteFish.dismissDropDown();
 		spinnerCatchTime.setSelection(0);
 		spinnerSpearGuns.setSelection(0);
-		//catchHour = null;
-		//catchDateMillis = 0;
-		//addCatchButton.setText(getActivity().getResources().getText(R.string.add_catch));
-
-
 
 		layoutFishCatchMeta.setVisibility(View.INVISIBLE);
 		layoutInsertButtons.setVisibility(View.INVISIBLE);
@@ -789,20 +748,12 @@ public class FrgFishingSessions
 	 * Clear views and objects concerning the fish session.
 	 */
 	void clearSessionViews() {
-
 		autocompleteFragment.setText(Constants.EMPTY);
-		//sessionId = Database.INVALID_ID;
-		//location = null;
-		//sessionImgBytes = null;
-		//sessionImgUriPath = null;
-		//wind = Wind.NOT_KNOWN;
-		//windVolume = WindVolume.NOT_KNOWN;
 		if (googleMap != null) {
 			googleMap.clear();
 		}
 		sessionCatchesList.clear();
 		sessionCatchesAdapter.notifyDataSetChanged();
-		//sessionMillis = 0L;
 		textDateAndLocation.setText(Constants.EMPTY);
 		updateCheckoutButtonText();
 		folaButton.setVisibility(View.VISIBLE);
@@ -819,45 +770,12 @@ public class FrgFishingSessions
 			return false;
 		}
 
-		//FishCatch fishCatchToAdd = new FishCatch();
-		//int selectedFishId = fishCatch.getFish().getFishId();
-		//fishCatchToAdd.setFishId(selectedFishId);
-		//ActSpearoStatsMain activity = (ActSpearoStatsMain) getActivity();
-		//Fish fish = Fish.getFromId(activity, selectedFishId);
-		//fishCatchToAdd.setFish(fish);
 		fishCatch.setDepthMeters(MetricConverter.convertDepthFromPickers(app_preferences, pickerDepth.getValue()));
 		fishCatch.setWeight(weightFromPickers);
-		//fishCatchToAdd.setCaughtWith(caughtByGunId);
 
 		sessionCatchesList.add(fishCatch);
 		sessionCatchesAdapter.notifyDataSetChanged();
-
 		return true;
-	}
-
-	/**
-	 * When a new session is persisted we need to update the grid view list.
-	 * Just adding it is not enough. We need to sort the collection.
-	 * We also update the appbar fish count.
-	 */
-	public void updateSessions() {
-		int fish = 0;
-
-		fishingSessions.clear();
-		List<FishingSession> fresh = getDbFishingSessions();
-		for (FishingSession fishingSession : fresh) {
-			fishingSessions.add(fishingSession);
-			fish += fishingSession.getFishCatches().size();
-		}
-		Collections.sort(fishingSessions);
-
-		recyclerViewAdapter.notifyDataSetChanged();
-		((ActSpearoStatsMain) getActivity()).fixCatchesNum(fish);
-
-		if (fishingSessions.isEmpty()) {
-			sessionsFlipper.setDisplayedChild(POSITION_NO_SESSIONS);
-		}
-
 	}
 
 	/**
@@ -904,7 +822,6 @@ public class FrgFishingSessions
 
 		session.setLatitude(point.latitude);
 		session.setLongitude(point.longitude);
-		//location = point;
 
 		View markerView = ((LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.map_marker_layout_sessions, null);
 		TextView numTxt = (TextView) markerView.findViewById(R.id.fish_num_txt);
@@ -935,46 +852,13 @@ public class FrgFishingSessions
 		saveSessionActions();
 	}
 
-	List<FishingSession> getFishingSessions(){
-		return ((SpearoApplication) this.getActivity().getApplication()).getFishingSessions();
-	}
-
-	List<FishingSession> getDbFishingSessions(){
-		ActSpearoStatsMain activity = (ActSpearoStatsMain) this.getActivity();
-		return ((SpearoApplication) activity.getApplication()).getDbFishingSessions();
-	}
-
 	public void reloadFishiesOnNewRecord(){
 		if (!((SpearoApplication) getActivity().getApplication()).isNewCommunityDataRecord()){
 			return;
 		}
-		
-		refreshFish();
 
-		AutoCompleteSearchAdapter autoCompleteSearchAdapter = new AutoCompleteSearchAdapter(this, fishies);
-		autoCompleteFish.setAdapter(autoCompleteSearchAdapter);
-		autoCompleteSearchAdapter.notifyDataSetChanged();
+		setFishAutoCompleteAdapter();
 		((SpearoApplication)getActivity().getApplication()).setNewCommunityDataRecord(false);
-	}
-	
-	void refreshFish() {
-		List<Fish> fishies2 = getFishies();
-		fishies.clear();
-		for (Fish fish : fishies2) {
-			fishies.add(fish);
-		}
-	}
-
-	List<Fish> getFishies(){
-		ActSpearoStatsMain activity = (ActSpearoStatsMain) getActivity();
-		List<Fish> loadedFish = ((SpearoApplication) activity.getApplication()).getFishies();
-		if (loadedFish == null || loadedFish.isEmpty()){
-			loadedFish = new Database(activity).fetchFishFromDb();
-			((SpearoApplication)activity.getApplication()).getFishies().clear();
-			((SpearoApplication)activity.getApplication()).getFishies().addAll(loadedFish);
-		}
-		
-		return loadedFish;
 	}
 
 	/**
@@ -1037,15 +921,9 @@ public class FrgFishingSessions
 	}
 
 	public void collapseAppbarIfNeeded() {
-		if (POSITION_SHOW_SESSIONS != sessionsFlipper.getDisplayedChild()){
+		if (POSITION_SHOW_SESSIONS == sessionsFlipper.getDisplayedChild()){
 			collapseAppbar();
 		}
-	}
-	
-	void clearAndGoToSessions() {
-//		clearCatchViews();
-//        clearSessionViews();
-    	goToSessionsChild();
 	}
 
 	public static FrgFishingSessions init(int val) {
@@ -1059,6 +937,26 @@ public class FrgFishingSessions
 	 private void placeAds() {
 	        adRequest = new AdRequest.Builder().build();
 	    }
+
+	@Override
+	public void notifyChanges(FishingSessionsState state) {
+		if (FishingSessionsState.ADDED_SESSION.equals(state)
+			|| FishingSessionsState.REMOVED_SESSION.equals(state)) {
+			recyclerViewAdapter.notifyDataSetChanged();
+
+			List<FishingSession> fishingSessions = ((SpearoApplication) getActivity().getApplication()).getFishingSessions();
+			if (fishingSessions.isEmpty()) {
+				sessionsFlipper.setDisplayedChild(POSITION_NO_SESSIONS);
+			}
+		}
+
+		if (FishingSessionsState.ADDED_GUN.equals(state)
+				|| FishingSessionsState.REMOVED_GUN.equals(state)) {
+
+			setupSpearGunsSpinnerAdapter();
+		}
+
+	}
 
 	private class LoadAsyncAd extends AsyncTask<Void, Void, Void> {
 
@@ -1160,8 +1058,6 @@ public class FrgFishingSessions
 			@Override
 			public void onClick(View v) {
 				alertDialog.cancel();
-				//clearCatchViews();
-
 			}
 		});
 
@@ -1175,7 +1071,7 @@ public class FrgFishingSessions
 		AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getActivity());
 		dialogBuilder.setPositiveButton(getResources().getString(R.string.yes), new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int id) {
-				clearAndGoToSessions();
+				goToSessionsChild();
 			}
 		})
 				.setNegativeButton(getResources().getString(R.string.no), new DialogInterface.OnClickListener() {
@@ -1224,7 +1120,7 @@ public class FrgFishingSessions
 			@Override
 			public void onClick(View v) {
 				alertDialog.cancel();
-				clearAndGoToSessions();
+				goToSessionsChild();
 			}
 		});
 
@@ -1298,8 +1194,7 @@ public class FrgFishingSessions
 			@Override
 			public void onClick(View v) {
 				alertDialog.cancel();
-				clearAndGoToSessions();
-
+				goToSessionsChild();
 			}
 		});
 

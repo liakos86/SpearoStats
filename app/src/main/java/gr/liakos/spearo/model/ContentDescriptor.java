@@ -559,7 +559,6 @@ public class ContentDescriptor {
             public static final String GUN_ID = BaseColumns._ID; // by convention
             public static final String BRAND = "brand";
             public static final String MODEL = "model";
-            public static final String NICKNAME = "nickname";
             public static final String LENGTH = "length";
             public static final String TYPE = "type";
         }
@@ -579,7 +578,6 @@ public class ContentDescriptor {
                     + String.format(sFrmText, Cols.MODEL) + " , "
                     + String.format(sFrmInt, Cols.TYPE) + " , "
                     + String.format(sFrmIntNotNull, Cols.LENGTH) + " , "
-                    + String.format(sFrmText, Cols.NICKNAME) + " , "
 
                     + String.format(sFrmPrimaryKey, Cols.GUN_ID) + ");";
         }

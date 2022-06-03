@@ -31,8 +31,8 @@ public class ActSplash extends BaseFrgActivityWithBottomButtons {
     }
 
     void startCountDown() {
-    	final ProgressBar progressBar = (ProgressBar) findViewById(R.id.progress_bar);
-        final int fiveSecs = 1 * 5 * 1000; // 1 minute in milli seconds
+    	final ProgressBar progressBar = findViewById(R.id.progress_bar);
+        final int fiveSecs = 1 * 5 * 1000;
 
         new CountDownTimer(fiveSecs, 1000) {
             public void onTick(long millisUntilFinished) {

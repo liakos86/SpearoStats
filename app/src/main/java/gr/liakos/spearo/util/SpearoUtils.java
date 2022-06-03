@@ -21,6 +21,8 @@ import android.graphics.drawable.Drawable;
 import android.net.ConnectivityManager;
 //import android.support.design.widget.Snackbar;
 import androidx.core.content.res.ResourcesCompat;
+import androidx.fragment.app.Fragment;
+
 import android.util.DisplayMetrics;
 import android.view.View;
 import android.view.ViewGroup.LayoutParams;
@@ -47,16 +49,24 @@ public class SpearoUtils {
 	        return context.getString(resId, obj);
 	 }
 	 
-	 public static void hideSoftKeyboard(Activity activity) {
-		 	if (activity.getCurrentFocus() == null){
-		 		return;
-		 	}
+	 public static void hideSoftKeyboard(Activity act, Fragment frg) {
+		View view = null;
+		if (act != null){
+			view =  act.getCurrentFocus();
+		}else if (frg != null) {
+			view = frg.getView().getRootView();
+			act= frg.requireActivity();
+		}
+
+		if (view == null){
+			return;
+		}
 		 
-		    InputMethodManager inputMethodManager = 
-		        (InputMethodManager) activity.getSystemService(
-		            Activity.INPUT_METHOD_SERVICE);
-		    inputMethodManager.hideSoftInputFromWindow(
-		        activity.getCurrentFocus().getWindowToken(), 0);
+		InputMethodManager inputMethodManager =
+			(InputMethodManager) act.getSystemService(
+				Activity.INPUT_METHOD_SERVICE);
+		inputMethodManager.hideSoftInputFromWindow(
+			view.getWindowToken(), 0);
 	}
 	 
 	 public Bitmap createDrawableFromView(Activity activity, View view) {

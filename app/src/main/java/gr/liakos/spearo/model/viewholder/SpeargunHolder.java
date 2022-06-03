@@ -7,7 +7,6 @@ public class SpeargunHolder {
 	
 	 public ImageView brandImg;
 	 public TextView brandTxt;
-	 public TextView modelTxt;
 	 public TextView recordTxt;
 	 public TextView catchesNumTxt;
 

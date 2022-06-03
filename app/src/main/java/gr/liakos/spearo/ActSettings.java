@@ -190,7 +190,7 @@ extends Activity implements AsyncSaveUserListener {
 	}
 
 	void closeKeyboard() {
-		SpearoUtils.hideSoftKeyboard(this);
+		SpearoUtils.hideSoftKeyboard(this, null);
 	}
 
 	void hideRequestLayout() {
@@ -320,7 +320,6 @@ extends Activity implements AsyncSaveUserListener {
 
 		Glide.with(getApplicationContext()).load(selectedImage).into(changeProfilePic);
 
-	  //changeProfilePic.setImageURI(selectedImage);
 	}
 
   void setProfilePicChangeListener() {
